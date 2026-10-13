@@ -14,7 +14,7 @@ ACCEPTED
 
 AWS hosts version 1. CloudFront is the front door players open.
 
-CloudFront delivers the site. It does not, by itself, run a match or keep a room. The service that runs a request, and the service that stores the room and the match, stay open. See OQ-13 in `docs/open-questions.md`.
+CloudFront delivers the site. It does not, by itself, run a match or keep a room. S3 holds the website files, Lambda runs a request, and DynamoDB stores the room and the match. See [decision 0004](0004-s3-lambda-dynamodb.md). OQ-13 is answered.
 
 ## Options considered
 

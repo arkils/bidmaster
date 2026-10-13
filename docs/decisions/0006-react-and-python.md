@@ -14,7 +14,7 @@ ACCEPTED
 
 The website is a React application. Lambda functions are written in Python.
 
-API Gateway sits between CloudFront and Lambda. See [decision 0007](0007-api-gateway-and-live-updates.md). Whether a container takes over once a match starts is still open. See OQ-18 in `docs/open-questions.md`.
+The HTTP API sits between CloudFront and Lambda. See [decision 0007](0007-api-gateway-and-live-updates.md). Live notices go through AWS IoT Core. No container takes over once a match starts. See [decision 0008](0008-iot-core-notifications.md).
 
 ## Options considered
 
@@ -30,7 +30,8 @@ The user chose this split. React is the website. Python is the backend code in L
 
 - Game rules that must be the same for every player run in the Python functions, which read and write DynamoDB.
 - The React app is what the player sees: the name popup, create and join, the match, the ranking table, and the graph.
-- A later choice still has to say how the React app invokes the Python functions.
+- A later choice still has to say how the React app invokes the Python functions. That choice is [decision 0007](0007-api-gateway-and-live-updates.md) and [decision 0008](0008-iot-core-notifications.md).
+- Infrastructure is TypeScript on AWS CDK, deployed from a laptop. See [decision 0010](0010-cdk-typescript-from-laptop.md). The website stays React and Lambda stays Python.
 
 ## Revisit triggers
 

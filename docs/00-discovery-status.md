@@ -2,30 +2,34 @@
 
 | | |
 | --- | --- |
-| Phase | Discovery & Architecture |
-| Phase started | 2026-10-13 |
-| Agent | Project architect (`AGENTS.md`) |
+| Phase | Pre-Development Review |
+| Phase started | 2026-10-14 |
+| Agent | Review (`AGENTS.md`) |
 | Code | Not allowed |
-| Active task | [DISC-005](tasks/discovery/DISC-005-data-model.md) — `IN_PROGRESS` |
-| Documentation gate | Not run |
-| Review GO | Not recorded |
+| Active task | None. [REV-008](tasks/review/REV-008-apply-findings.md) is done. |
+| Documentation gate | PASS on 2026-10-14. See [01-development-gate.md](01-development-gate.md). |
+| Review GO | Recorded by the user on 2026-10-14 |
 | Build GO | Not recorded |
+
+Discovery & Architecture ran from 2026-10-13 through 2026-10-14. Its agent is archived at [agent/agent-discovery-architecture.md](agent/agent-discovery-architecture.md).
 
 ## Progress
 
-DISC-001, DISC-002, and DISC-003 are done. Journeys in `docs/product/journeys.md` cover the name cookie, rooms, join order, the host's choice of first bidder, the match in `docs/game/rules.md`, and a dashboard with scores, rank, and a per-round graph. The website is public and global. Many invited matches can run at once. There is no public lobby, and it is not a source of income. Android and iOS apps are FUTURE. DISC-004 is done. Decisions 0002 through 0007 are accepted: serverless hosting on AWS in Mumbai, CloudFront, S3, a React site, Python Lambda, DynamoDB, and API Gateway HTTP plus WebSocket. Whether a container takes over when a match starts is still open (OQ-18). What DynamoDB keeps after a room empties is also open (OQ-17) and waits on that choice.
+DISC-001 through DISC-009 are done. The documentation gate is PASS. [REV-001](tasks/review/REV-001-product-documents.md) reviewed the vision, the requirements, and the journeys against each other and against `docs/game/rules.md`. Two findings are recorded there. [REV-002](tasks/review/REV-002-architecture.md) reviewed the architecture overview and decisions 0002 through 0010. Findings F-3 through F-7 are recorded there. [REV-003](tasks/review/REV-003-data-model.md) reviewed the data model. Findings F-8 and F-9 are recorded there. [REV-004](tasks/review/REV-004-contracts.md) reviewed the interface contracts. Findings F-10 through F-13 are recorded there. [REV-005](tasks/review/REV-005-non-functional.md) reviewed the non-functional requirements. Findings F-14 through F-16 are recorded there. [REV-006](tasks/review/REV-006-delivery.md) reviewed delivery. Findings F-17 through F-19 are recorded there. Those documents were not edited. [REV-007](tasks/review/REV-007-synthesis.md) dispositioned F-1 through F-19. F-8 is covered by F-1. F-14 is covered by F-5. [OQ-23](open-questions.md) and [OQ-24](open-questions.md) are answered. [REV-008](tasks/review/REV-008-apply-findings.md) applied those repairs in the product and architecture documents. The extra wait from outside India may pass 2 seconds, and that wait is acceptable.
+
+Delivery is in `docs/architecture/delivery.md`: AWS CDK in TypeScript from a laptop, and the local React app talks to those deployed services. Non-functional requirements are in `docs/product/non-functional.md`. The site states no uptime percentage and no cost ceiling. CloudFront is on the AWS free tier. Lambda runs per request. API Gateway and DynamoDB stay in place. The interface contracts are in `docs/architecture/contracts.md`. Journeys in `docs/product/journeys.md` cover the name and player id in the cookie, rooms, join order, the host's choice of first bidder, the match in `docs/game/rules.md`, a live dashboard, and looking back at a started match by its room id. Decision 0009 keeps the player id beside the visible name, so two players can share a name, and the dashboard can list the matches that browser played. The website is public and global. Many invited matches can run at once. There is no public lobby, and it is not a source of income. Android and iOS apps are FUTURE. Decisions 0002 through 0010 are accepted: serverless hosting on AWS in Mumbai, CloudFront, S3, a React site, Python Lambda, DynamoDB, an HTTP API, AWS IoT Core for live notices, and CDK in TypeScript deployed from a laptop. No API Gateway WebSocket, and no container starts when a match begins. DynamoDB keeps every started match after the room is empty: the date, the room id, each seat's player id and name, the seat that bids first in round 1, and each round's points. Public facts about a player use the seat number and the name. Decision 0001 stays PROPOSED.
 
 ## What we are not doing yet
 
-Coding waits for **Review GO**, then Planning, then **Build GO**.
+Coding waits for Implementation Planning, then **Build GO**.
 
-Until those gates:
+Until Build GO:
 
 - No application, infrastructure, configuration, or script code.
-- No Review, Planning, or Implementation task files. Those are created in their own phases.
-- The architecture overview is recorded. The data model waits on where the live match runs, and on what is kept after a room empties.
-- Review GO and Build GO stay unchecked in `docs/01-development-gate.md`. This file cannot grant them.
+- No Planning or Implementation task files.
+- An individual review records findings. It does not edit the product or architecture docs to repair them.
+- **Build GO** stays unchecked in `docs/01-development-gate.md`. This file cannot grant it.
 
 ## Next step
 
-Answer OQ-18 in `docs/open-questions.md`: when a match starts, whether players stay on API Gateway and Lambda or a container holds the match and the live connections. DISC-005 stays `IN_PROGRESS`. The data model stays unwritten until that answer, and until OQ-17.
+The review tasks are done, and the standing findings are repaired. Implementation Planning waits until you record that it may start.

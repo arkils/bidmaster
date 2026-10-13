@@ -18,7 +18,7 @@ CloudFront still serves the website to browsers. Players can open the site from 
 
 ## Options considered
 
-- One region, Mumbai. Players in India get the shorter path to Lambda and DynamoDB. A player far from Mumbai waits longer on each bid and card. One table holds every match.
+- One region, Mumbai. Players in India get the shorter path to Lambda and DynamoDB. A player far from Mumbai waits longer on each bid and card. Every match lives in that one region.
 - One region somewhere else. It would be a worse fit for a project based in India.
 - A copy of the data in several regions. Nearby players would wait less. One room would be harder to keep as a single match.
 

@@ -1,14 +1,14 @@
-# Discovery agent
+# Pre-Development Review agent
 
 Source of truth is `docs/`. Trust `docs/` and the active task file over chat memory.
 
 ## Role
 
-Project architect for Discovery & Architecture. Write the Markdown a later agent needs with no access to prior chat. Ask when a fact is unknown. Leave product, scope, and architecture unconfirmed until the user agrees.
+Review and readiness for Pre-Development Review. Read the documentation a later agent would build from. Find and document issues. Do not fix them unless the user explicitly says to.
 
 ## Current phase
 
-Discovery & Architecture. Started 2026-10-13.
+Pre-Development Review. Started 2026-10-14, when the user recorded Review GO.
 
 Markdown only. Code is not allowed: no application code, infrastructure, configuration, or scripts.
 
@@ -16,9 +16,11 @@ Markdown only. Code is not allowed: no application code, infrastructure, configu
 
 You do not grant GO. The user records it.
 
-Leave this phase only when `docs/01-development-gate.md` records PASS and the user records **Review GO**. Coding waits for **Review GO**, then Implementation Planning, then **Build GO**.
+The user recorded **Review GO** on 2026-10-14. Do not check **Build GO**.
 
-On Review GO, archive this file and promote the drafted Pre-Development Review agent. The procedure is `docs/agent/README.md`.
+Do not author Planning tasks (`PREP-*`) or Implementation tasks (`IMPL-*`). Do not start Implementation Planning. Coding still waits for **Build GO**.
+
+Leave this phase only when the user records that Implementation Planning may start. On that recording, archive this file and promote the next phase’s draft. The procedure is `docs/agent/README.md`. Draft that next agent in `docs/agent/` before the handoff. Do not promote it yourself.
 
 ## Absolute rules
 
@@ -32,17 +34,25 @@ On Review GO, archive this file and promote the drafted Pre-Development Review a
 8. Record a hard-to-reverse decision as an ADR: context, decision, options considered, rationale, consequences, revisit triggers. Status is PROPOSED until the user agrees, then ACCEPTED. Index: `docs/decisions/README.md`. Template: `docs/decisions/0000-template.md`.
 9. Do not expand agreed scope without the user’s approval.
 10. Do not change architecture inside a coding task. If a task conflicts with docs, stop and escalate.
-11. During discovery, ask one question at a time.
-12. When the user reports a bug or change request during Development: log it and author the `IMPL-*.md` in that pass. Implement it in a later pass.
+11. During discovery, ask one question at a time. This phase asks when a review is blocked on a fact the docs do not settle.
+12. When the user reports a bug or change request during Development: log it and author the `IMPL-*.md` in that pass. Implement it in a later pass. This phase does not write those files.
 13. Reviews find and document. A synthesis task dispositions findings. A later task applies the fixes. Do not fix docs during an individual review unless the user explicitly says to.
+
+## What this phase writes
+
+Review tasks live in `docs/tasks/review/` with the prefix `REV-`. Add each row to `docs/tasks/backlog.md` when the task file is created. Copy `docs/tasks/TEMPLATE.md`.
+
+If none exist yet, add the first review task and start it. Cover the documents a coding agent would use: the vision, requirements, journeys, architecture, accepted decisions, data model, contracts, non-functional requirements, and delivery. One task is `IN_PROGRESS` at a time. Do not create the Planning or Implementation rows.
+
+An individual review records findings. It does not edit the product or architecture docs to repair them. After those reviews are done, one synthesis task dispositions each finding. Fixes wait for a later task, and only when the user asks for that task.
 
 ## Key documents
 
 - `docs/00-discovery-status.md` — phase, progress, next step
 - `docs/tasks/backlog.md` — which task is active
+- `docs/01-development-gate.md` — documentation gate and the user’s GO checkboxes
 - `docs/open-questions.md`
 - `docs/decisions/README.md`
-- `docs/01-development-gate.md`
 - `docs/README.md` — index and conventions
 
 ## Session start
@@ -51,8 +61,9 @@ On Review GO, archive this file and promote the drafted Pre-Development Review a
 2. Read `docs/tasks/backlog.md`.
 3. Read `docs/open-questions.md`.
 4. Read `docs/decisions/README.md`.
-5. Continue the `DISC-*` task that is `IN_PROGRESS`. If none is, take the lowest-ID `TODO` that is not blocked.
-6. Read that task’s **Read first** list completely before writing.
+5. Read `docs/01-development-gate.md`. Confirm PASS is recorded and **Build GO** is still unchecked.
+6. Continue the `REV-*` task that is `IN_PROGRESS`. If none is, take the lowest-ID `TODO` that is not blocked. If no `REV-*` task exists, create the first one, then start it.
+7. Read that task’s **Read first** list completely before writing.
 
 ## Q&A
 

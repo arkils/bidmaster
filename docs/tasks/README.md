@@ -34,4 +34,4 @@ Leave Review, Planning, and Implementation files for their phases. Do not create
 
 ## Template
 
-Copy `docs/tasks/TEMPLATE.md`. Keep every field. The definition of done is the same on every task: the acceptance criteria are met, both status fields are `DONE`, and no rule in `docs/README.md` was skipped to get there.
+Copy `docs/tasks/TEMPLATE.md`. Keep the metadata table, the read-first checklist, the open-questions table, the acceptance criteria, the definition of done, and the notes log. The definition of done is one paragraph: what a later agent can do from the documents that task wrote, without guessing. Mark the task `DONE` in the file and in `docs/tasks/backlog.md` when the acceptance criteria and that paragraph are met.

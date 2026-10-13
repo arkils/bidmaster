@@ -9,7 +9,7 @@ Status: recorded by [DISC-003](../tasks/discovery/DISC-003-user-journeys.md). Ea
 - Steps:
   1. A popup asks for their name. This is the first thing the site asks.
   2. They enter the name.
-- End: the popup closes, and the site shows Create room and Join room. The site stores the name in a cookie. On a later visit, while that cookie is present, the popup stays closed and the site still knows the name.
+- End: the popup closes, and the site shows Create room and Join room. The site stores two values in a cookie: the name they typed, and a player id generated once on this browser. The screen shows the name. It does not show the player id. On a later visit, while that cookie is present, the popup stays closed and the site still knows both values. See [decision 0009](../decisions/0009-player-id.md).
 
 ## Create a room
 
@@ -30,7 +30,7 @@ The room id is two ordinary words joined by a hyphen, in the style of `funny-mon
 - Steps:
   1. If the site does not yet have their name, the name popup in **Give a name** comes first.
   2. The friend joins that room, using the name already entered.
-- End: the friend is in the room. The match has not started.
+- End: the friend is in the room. The match has not started. A join that would seat an 11th player is refused, and the friend sees the message “room is full”. A join after the match has started is refused with that same message.
 
 ## Join by room id
 
@@ -40,7 +40,16 @@ The room id is two ordinary words joined by a hyphen, in the style of `funny-mon
   1. The player chooses Join room.
   2. The player enters the room id, for example `funny-monkey`.
   3. The player joins the room, using the name already entered.
-- End: the player is in the room. The match has not started.
+- End: the player is in the room. The match has not started. A join that would seat an 11th player is refused, and the player sees the message “room is full”. A join after the match has started is refused with that same message.
+
+## The host leaves before the start
+
+- Person: the host.
+- Start: the room exists and the match has not started.
+- Steps:
+  1. The host leaves the room.
+  2. The player who joined next after that host becomes the host.
+- End: the players still in the room stay in join order, earliest first. Seats are numbered again from 1, so the new host is seat 1. When the host was the only player, the room has no seated player and the room id stays reserved. A match still starts only when 3 to 10 players are seated.
 
 ## Start the match
 
@@ -52,7 +61,7 @@ The room id is two ordinary words joined by a hyphen, in the style of `funny-mon
   3. The host starts the match.
 - End: the match starts. Seating is fixed at that moment, and the round-1 first bidder is the player the host chose.
 
-Seating order is the order in which players joined the room, earliest first. The host joins by creating the room, so that time is the host's join time. Later players take the following seats. Play proceeds clockwise through that order, as `docs/game/rules.md` already requires. In later rounds, the first bidder moves one seat clockwise, as those rules already require.
+Seating order is the order in which players joined the room, earliest first. The player who creates the room is the first host, so that time is the first host's join time. If that host leaves before the start, the player who joined next becomes the host and seat 1. Later players take the following seats. Play proceeds clockwise through that order, as `docs/game/rules.md` already requires. In later rounds, the first bidder moves one seat clockwise, as those rules already require.
 
 ## Play the match
 
@@ -67,6 +76,18 @@ Seating order is the order in which players joined the room, earliest first. The
 - Start: the match has started. The dashboard is on screen from that moment.
 - What it shows:
   1. Each player's cumulative score for this match. Every score starts at 0 and updates when a round is scored.
-  2. A table that ranks the players and shows each cumulative score. Rank follows `docs/game/rules.md`: a higher cumulative score ranks first. When scores are equal, more successful bids rank higher.
+  2. A table that ranks the players and shows each cumulative score. Rank follows `docs/game/rules.md`: a higher cumulative score ranks first. When scores are equal, more successful bids rank higher. When the score and the number of successful bids are both equal, those players share the rank. Players who share the highest rank share the win.
   3. A graph with one line per player. For each round that has been scored, the line shows how many points that player gained or lost in that round.
 - End: after the last round is scored, the table shows the final ranking and the graph includes every round.
+
+## Look back at a match
+
+- Person: a player who knows a match's room id.
+- Start: the host has started that match. The players may already have left.
+- Steps:
+  1. The player opens the dashboard for that room id, for example `funny-monkey`.
+  2. The dashboard shows the date the match started, the players who were there, and every round that has been scored.
+  3. For those rounds it shows the same three views as the live dashboard: cumulative scores, the ranking, and the graph of points gained or lost each round.
+- End: the player has seen that match's results. The cards, bids, and trump of those rounds are not part of this view.
+
+The dashboard also lists the matches this browser's player id sat in. Each entry shows the date, the room id, and the names the players used. Opening one shows that match's rounds, as above. Another browser, or this browser after the cookie is cleared, has a different player id and does not show this list.

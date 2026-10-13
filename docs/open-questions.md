@@ -20,8 +20,14 @@ An unknown stays here until the user answers it or explicitly defers it. A defer
 | OQ-14 | Do S3, Lambda, and DynamoDB live in one AWS region, and which region? | ANSWERED | — |
 | OQ-15 | What language is the website and the Lambda code written in? | ANSWERED | — |
 | OQ-16 | How does the React website call the Python Lambda functions? | ANSWERED | — |
-| OQ-17 | What does DynamoDB keep after everyone has left the room? | OPEN | DISC-005 |
-| OQ-18 | When a match starts, do players stay on API Gateway and Lambda, with the match in DynamoDB, or does a container start, hold the match, and keep the live connections? | OPEN | DISC-005 |
+| OQ-17 | What does DynamoDB keep after everyone has left the room? | ANSWERED | — |
+| OQ-18 | When a match starts, do players stay on API Gateway and Lambda, with the match in DynamoDB, or does a container start, hold the match, and keep the live connections? | ANSWERED | — |
+| OQ-19 | Must the version-1 website be usable in a phone browser, as well as on a desktop browser? | ANSWERED | — |
+| OQ-20 | How quickly must the other players see a bid or a card? | ANSWERED | — |
+| OQ-21 | Does version 1 state an uptime percentage? | ANSWERED | — |
+| OQ-22 | How does a developer run version 1 on the laptop before deploying to AWS? | ANSWERED | — |
+| OQ-23 | When a room is outside 3 to 10 players before the start, how can the host still reach a startable room? | ANSWERED | — |
+| OQ-24 | May a player outside India wait longer than 2 seconds on a bid or a card? | ANSWERED | — |
 
 ## OQ-1 resolution
 
@@ -50,6 +56,8 @@ Answered 2026-10-13. The host enters a name before creating a room. For anyone, 
 ## OQ-9 resolution
 
 Answered 2026-10-13. The site stores the name in a cookie. The record is `docs/product/journeys.md`.
+
+[Decision 0009](decisions/0009-player-id.md) later added a player id in that same cookie. The screen still shows the name. The player id is how two players with the same name are told apart.
 
 ## OQ-7 resolution
 
@@ -89,15 +97,43 @@ Answered 2026-10-13. The website is React. The Lambda code is Python. The record
 
 Answered 2026-10-13. The React app uses an HTTP API to create, join, and load a room, and a WebSocket API while players are in the room. API Gateway holds the connections. Lambda checks an action, saves the match, and pushes the result to the other players. The record is [decision 0007](decisions/0007-api-gateway-and-live-updates.md), status ACCEPTED.
 
-## OQ-17
+[Decision 0008](decisions/0008-iot-core-notifications.md) later replaced the WebSocket push. The HTTP API remains.
 
-A finished-match review is classified out of version 1 in `docs/product/requirements.md`. DISC-005 does not decide what DynamoDB keeps after the room is empty until the user answers. This waits on OQ-18, because the answer depends on where the live match lives.
+## OQ-17 resolution
 
-## OQ-18
+Answered 2026-10-14. DynamoDB keeps every match the host has started, including after everyone has left. The kept record is the date the match started, the room id as its name, the players who were there, and the points each player gained or lost in each scored round. The dashboard can open that match later by its room id and show those rounds. A review of every deal, bid, trump, and trick stays out of version 1. The record is `docs/architecture/data-model.md`.
 
-The user asked on 2026-10-13 whether, once a match starts, a container should hold the match state and the live connections, while create, join, and load stay on Lambda. That choice is unanswered. [Decision 0007](decisions/0007-api-gateway-and-live-updates.md) stays ACCEPTED as the current record. The container is not accepted. The data model stays unwritten until this is answered.
+## OQ-18 resolution
+
+Answered 2026-10-13. No container starts when a match begins. The match stays in DynamoDB. Lambda runs each action and then stops. AWS IoT Core carries the live notices, so the API Gateway WebSocket is unused. The record is [decision 0008](decisions/0008-iot-core-notifications.md), status ACCEPTED.
+
+## OQ-19 resolution
+
+Answered 2026-10-14. The website is responsive. It works on a computer and on a phone. Native Android and iOS apps stay FUTURE. The record is `docs/product/non-functional.md`.
+
+## OQ-20 resolution
+
+Answered 2026-10-14. There is no stricter limit. A bid or a card should feel real-time, and a delay of 1 or 2 seconds is acceptable. The first request after a quiet period can be slower because of a cold start, which [decision 0002](decisions/0002-serverless-hosting.md) already records. The record is `docs/product/non-functional.md`.
+
+## OQ-21 resolution
+
+Answered 2026-10-14. Version 1 states no uptime percentage and no cost ceiling. CloudFront is the front door, on the AWS free tier. Lambda runs when a request arrives, then stops. API Gateway and DynamoDB stay in place. The record is `docs/product/non-functional.md`.
+
+## OQ-22 resolution
+
+Answered 2026-10-14. The React app on the laptop talks to the deployed AWS services: API Gateway, Lambda, DynamoDB, and IoT Core. There is no local stand-in. The record is `docs/architecture/delivery.md`.
+
+## OQ-23 resolution
+
+Answered 2026-10-14. A player who would be the 11th is not seated. That player sees the error message “room is full”. A player who tries to join after the match has started is not seated and sees that same message.
+
+Before the match starts, if the host leaves the room, the player who joined next after that host becomes the host. The players still in the room stay in join order, earliest first, so the new host is seat 1. When that host was the only player, the room has no seated player and the room id stays reserved. A match still starts only when 3 to 10 players are seated. The record is `docs/product/journeys.md`, `docs/product/requirements.md`, `docs/architecture/contracts.md`, and `docs/architecture/data-model.md`.
+
+## OQ-24 resolution
+
+Answered 2026-10-14. The extra wait from outside India may pass 2 seconds, and that wait is acceptable. A delay of 1 or 2 seconds remains the ordinary feel. A cold start may still be slower. The record is `docs/product/non-functional.md`.
 
 Prior notes that are easy to mistake for answers:
 
 - `docs/game/rules.md` is the version-1 game. It does not by itself name the rest of the product boundary.
-- The Digital section of `docs/tasks.md` lists earlier ideas (a review of a finished match, a separate rules engine, an authoritative server, Android and iOS). DISC-002 classifies them in `docs/product/requirements.md`. Android and iOS are FUTURE in the vision. The other three stay unaccepted. Room creation and joining are confirmed in `docs/product/vision.md`.
+- The Digital section of `docs/tasks.md` lists earlier ideas (a review of a finished match, a separate rules engine, an authoritative server, Android and iOS). DISC-002 classifies them in `docs/product/requirements.md`. Android and iOS are FUTURE in the vision. A trick-by-trick review stays unaccepted. Looking back at each round's points is confirmed in OQ-17. A separate rules engine and an authoritative server stay unaccepted. Room creation and joining are confirmed in `docs/product/vision.md`.

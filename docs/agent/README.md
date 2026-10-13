@@ -19,10 +19,11 @@ Draft the next phase’s `AGENTS-*.md` in this folder before the gate. Promote t
 | `agent-{phase-slug}.md` | Frozen copy of a root `AGENTS.md` that has been replaced. |
 | `AGENTS-{phase-slug}.md` | Draft for the next phase. Not active until it is copied to the root. |
 
-The next draft, `AGENTS-pre-development-review.md`, is written before the documentation gate (DISC-009), not during skeleton setup.
+[AGENTS-pre-development-review.md](AGENTS-pre-development-review.md) was copied to the root on 2026-10-14, when the user recorded Review GO. Root `AGENTS.md` is the active review agent. The next draft, for Implementation Planning, is written in this folder before that phase starts.
 
 ## Archives
 
 | File | Phase | Archived |
 | --- | --- | --- |
 | [agent-prior-process.md](agent-prior-process.md) | Prior process (rules, then digital behavior) | 2026-10-13 |
+| [agent-discovery-architecture.md](agent-discovery-architecture.md) | Discovery & Architecture | 2026-10-14 |

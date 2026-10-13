@@ -1,6 +1,6 @@
 # BidMaster functional rules
 
-Status: reviewed. Digital behavior is the next pass.
+Status: reviewed. These are the tabletop rules. Version 1’s digital behavior is the product documents under `docs/product/`.
 
 This is the tabletop game. Rooms, stored history, and clients are outside this document.
 

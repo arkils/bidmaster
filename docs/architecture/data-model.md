@@ -1,0 +1,50 @@
+# Data model
+
+Status: recorded by [DISC-005](../tasks/discovery/DISC-005-data-model.md). It matches the confirmed product and [decision 0008](../decisions/0008-iot-core-notifications.md).
+
+DynamoDB is the store. The browser cookie holds the typed name and a player id generated once on that browser. The screen shows the name and hides the player id. There is no user account. See [decision 0009](../decisions/0009-player-id.md).
+
+## Kept match
+
+CONFIRMED on 2026-10-14, from the user's answer to OQ-17. DynamoDB keeps every match the host has started. It keeps that match after everyone has left the room. The record does not expire.
+
+A kept match has:
+
+- The date the host started it.
+- The room id, which is the name of the match, in the style of `funny-monkey`.
+- The players who were seated when the match started, in seat order. Seats are numbered from 1. The host is seat 1. Each seat has a player id and the name that player used in this match. The screen shows the name. A public mention of a player is the seat number plus that name.
+- The seat that bids first in round 1. Each later round moves that seat one place clockwise, as `docs/game/rules.md` requires.
+- The result of each round that has been scored. For each player, that result is the points gained or lost in that round.
+
+The dashboard opens a kept match by its room id and shows all of those rounds: cumulative scores, the ranking, and the graph of each round's gain or loss. It also lists every kept match whose seats include this browser's player id. Cumulative scores are the sum of the round results. Rank follows `docs/game/rules.md`. A higher cumulative score ranks first. When scores are equal, more successful bids rank higher. When the score and the number of successful bids are both equal, those players share the rank. Players who share the highest rank share the win. A successful bid is a round whose points are positive, which is the exact-bid rule in `docs/game/rules.md`.
+
+One room id names one room record. A later room does not reuse an id that already belongs to a room record. A started match keeps that id. An unstarted room is not a past match and is not listed as a result. No operation deletes it, so its id stays reserved too.
+
+## What looking back does not include
+
+CONFIRMED. A review of every deal, bid, trump, and trick is classified out in `docs/product/requirements.md`. The dashboard's look back shows the round results above. It does not show each card, and it does not show the seat that bids first in round 1. That seat stays on the stored match so a later round's opener can be told.
+
+## While a round is being played
+
+CONFIRMED for the product because version 1 plays `docs/game/rules.md` (OQ-2) and [decision 0008](../decisions/0008-iot-core-notifications.md) says Lambda loads the match from DynamoDB to apply those rules.
+
+Until the current round is scored, the match also holds the state of that round: each player's hand, the bids already submitted, the trump suit once it is chosen, the tricks already won, the trick in progress, and whose turn it is. A hand, a bid, a played card, a trick winner, and the turn are tied to a seat. The hand is also tied to that seat's player id. Those cards are sent only to that player. When the round is scored, the points become a kept round result. Those cards are not part of the history the dashboard shows later.
+
+Opening the room id loads this same match. An unfinished match is still that match: the rounds already scored, and the round still in progress.
+
+## Before the host starts the match
+
+The room holds the room id, the host's player id and name, and each joined player with their player id, their name, and the time they joined. Two joined players may use the same name. Their player ids differ. Seat order is that join order, earliest first. The first host's join time is the time the room was created. Before the match starts, a player who joins again with the same player id keeps that seat and the seat's name becomes the name in the cookie. Before the match starts, if the host leaves, that player is no longer seated. The player who joined next becomes the host. Seats are numbered again from 1 in the join order of the players who remain, so the new host is seat 1. A room already has at most 10 seated players. When the host starts the match, those seated players, their names, and the host's choice of which seat bids first in round 1, are fixed on the match.
+
+## Relationships
+
+- A room id names at most one match.
+- A match has 3 to 10 players, fixed when the host starts it.
+- A match has one kept result per scored round, and one points number per seated player in that round.
+- The number of rounds, and how many cards each round deals, come from the player count and `docs/game/rules.md`. They are calculated, not chosen separately. That calculation is CONFIRMED for the product by OQ-2.
+
+## Not stored
+
+- API Gateway connection ids. Live notices use AWS IoT Core. See [decision 0008](../decisions/0008-iot-core-notifications.md).
+- A user account or a password. There is still no public lobby. A past match is opened by its room id. The only match list is the one for the player id in this browser's cookie.
+- The cards, bids, and trump of a scored round, as a history the dashboard shows later.

@@ -13,8 +13,12 @@ Start at `docs/00-discovery-status.md`. It names the phase, the active task, and
 | What to do next | [tasks/backlog.md](tasks/backlog.md) |
 | What the product is | [product/vision.md](product/vision.md) |
 | What it must do | [product/requirements.md](product/requirements.md) |
+| What version 1 must be like in use | [product/non-functional.md](product/non-functional.md) |
 | How a player moves through version 1 | [product/journeys.md](product/journeys.md) |
 | How version 1 is structured | [architecture/overview.md](architecture/overview.md) |
+| What version 1 stores | [architecture/data-model.md](architecture/data-model.md) |
+| What the browser and the backend say to each other | [architecture/contracts.md](architecture/contracts.md) |
+| How version 1 is deployed | [architecture/delivery.md](architecture/delivery.md) |
 | What is undecided | [open-questions.md](open-questions.md) |
 | What we are assuming | [assumptions.md](assumptions.md) |
 | What can go wrong | [risks.md](risks.md) |

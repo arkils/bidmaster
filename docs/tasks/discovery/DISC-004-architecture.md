@@ -1,36 +1,16 @@
-# DISC-004. Architecture overview
+# DISC-004: Architecture overview
 
-## ID
-
-`DISC-004`
-
-## Track
-
-Discovery
-
-## Phase
-
-Discovery & Architecture
-
-## Component
-
-Architecture
-
-## Status
-
-`DONE`
-
-## Priority
-
-Blocking
-
-## Blocked by
-
-DISC-003
-
-## Blocks
-
-DISC-005
+| Field | Value |
+| --- | --- |
+| **ID** | DISC-004 |
+| **Track** | Discovery |
+| **Phase** | Discovery & Architecture |
+| **Component** | docs / architecture |
+| **Status** | DONE |
+| **Priority** | Blocking |
+| **Blocked by** | DISC-003 |
+| **Blocks** | DISC-005 |
+| **Completed** | 2026-10-13 |
 
 ## Summary
 
@@ -38,31 +18,38 @@ An architecture overview describes how version 1 is structured. Stack choices th
 
 ## Read first
 
-- `docs/00-discovery-status.md`
-- `docs/product/vision.md`
-- `docs/product/requirements.md`
-- `docs/decisions/README.md`
-- `docs/decisions/0000-template.md`
-- `docs/decisions/0001-documentation-driven-phases.md`
-- `docs/architecture/README.md`
-- `docs/adr/README.md`
-- The journeys document written by DISC-003
+- [x] [00-discovery-status.md](../../00-discovery-status.md)
+- [x] [product/vision.md](../../product/vision.md)
+- [x] [product/requirements.md](../../product/requirements.md)
+- [x] [decisions/README.md](../../decisions/README.md)
+- [x] [decisions/0000-template.md](../../decisions/0000-template.md)
+- [x] [decisions/0001-documentation-driven-phases.md](../../decisions/0001-documentation-driven-phases.md)
+- [x] [architecture/README.md](../../architecture/README.md)
+- [x] [adr/README.md](../../adr/README.md)
+- [x] [product/journeys.md](../../product/journeys.md)
 
-## Open questions
+## Open questions to resolve
 
-- OQ-11. Answered 2026-10-13. [Decision 0002](../../decisions/0002-serverless-hosting.md) is ACCEPTED.
-- OQ-12. Answered 2026-10-13. [Decision 0003](../../decisions/0003-aws-cloudfront.md) is ACCEPTED.
-- OQ-13. Answered 2026-10-13. [Decision 0004](../../decisions/0004-s3-lambda-dynamodb.md) is ACCEPTED.
-- OQ-14. Answered 2026-10-13. [Decision 0005](../../decisions/0005-mumbai-region.md) is ACCEPTED. Mumbai, `ap-south-1`.
-- OQ-15. Answered 2026-10-13. [Decision 0006](../../decisions/0006-react-and-python.md) is ACCEPTED. React and Python.
-- OQ-16. Answered 2026-10-13. [Decision 0007](../../decisions/0007-api-gateway-and-live-updates.md) is ACCEPTED. HTTP API and WebSocket API.
+| ID | Question | Resolution |
+| --- | --- | --- |
+| OQ-11 | Is version 1 a serverless website that stays idle until someone plays? | Yes. [Decision 0002](../../decisions/0002-serverless-hosting.md) is ACCEPTED. |
+| OQ-12 | Which company hosts the version-1 website? | AWS, with CloudFront as the front door. [Decision 0003](../../decisions/0003-aws-cloudfront.md) is ACCEPTED. |
+| OQ-13 | Which AWS services run a request and store the room behind CloudFront? | S3, Lambda, and DynamoDB. [Decision 0004](../../decisions/0004-s3-lambda-dynamodb.md) is ACCEPTED. |
+| OQ-14 | Do those services live in one region, and which region? | Mumbai, `ap-south-1`. [Decision 0005](../../decisions/0005-mumbai-region.md) is ACCEPTED. |
+| OQ-15 | What language is the website and the Lambda code written in? | React and Python. [Decision 0006](../../decisions/0006-react-and-python.md) is ACCEPTED. |
+| OQ-16 | How does the React website call the Python Lambda functions? | An HTTP API. [Decision 0007](../../decisions/0007-api-gateway-and-live-updates.md) is ACCEPTED. [Decision 0008](../../decisions/0008-iot-core-notifications.md) later replaced the WebSocket push. |
 
 ## Acceptance criteria
 
-- `docs/architecture/` has an overview that matches the confirmed scope.
-- The overview is listed in `docs/architecture/README.md`.
-- Each stack choice is an ADR with context, decision, options considered, rationale, consequences, and revisit triggers.
-- No application code is written.
+- [x] [architecture/overview.md](../../architecture/overview.md) matches the confirmed scope
+- [x] The overview is listed in [architecture/README.md](../../architecture/README.md)
+- [x] Each stack choice is an ADR with context, decision, options considered, rationale, consequences, and revisit triggers
+- [x] No application code is written
+- [x] Status updated in [backlog.md](../backlog.md)
+
+## Definition of done
+
+A later agent can see how the site is hosted and which accepted decision chose each service.
 
 ## Notes log
 
@@ -78,10 +65,4 @@ An architecture overview describes how version 1 is structured. Stack choices th
 | 2026-10-13 | agent | User asked about an ALB, a direct Lambda call, and live updates. Wrote decision 0007 as PROPOSED. Waiting for acceptance. |
 | 2026-10-13 | agent | User asked about SNS and SQS. Recorded them as an option in decision 0007. The proposal stays PROPOSED. |
 | 2026-10-13 | agent | User accepted the live table on the serverless site. Decision 0007 is ACCEPTED. Overview updated. Acceptance criteria met. |
-
-## Definition of done
-
-- Every acceptance criterion is met.
-- Status is `DONE` in this file and in `docs/tasks/backlog.md`.
-- Assumptions, open questions, and risks touched by this task are updated in their registers.
-- No code was written.
+| 2026-10-13 | agent | Decision 0008 superseded the WebSocket half of decision 0007. The overview now shows IoT Core. This task stays DONE. |

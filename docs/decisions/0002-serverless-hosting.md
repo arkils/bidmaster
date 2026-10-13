@@ -12,7 +12,7 @@ Version 1 is a website for a private group that plays when they want to. It is n
 
 ## Decision
 
-Version 1 is a serverless website. Work runs when a player makes a request, and the site is idle when nobody is playing. No process stays running between requests.
+Version 1 is a serverless website. Work runs when a player makes a request, and the site is idle when nobody is playing. Lambda runs for that request and then stops. No Lambda process stays running between requests. While a player has the room open, AWS IoT Core keeps that player's MQTT session, including the gaps between actions. When nobody is connected, nothing stays running. See [decision 0008](0008-iot-core-notifications.md).
 
 The hosting company is AWS, and CloudFront is the front door. See [decision 0003](0003-aws-cloudfront.md).
 
