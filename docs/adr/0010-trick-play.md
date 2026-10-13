@@ -4,7 +4,7 @@ Date: 2026-10-12
 
 ## Status
 
-Proposed
+Withdrawn. The rule is recorded in [docs/game/rules.md](../game/rules.md).
 
 ## Context
 

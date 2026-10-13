@@ -1,9 +1,11 @@
 ---
 name: architect-game
-description: Draws bidmaster architecture as Mermaid diagrams after functional rules and digital behavior are documented. Use when creating or updating docs/architecture. Does not create tasks or code.
+description: Historical method for drawing docs/architecture under the previous process. Do not use it to choose work. The active agent is root AGENTS.md. Use only when an active task file names this skill.
 ---
 
 # Architect the game
+
+**Do not execute this skill.** On 2026-10-13 the active process moved to root `AGENTS.md`. The sections below are the previous method, kept so links still resolve. They do not choose the next task.
 
 Draw diagrams only after both `docs/game/rules.md` and `docs/game/digital.md` exist and the user has accepted them. If either document is missing or still open, stop and use `.cursor/skills/document-game/SKILL.md`.
 

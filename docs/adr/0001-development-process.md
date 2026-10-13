@@ -6,6 +6,8 @@ Date: 2026-10-12
 
 Accepted
 
+A successor is proposed: [0001. Documentation-driven phases](../decisions/0001-documentation-driven-phases.md). Root `AGENTS.md` follows that successor because the user instructed it on 2026-10-13. This file stays Accepted until the user accepts the successor.
+
 ## Context
 
 Bidmaster is a digital copy of a card game. The rules are not written yet. Implementation before the rules, the digital behavior, and the architecture would freeze choices that have not been examined.

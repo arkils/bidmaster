@@ -1,9 +1,11 @@
 ---
 name: implement-task
-description: Writes bidmaster tasks from an accepted architecture, then implements exactly one task marked doing. Use when editing docs/tasks.md or implementing a task.
+description: Historical method for writing docs/tasks.md and implementing one task under the previous process. Do not use it to choose work. The active agent is root AGENTS.md. Use only when an active task file names this skill.
 ---
 
 # Tasks, then one task
+
+**Do not execute this skill.** On 2026-10-13 the active process moved to root `AGENTS.md`. The sections below are the previous method, kept so links still resolve. They do not choose the next task.
 
 Read `.cursor/skills/write-adr/SKILL.md` before recording any new decision.
 

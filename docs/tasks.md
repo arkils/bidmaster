@@ -1,5 +1,7 @@
 # Tasks
 
+Historical task list from the earlier process. The active backlog is [tasks/backlog.md](tasks/backlog.md). Do not start N1 from this page. Coding waits for Review GO, then Planning, then Build GO.
+
 Tasks are grouped. Exactly one task may be `doing`. New tasks start as `todo`.
 
 Discovery of the tabletop rules is done. The next group is Digital. Architecture and implementation tasks are not created until those gates in [ADR 0001](adr/0001-development-process.md) open. Digital tasks depend on [ADR 0002](adr/0002-discovery-tasks.md).
@@ -12,31 +14,31 @@ The next task is **N1**. Do not start N2 or later in the same change.
 - Status: done
 - Outcome: `docs/game/rules.md` records the players, the deal size, and the round sequence
 - Diagram: none
-- ADRs: [0003](adr/0003-match-structure.md), [0012](adr/0012-maximum-deal.md)
+- Rules: [docs/game/rules.md](game/rules.md)
 
 ### D2 — Discover the cards and the deck
 - Status: done
 - Outcome: `docs/game/rules.md` records the deck, private hands, and undealt cards
 - Diagram: none
-- ADRs: [0007](adr/0007-standard-deck.md), [0014](adr/0014-private-hands.md), [0015](adr/0015-undealt-cards.md)
+- Rules: [docs/game/rules.md](game/rules.md)
 
 ### D3 — Discover turns and legal actions
 - Status: done
 - Outcome: `docs/game/rules.md` records bidding, trump, and trick play
 - Diagram: none
-- ADRs: [0004](adr/0004-bidding.md), [0005](adr/0005-trump-selection.md), [0008](adr/0008-bid-range.md), [0009](adr/0009-clockwise-order.md), [0010](adr/0010-trick-play.md), [0011](adr/0011-round-starter.md)
+- Rules: [docs/game/rules.md](game/rules.md)
 
 ### D4 — Discover winning and scoring
 - Status: done
 - Outcome: `docs/game/rules.md` records scoring and the tie break
 - Diagram: none
-- ADRs: [0006](adr/0006-scoring.md), [0013](adr/0013-tie-break.md)
+- Rules: [docs/game/rules.md](game/rules.md)
 
 ## Digital
 
-Write `docs/game/digital.md`. Record what the user describes. Do not invent behavior, draw architecture, or write code.
+Historical notes. The active requirements are `docs/product/requirements.md`. Do not start N1 from this section, and do not treat the bullets below as confirmed.
 
-These points were stated earlier and still need to be confirmed in that document:
+These points were stated earlier. DISC-002 classified them:
 
 - One player creates a room and others join.
 - The program rejects illegal and out-of-turn actions and explains an illegal last bid.

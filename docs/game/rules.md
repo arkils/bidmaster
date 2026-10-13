@@ -1,12 +1,10 @@
 # BidMaster functional rules
 
-Status: reviewed. ADRs 0003–0015 are proposed. Digital behavior is the next pass.
+Status: reviewed. Digital behavior is the next pass.
 
 This is the tabletop game. Rooms, stored history, and clients are outside this document.
 
 A match is a sequence of rounds. A round is a deal, a bid from each player, a trump suit, then tricks until the dealt cards are gone. The match winner is the highest rank after the cumulative score and the successful-bid tie break.
-
-Decisions recorded so far: [ADR 0003](../adr/0003-match-structure.md), [ADR 0004](../adr/0004-bidding.md), [ADR 0005](../adr/0005-trump-selection.md), [ADR 0006](../adr/0006-scoring.md), [ADR 0007](../adr/0007-standard-deck.md), [ADR 0008](../adr/0008-bid-range.md), [ADR 0009](../adr/0009-clockwise-order.md), [ADR 0010](../adr/0010-trick-play.md), [ADR 0011](../adr/0011-round-starter.md), [ADR 0012](../adr/0012-maximum-deal.md), [ADR 0013](../adr/0013-tie-break.md), [ADR 0014](../adr/0014-private-hands.md), [ADR 0015](../adr/0015-undealt-cards.md). Each is proposed until accepted.
 
 ## Players and setup
 

@@ -1,15 +1,10 @@
 ---
-description: Bidmaster gated development process. Document functional rules, then digital behavior, then architecture, then tasks, then one task at a time. Record every decision as an ADR.
+description: Follow the phase agent in root AGENTS.md. docs/ is the source of truth. Code only when that agent allows it.
 alwaysApply: true
 ---
 
 # Development process
 
-Read `AGENTS.md` and follow its current state. The next task is N1 in `docs/tasks.md`. Before acting, read the skill for the current stage:
+Follow root `AGENTS.md`. The source of truth is `docs/`. At session start, read `docs/00-discovery-status.md`.
 
-- Rules or digital behavior: `.cursor/skills/document-game/SKILL.md`
-- Architecture: `.cursor/skills/architect-game/SKILL.md`
-- Tasks or implementation: `.cursor/skills/implement-task/SKILL.md`
-- Any decision: `.cursor/skills/write-adr/SKILL.md`
-
-Do not implement, draw architecture, or write tasks until the earlier gates in `docs/process.md` are accepted. Do not treat a choice as decided until `docs/adr/README.md` lists its ADR.
+Do not grant Review GO or Build GO. Do not write code unless `AGENTS.md` says the current phase allows it. Answer project questions from `docs/` using `.cursor/skills/ask-project/SKILL.md`. That skill does not replace `AGENTS.md`.
