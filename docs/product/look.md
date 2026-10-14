@@ -16,7 +16,7 @@ Colors, type, and motion durations live in `web/src/tokens.css`. That file is th
 - A filled button is antique gold, `#C89A45`, with deep emerald text. An outline button is warm white with a beige border, `#DDD3BF`.
 - The scoreboard header is deep emerald with warm white text. Its rows are warm ivory, separated by beige lines.
 - A bid number is pale amber, `#F6E3BF`, with dark gold text, `#B87516`. A tricks-won number is soft blue, `#DCE6FF`, with royal blue text, `#244FC5`.
-- The felt is an oval, lighter toward the center and deep emerald at the rim, with a cloth grain across it. The gold rim is a raised rail: a bright edge, antique gold, a darker edge, and a shadow under the oval.
+- The felt is a stadium: straight sides and semicircular ends, lighter toward the center and deep emerald at the rim, with a cloth grain across it. On a wide screen the long axis is horizontal, so the round ends are on the left and right. On a phone the long axis is vertical, so the round ends are on the top and bottom. The gold rim is a raised rail: a bright edge, antique gold, a darker edge, and a shadow under the stadium.
 - The title is BidMaster in deep emerald, with a small gold crown just above the word, clear of the letters, and short gold lines.
 - The browser tab shows a playing card: warm white, an antique-gold edge, and an emerald club. The file is `web/public/favicon.png`.
 
@@ -30,9 +30,9 @@ The name dialog, buttons, fields, the bids-first select, and the scoreboard tabl
 
 A face-up card has a large rank in the left corner and one large suit mark in the center, with a thin border and a shadow. Jack, queen, king, and ace use that same face. When the card is playable, the rank stays in that left corner.
 
-The caller sees only their own cards, in a row below the table. Cards in that row may overlap so the row fits. The caller's own seat is a larger chip inside the felt, along the bottom edge. It is highlighted when it is that player's turn. It does not cover the trump mark, the trick, or another seat.
+The caller sees only their own cards, in a row below the table. Cards in that row may overlap so the row fits. That row keeps the height of one card after the last card is played, so Copy link, Leave room, and Dashboard stay where they are. The caller's own seat is a larger chip inside the felt, close to the gold rim along the bottom. It is highlighted when it is that player's turn. It does not cover the trump mark, the trick, or another seat.
 
-Other seats sit around the table, clockwise from the caller's left. A small table spreads those seats around the oval, far from the caller and from each other. A full table uses the same rim and still fits. Those chips do not cover the trump mark, the trick, or each other.
+Other seats sit around the table, clockwise from the caller's left, close to the rim. A small table spreads those seats around the stadium, far from the caller and from each other. A full table uses the same rim and still fits. Those chips do not cover the trump mark, the trick, or each other.
 
 A seat chip shows the name. It does not show how many cards are left. Once a round has started, it also shows two numbers: the bid once stored, and the tricks won so far. A bid that is not stored yet is a dash. Tricks won start at 0. The bid number is gold. The tricks-won number is blue. The words "bid" and "won" are not written on the chip.
 
@@ -56,6 +56,7 @@ The seat whose turn it is, for a bid, the trump choice, or a card, is highlighte
 
 Motion is snappy.
 
+- A chosen bid plays one short sound from `bid.mp3` on every table. A bid already stored when the table opens does not play. The next round clearing those bids does not play.
 - A played card slides into the trick and plays one short card sound from `card.mp3`.
 - When the last card of a trick is played, the cards stay in the center and the winning card is highlighted. After 2 seconds, every card in the trick moves to the winner's seat chip. One sound plays for each of those cards, back to back.
 - A new hand deals in with a short slide.

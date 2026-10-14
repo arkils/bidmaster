@@ -5,7 +5,7 @@
 | Phase | Development |
 | Phase started | 2026-10-14 |
 | Agent | Development (`AGENTS.md`) |
-| Code | Allowed inside the active `IMPL-*` task |
+| Code | Allowed only inside the one task that is `IN_PROGRESS` |
 | Active task | None. Version 2 preps are in [backlog.md](tasks/backlog.md). |
 | Documentation gate | PASS on 2026-10-14. See [01-development-gate.md](01-development-gate.md). |
 | Review GO | Recorded by the user on 2026-10-14 |
@@ -33,6 +33,10 @@ Delivery is in `docs/architecture/delivery.md`: AWS CDK in TypeScript from a lap
 
 [V2-003](tasks/v2/V2-003-plain-text.md) through [V2-007](tasks/v2/V2-007-trick-pause.md) are done. Plain sentences use the muted centered line. The crown sits just above BidMaster, clear of the letters. The felt is lighter in the center, grained, and raised on a gold rail. The tab icon is `web/public/favicon.png`. After the last card of a trick, the winning card stays highlighted for 2 seconds, and only then do the cards move to the winner. [V2-009](tasks/v2/V2-009-wrong-room-id.md) is done. A missing room id stays on the home page, with the join field open and the message “there is no room with that id”.
 
+[V2-011](tasks/v2/V2-011-seats-and-hand-gap.md) is done. Other seats sit close to the rim. The caller's chip sits just inside the gold rail. The hand row keeps its height after the last card, so the controls under the table stay put. The chosen trump mark stays in the center.
+
+[V2-010](tasks/v2/V2-010-bid-sound.md) is done. A chosen bid plays `bid.mp3` once. A bid already stored when the table opens does not play. [V2-012](tasks/v2/V2-012-stadium-table.md) is done. The felt is a stadium, horizontal on a wide screen and vertical on a phone.
+
 ## Next step
 
-No version 2 prep is waiting. The user chooses the next change. New work is a `V2-*` task under Version 2 preps in [backlog.md](tasks/backlog.md).
+No version 2 prep is waiting. The user chooses the next change. New work is a `V2-*` task under Version 2 preps in [backlog.md](tasks/backlog.md). Do not change code until that task is `IN_PROGRESS`.

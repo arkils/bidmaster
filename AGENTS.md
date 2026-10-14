@@ -33,12 +33,13 @@ Do not expand a task past its acceptance criteria. If the task conflicts with th
 9. Do not expand agreed scope without the user’s approval.
 10. Do not change architecture inside a coding task. If a task conflicts with docs, stop and escalate.
 11. Ask one question at a time when the active task is blocked on a fact the docs do not settle.
-12. When the user reports a bug or change request: log it and author the `IMPL-*.md` in that pass. Implement it in a later pass.
+12. When the user reports a bug or change request: log it and author the task file in that pass. Do not change code in that pass. Implement it only in a later pass, and only while that task is `IN_PROGRESS`.
 13. Do not reopen a finished review. Reviews find and document. A synthesis task dispositions findings. A later task applies the fixes.
+14. Do not change application code unless one task is `IN_PROGRESS` and the change is inside that task’s acceptance criteria. Author the task first.
 
 ## What this phase writes
 
-Code for the one `IMPL-*` task that is `IN_PROGRESS`, and the status updates that task requires.
+Code for the one task that is `IN_PROGRESS`, and the status updates that task requires. Do not change application code when no task is `IN_PROGRESS`.
 
 The task files for the first milestone are `docs/tasks/impl/IMPL-001-deploy.md` through `docs/tasks/impl/IMPL-007-look-back.md`. Do not start one whose blocker is not `DONE`.
 

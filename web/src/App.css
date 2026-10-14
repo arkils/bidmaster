@@ -4,8 +4,8 @@
 
 .felt {
   position: relative;
-  min-height: 34rem;
-  border-radius: 50%;
+  min-height: 22rem;
+  border-radius: 9999px;
   background-color: #021f16;
   background-image:
     radial-gradient(ellipse at 50% 46%, rgb(255 248 230 / 0.22), transparent 46%),
@@ -186,9 +186,11 @@
 .hand {
   width: 100%;
   max-width: 100%;
+  min-height: calc(5rem + 0.85rem + 0.35rem);
   justify-content: safe center;
   overflow-x: auto;
   padding: 0.85rem 0.35rem 0.35rem;
+  box-sizing: border-box;
 }
 
 .hand > * {
@@ -222,7 +224,7 @@
 .seat-chip.own {
   left: 50%;
   top: auto;
-  bottom: 1.35rem;
+  bottom: 1.05rem;
   width: auto;
   transform: translateX(-50%);
 }

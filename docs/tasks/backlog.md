@@ -74,3 +74,6 @@ Work after version 1 goes in this table. One task is `IN_PROGRESS` at a time. Ta
 | [V2-007](v2/V2-007-trick-pause.md) | DONE | Important | — | Highlight the winning card, then wait 2 seconds |
 | [V2-008](v2/V2-008-crown-lift.md) | DONE | Important | — | Lift the crown off the letters |
 | [V2-009](v2/V2-009-wrong-room-id.md) | DONE | Important | — | Stay on the page for a wrong room id |
+| [V2-010](v2/V2-010-bid-sound.md) | DONE | Important | — | Play a sound when a bid is chosen |
+| [V2-011](v2/V2-011-seats-and-hand-gap.md) | DONE | Important | — | Seats near the rim, and a steady hand row |
+| [V2-012](v2/V2-012-stadium-table.md) | DONE | Important | — | Change the oval felt to a stadium |

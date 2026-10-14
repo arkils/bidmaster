@@ -28,10 +28,18 @@ import { watchRoom } from "./live";
 import { readPlayer, savePlayer, type Player } from "./player";
 import "./App.css";
 
-function playCardSound() {
-  const sound = new Audio("/card.mp3");
+function playClip(src: string) {
+  const sound = new Audio(src);
   sound.volume = 0.55;
   void sound.play().catch(() => undefined);
+}
+
+function playCardSound() {
+  playClip("/card.mp3");
+}
+
+function playBidSound() {
+  playClip("/bid.mp3");
 }
 
 const LINE_COLORS = ["#0b6e4f", "#9a3412", "#1d4ed8", "#a16207", "#7e22ce", "#be123c", "#0f766e", "#b45309", "#334155", "#4d7c0f"];
@@ -65,8 +73,8 @@ function seatSpot(index: number, total: number): { left: string; top: string } {
   const count = total + 1;
   const angle = Math.PI / 2 + ((index + 1) * 2 * Math.PI) / count;
   return {
-    left: `${50 + 30 * Math.cos(angle)}%`,
-    top: `${50 + 34 * Math.sin(angle)}%`,
+    left: `${50 + 40 * Math.cos(angle)}%`,
+    top: `${50 + 40 * Math.sin(angle)}%`,
   };
 }
 
@@ -182,6 +190,7 @@ function Table({
   const [gather, setGather] = useState(false);
   const trickCount = useRef(tricks.length);
   const seenTrick = useRef(round?.trick.length ?? 0);
+  const seenBids = useRef(round?.bids.length ?? 0);
   const handKey = (room.cards ?? []).map((card) => `${card.suit}-${card.rank}`).join("|");
   const [dealing, setDealing] = useState(false);
   const seenHand = useRef("");
@@ -201,6 +210,15 @@ function Table({
     }
     seenTrick.current = length;
   }, [round?.trick, tricks.length]);
+
+  useEffect(() => {
+    const length = round?.bids.length ?? 0;
+    const added = length - seenBids.current;
+    seenBids.current = length;
+    for (let index = 0; index < added; index += 1) {
+      playBidSound();
+    }
+  }, [round?.bids]);
 
   useEffect(() => {
     if (!taken) {
@@ -369,7 +387,7 @@ function Table({
               })}
             </div>
           ) : null}
-          {hand.length ? (
+          {round ? (
             <div className="hand">
               {hand.map((card, index) => {
                 const allowed = cardAllowed(card, hand, liveTrick);
