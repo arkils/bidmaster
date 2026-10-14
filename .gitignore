@@ -1,0 +1,8 @@
+node_modules/
+functions/api/unique_names_generator/
+functions/api/unique_names_generator-*.dist-info/
+dist/
+cdk.out/
+.DS_Store
+web/.env.local
+*.tsbuildinfo

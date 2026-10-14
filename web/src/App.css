@@ -1,0 +1,125 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+main {
+  box-sizing: border-box;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  font-size: 1rem;
+}
+
+button {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+}
+
+dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  padding: 1.25rem;
+  width: min(24rem, calc(100vw - 2rem));
+}
+
+dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+input {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.6rem;
+}
+
+ol {
+  padding-left: 1.25rem;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.graph {
+  width: 100%;
+  height: auto;
+}
+
+.seats,
+.legend,
+.cards {
+  padding: 0;
+  list-style: none;
+}
+
+.legend,
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.legend span {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.35rem;
+}
+
+.cards li {
+  border: 1px solid #ccc;
+  border-radius: 0.35rem;
+  padding: 0.4rem 0.6rem;
+}
+
+select {
+  font: inherit;
+  font-size: 1rem;
+  min-height: 2.75rem;
+}
+
+@media (max-width: 40rem) {
+  .actions,
+  .actions button,
+  form,
+  input,
+  button {
+    width: 100%;
+  }
+
+  .cards button {
+    width: auto;
+  }
+}

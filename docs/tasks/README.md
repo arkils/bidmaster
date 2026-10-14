@@ -20,7 +20,7 @@ One task is `IN_PROGRESS` at a time.
 | Discovery | `DISC-` | `docs/tasks/discovery/` | Done |
 | Review | `REV-` | `docs/tasks/review/` | Done |
 | Planning | `PREP-` | `docs/tasks/prep/` | Now. Authors `IMPL-*.md` for one agreed milestone slice. No code |
-| Implementation | `IMPL-` | `docs/tasks/impl/` | After Build GO. Code to that file’s acceptance criteria |
+| Implementation | `IMPL-` | `docs/tasks/impl/` | Now. Code to that file’s acceptance criteria |
 
 Planning may add `PREP-*` files. It writes `IMPL-*.md` files only after the user agrees that slice. Those files stay unstarted until **Build GO**.
 

@@ -1,6 +1,6 @@
 # Development agent
 
-Draft for the phase that starts when the user records **Build GO**. Not active until it is copied to root `AGENTS.md`. Do not copy it to the root in Implementation Planning.
+Promoted to root `AGENTS.md` on 2026-10-14, when the user recorded **Build GO**. The root file is the active copy. Do not edit this draft except to fix broken links.
 
 Source of truth is `docs/`. Trust `docs/` and the active task file over chat memory.
 

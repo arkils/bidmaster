@@ -1,0 +1,16 @@
+{
+  "name": "bidmaster-infra",
+  "private": true,
+  "scripts": {
+    "build:web": "npm run build --prefix ../web",
+    "deploy": "python3 -m pip install -r ../functions/api/requirements.txt -t ../functions/api && npm run build:web && cdk deploy --require-approval never"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "aws-cdk": "^2.170.0",
+    "aws-cdk-lib": "^2.170.0",
+    "constructs": "^10.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

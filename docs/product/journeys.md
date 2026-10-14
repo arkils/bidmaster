@@ -73,7 +73,7 @@ Seating order is the order in which players joined the room, earliest first. The
 ## Dashboard
 
 - Person: every player in the room.
-- Start: the match has started. The dashboard is on screen from that moment.
+- Start: the match has started. The dashboard is on screen from that moment, at `/dashboard/{roomId}`, for example `/dashboard/funny-monkey`. The room page stays at `/{roomId}`.
 - What it shows:
   1. Each player's cumulative score for this match. Every score starts at 0 and updates when a round is scored.
   2. A table that ranks the players and shows each cumulative score. Rank follows `docs/game/rules.md`: a higher cumulative score ranks first. When scores are equal, more successful bids rank higher. When the score and the number of successful bids are both equal, those players share the rank. Players who share the highest rank share the win.

@@ -6,11 +6,11 @@
 | **Track** | Implementation |
 | **Phase** | Development |
 | **Component** | match |
-| **Status** | TODO |
+| **Status** | DONE |
 | **Priority** | Blocking |
 | **Blocked by** | IMPL-004 |
 | **Blocks** | IMPL-006 |
-| **Completed** | — |
+| **Completed** | 2026-10-14 |
 
 ## Summary
 
@@ -18,11 +18,11 @@ Players bid in turn for the current round, the rules reject an illegal bid, and 
 
 ## Read first
 
-- [ ] [product/journeys.md](../../product/journeys.md)
-- [ ] [architecture/contracts.md](../../architecture/contracts.md)
-- [ ] [architecture/data-model.md](../../architecture/data-model.md)
-- [ ] [game/rules.md](../../game/rules.md)
-- [ ] [impl/IMPL-004-start.md](IMPL-004-start.md)
+- [x] [product/journeys.md](../../product/journeys.md)
+- [x] [architecture/contracts.md](../../architecture/contracts.md)
+- [x] [architecture/data-model.md](../../architecture/data-model.md)
+- [x] [game/rules.md](../../game/rules.md)
+- [x] [impl/IMPL-004-start.md](IMPL-004-start.md)
 
 Read every item in this list before writing.
 
@@ -34,16 +34,16 @@ Read every item in this list before writing.
 
 ## Acceptance criteria
 
-- [ ] Only the seated player whose turn it is can submit one whole-number bid from 0 through the cards dealt this round. A second bid, a bid out of turn, or a bid outside that range is not applied, and version 1 adds no further sentence for those cases
-- [ ] The last bid of the round is rejected when it would make the sum of bids equal the number of tricks in the round. The surfaced sentence is that the bid would make the total equal the tricks in the round
-- [ ] A stored bid is kept on that seat and published on the room topic, including the bid number
-- [ ] When every seat has bid, the seat that selects trump is the first seat in that round's bidding order to bid the highest number. When every bid is 0, the seat that bid first that round selects trump
-- [ ] That seat's player chooses one of clubs, diamonds, hearts, or spades. The suit stays fixed for the round. Any other caller or suit is not applied, and version 1 adds no further sentence
-- [ ] The trump suit is published on the room topic. The seat that bid first this round leads the first trick
-- [ ] Load includes the bids already stored and the trump suit once chosen. It does not include other players' cards
-- [ ] A missed notice is repaired by loading the room
-- [ ] The page works in a computer browser and in a phone browser
-- [ ] Status updated in [backlog.md](../backlog.md)
+- [x] Only the seated player whose turn it is can submit one whole-number bid from 0 through the cards dealt this round. A second bid, a bid out of turn, or a bid outside that range is not applied, and version 1 adds no further sentence for those cases
+- [x] The last bid of the round is rejected when it would make the sum of bids equal the number of tricks in the round. The surfaced sentence is that the bid would make the total equal the tricks in the round
+- [x] A stored bid is kept on that seat and published on the room topic, including the bid number
+- [x] When every seat has bid, the seat that selects trump is the first seat in that round's bidding order to bid the highest number. When every bid is 0, the seat that bid first that round selects trump
+- [x] That seat's player chooses one of clubs, diamonds, hearts, or spades. The suit stays fixed for the round. Any other caller or suit is not applied, and version 1 adds no further sentence
+- [x] The trump suit is published on the room topic. The seat that bid first this round leads the first trick
+- [x] Load includes the bids already stored and the trump suit once chosen. It does not include other players' cards
+- [x] A missed notice is repaired by loading the room
+- [x] The page works in a computer browser and in a phone browser
+- [x] Status updated in [backlog.md](../backlog.md)
 
 ## Definition of done
 
@@ -54,3 +54,4 @@ A started round can collect every bid, name trump, and show both to the room. Ca
 | Date | Author | Note |
 | --- | --- | --- |
 | 2026-10-14 | agent | Authored by PREP-002. Not started. Build GO is not recorded. |
+| 2026-10-14 | agent | Bids and trump are on the live site. Playing a card stays IMPL-006. |

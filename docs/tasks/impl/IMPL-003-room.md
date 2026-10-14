@@ -6,11 +6,11 @@
 | **Track** | Implementation |
 | **Phase** | Development |
 | **Component** | room |
-| **Status** | TODO |
+| **Status** | DONE |
 | **Priority** | Blocking |
 | **Blocked by** | IMPL-002 |
 | **Blocks** | IMPL-004 |
-| **Completed** | — |
+| **Completed** | 2026-10-14 |
 
 ## Summary
 
@@ -38,22 +38,22 @@ Read every item in this list before writing.
 
 ## Acceptance criteria
 
-- [ ] Create room returns a new room id of two ordinary words joined by a hyphen, in the style of `funny-monkey`, and a URL whose last part is that id
-- [ ] The host is seat 1. The match has not started. The id does not reuse an id that already belongs to a room record
-- [ ] A friend can join by opening that URL, and a player can join by typing the room id. The name popup comes first when that browser has no name
-- [ ] Join returns the seated players in join order, earliest first. Each player is a seat number and a name. Two players may share a name. Responses do not include other players' ids
-- [ ] A join that would seat an 11th player is refused with the message “room is full”
-- [ ] A player id that is already seated, before the start, keeps that seat and updates the seat's name from the cookie
-- [ ] An unknown room id is refused
-- [ ] Before the start, the host can leave. The player who joined next becomes the host and seat 1. The remaining players stay in join order and are numbered again from 1
-- [ ] When that host was the only player, the room has no seated player and the room id stays reserved
-- [ ] A leave by a player who is not the host is not applied
-- [ ] Load before the start returns the room id and the joined players in join order, each as a seat number and a name
-- [ ] A seated player can subscribe to the room topic and to that player id's topic. A player id that is not seated is refused. Knowing the room id is not enough
-- [ ] A successful join or leave publishes a room notice with the seats in order. The leave notice shows the new host as seat 1 when someone remains
-- [ ] A missed notice is repaired by loading the room
-- [ ] The page works in a computer browser and in a phone browser
-- [ ] Status updated in [backlog.md](../backlog.md)
+- [x] Create room returns a new room id of two ordinary words joined by a hyphen, in the style of `funny-monkey`, and a URL whose last part is that id
+- [x] The host is seat 1. The match has not started. The id does not reuse an id that already belongs to a room record
+- [x] A friend can join by opening that URL, and a player can join by typing the room id. The name popup comes first when that browser has no name
+- [x] Join returns the seated players in join order, earliest first. Each player is a seat number and a name. Two players may share a name. Responses do not include other players' ids
+- [x] A join that would seat an 11th player is refused with the message “room is full”
+- [x] A player id that is already seated, before the start, keeps that seat and updates the seat's name from the cookie
+- [x] An unknown room id is refused
+- [x] Before the start, the host can leave. The player who joined next becomes the host and seat 1. The remaining players stay in join order and are numbered again from 1
+- [x] When that host was the only player, the room has no seated player and the room id stays reserved
+- [x] A leave by a player who is not the host is not applied
+- [x] Load before the start returns the room id and the joined players in join order, each as a seat number and a name
+- [x] A seated player can subscribe to the room topic and to that player id's topic. A player id that is not seated is refused. Knowing the room id is not enough
+- [x] A successful join or leave publishes a room notice with the seats in order. The leave notice shows the new host as seat 1 when someone remains
+- [x] A missed notice is repaired by loading the room
+- [x] The page works in a computer browser and in a phone browser
+- [x] Status updated in [backlog.md](../backlog.md)
 
 ## Definition of done
 
@@ -64,3 +64,4 @@ Several browsers can gather in one unstarted room on the deploy from IMPL-001, s
 | Date | Author | Note |
 | --- | --- | --- |
 | 2026-10-14 | agent | Authored by PREP-002. Not started. Build GO is not recorded. |
+| 2026-10-14 | agent | Done on https://dyqrtt5df9uyr.cloudfront.net. Room topic `bidmaster/room/{roomId}`. Player topic `bidmaster/room/{roomId}/player/{playerId}`. The browser passes `roomId#playerId` as `x-amz-customauthorizer-token`. IoT principal ids are alphanumeric, so the authorizer strips other characters from the player id. Join time is stored as integer milliseconds. |

@@ -28,7 +28,7 @@ Every question in `docs/open-questions.md` through OQ-25 is answered. [OQ-25](op
 
 Accepted decisions do not conflict. Decision 0007 keeps the HTTP API. Decision 0008 replaces that decision’s WebSocket push with AWS IoT Core, and both records say so. No container starts when a match begins. Decision 0001 stays PROPOSED, so it is not treated as decided. [R-5](risks.md) records that its phase table and root `AGENTS.md` disagree on when Review GO starts the review.
 
-The planning agent is root `AGENTS.md`, promoted on 2026-10-14, when the user recorded that Implementation Planning may start. The review agent is archived at `docs/agent/agent-pre-development-review.md`. Its draft remains at `docs/agent/AGENTS-pre-development-review.md`. The planning draft remains at `docs/agent/AGENTS-implementation-planning.md`. **Build GO** stays unchecked.
+The development agent is root `AGENTS.md`, promoted on 2026-10-14, when the user recorded **Build GO**. The planning agent is archived at `docs/agent/agent-implementation-planning.md`. Its draft remains at `docs/agent/AGENTS-implementation-planning.md`. The development draft remains at `docs/agent/AGENTS-development.md`.
 
 ## Review GO
 
@@ -38,6 +38,6 @@ The user recorded **Review GO** on 2026-10-14. An agent does not grant this.
 
 ## Build GO
 
-The user records this after Implementation Planning has written the first milestone `IMPL-*.md` files. An agent does not check it.
+The user recorded **Build GO** on 2026-10-14, after IMPL-001 through IMPL-007 existed. An agent does not grant this.
 
-- [ ] User has recorded **Build GO**
+- [x] User has recorded **Build GO**
