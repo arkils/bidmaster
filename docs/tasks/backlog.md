@@ -2,7 +2,7 @@
 
 One task is `IN_PROGRESS` at a time. If none is, take the lowest `TODO` whose blockers are `DONE`. Status here and in the task file stay the same.
 
-The user recorded **Review GO** on 2026-10-14. Coding still waits for Planning, then **Build GO**. Planning and Implementation rows are added in those phases.
+The user recorded **Review GO** on 2026-10-14, and recorded that Implementation Planning may start on 2026-10-14. Coding still waits for the first milestone `IMPL-*.md` files, then **Build GO**.
 
 | ID | Status | Priority | Blocked by | Summary |
 | --- | --- | --- | --- | --- |
@@ -23,5 +23,14 @@ The user recorded **Review GO** on 2026-10-14. Coding still waits for Planning, 
 | [REV-006](review/REV-006-delivery.md) | DONE | Blocking | REV-005 | Review delivery against the accepted decisions and the confirmed product |
 | [REV-007](review/REV-007-synthesis.md) | DONE | Blocking | REV-006 | Disposition the review findings |
 | [REV-008](review/REV-008-apply-findings.md) | DONE | Blocking | REV-007 | Apply the review findings |
+| [PREP-001](prep/PREP-001-milestone-slice.md) | DONE | Blocking | — | Propose the first milestone slice |
+| [PREP-002](prep/PREP-002-implementation-tasks.md) | DONE | Blocking | PREP-001 | Write the version-1 implementation tasks |
+| [IMPL-001](impl/IMPL-001-deploy.md) | TODO | Blocking | — | Deploy from the laptop |
+| [IMPL-002](impl/IMPL-002-name.md) | TODO | Blocking | IMPL-001 | Name and player id |
+| [IMPL-003](impl/IMPL-003-room.md) | TODO | Blocking | IMPL-002 | Room before the match starts |
+| [IMPL-004](impl/IMPL-004-start.md) | TODO | Blocking | IMPL-003 | Start the match |
+| [IMPL-005](impl/IMPL-005-bid-and-trump.md) | TODO | Blocking | IMPL-004 | Bid and trump |
+| [IMPL-006](impl/IMPL-006-play.md) | TODO | Blocking | IMPL-005 | Play the match |
+| [IMPL-007](impl/IMPL-007-look-back.md) | TODO | Blocking | IMPL-006 | Look back at a match |
 
 The order is a chain. Split or reorder a later task only after discovery shows the product needs a different cut. Do that in the task’s notes log and in this table before starting the reordered work.

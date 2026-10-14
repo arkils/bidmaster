@@ -28,6 +28,7 @@ An unknown stays here until the user answers it or explicitly defers it. A defer
 | OQ-22 | How does a developer run version 1 on the laptop before deploying to AWS? | ANSWERED | — |
 | OQ-23 | When a room is outside 3 to 10 players before the start, how can the host still reach a startable room? | ANSWERED | — |
 | OQ-24 | May a player outside India wait longer than 2 seconds on a bid or a card? | ANSWERED | — |
+| OQ-25 | What is the first milestone slice that Implementation Planning writes `IMPL-*.md` files for? | ANSWERED | — |
 
 ## OQ-1 resolution
 
@@ -132,6 +133,12 @@ Before the match starts, if the host leaves the room, the player who joined next
 ## OQ-24 resolution
 
 Answered 2026-10-14. The extra wait from outside India may pass 2 seconds, and that wait is acceptable. A delay of 1 or 2 seconds remains the ordinary feel. A cold start may still be slower. The record is `docs/product/non-functional.md`.
+
+## OQ-25 resolution
+
+Answered 2026-10-14. The user chose option C in [PREP-001](tasks/prep/PREP-001-milestone-slice.md). The first milestone slice is all of version 1. The implementation tasks cover the confirmed product: the name and player id in the cookie, creating and joining a room, leaving before the start, starting the match, the complete match in `docs/game/rules.md`, the live dashboard, looking back by room id, the list of matches for this browser's player id, and the laptop deploy those calls use.
+
+Android and iOS stay FUTURE. A public lobby, income, a trick-by-trick review, a separate rules engine, and a server that stays up for the match stay out. The waiting-room recommendation in that task was not accepted.
 
 Prior notes that are easy to mistake for answers:
 

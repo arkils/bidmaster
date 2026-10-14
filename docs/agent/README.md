@@ -19,7 +19,11 @@ Draft the next phase’s `AGENTS-*.md` in this folder before the gate. Promote t
 | `agent-{phase-slug}.md` | Frozen copy of a root `AGENTS.md` that has been replaced. |
 | `AGENTS-{phase-slug}.md` | Draft for the next phase. Not active until it is copied to the root. |
 
-[AGENTS-pre-development-review.md](AGENTS-pre-development-review.md) was copied to the root on 2026-10-14, when the user recorded Review GO. Root `AGENTS.md` is the active review agent. The next draft, for Implementation Planning, is written in this folder before that phase starts.
+[AGENTS-pre-development-review.md](AGENTS-pre-development-review.md) was copied to the root on 2026-10-14, when the user recorded Review GO. That root file is archived as [agent-pre-development-review.md](agent-pre-development-review.md).
+
+[AGENTS-implementation-planning.md](AGENTS-implementation-planning.md) was copied to the root on 2026-10-14, when the user recorded that Implementation Planning may start. Root `AGENTS.md` is the active planning agent.
+
+[AGENTS-development.md](AGENTS-development.md) is the draft for Development. It is not active. Copy it to the root only when the user records **Build GO**.
 
 ## Archives
 
@@ -27,3 +31,4 @@ Draft the next phase’s `AGENTS-*.md` in this folder before the gate. Promote t
 | --- | --- | --- |
 | [agent-prior-process.md](agent-prior-process.md) | Prior process (rules, then digital behavior) | 2026-10-13 |
 | [agent-discovery-architecture.md](agent-discovery-architecture.md) | Discovery & Architecture | 2026-10-14 |
+| [agent-pre-development-review.md](agent-pre-development-review.md) | Pre-Development Review | 2026-10-14 |

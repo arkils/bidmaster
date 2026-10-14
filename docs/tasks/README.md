@@ -17,12 +17,12 @@ One task is `IN_PROGRESS` at a time.
 
 | Track | Prefix | Folder | When |
 | --- | --- | --- | --- |
-| Discovery | `DISC-` | `docs/tasks/discovery/` | Now |
-| Review | `REV-` | `docs/tasks/review/` | After the documentation gate PASS |
-| Planning | `PREP-` | `docs/tasks/prep/` | After Review GO. Authors `IMPL-*.md` for one milestone slice. No code |
+| Discovery | `DISC-` | `docs/tasks/discovery/` | Done |
+| Review | `REV-` | `docs/tasks/review/` | Done |
+| Planning | `PREP-` | `docs/tasks/prep/` | Now. Authors `IMPL-*.md` for one agreed milestone slice. No code |
 | Implementation | `IMPL-` | `docs/tasks/impl/` | After Build GO. Code to that file’s acceptance criteria |
 
-Leave Review, Planning, and Implementation files for their phases. Do not create them early.
+Planning may add `PREP-*` files. It writes `IMPL-*.md` files only after the user agrees that slice. Those files stay unstarted until **Build GO**.
 
 ## Status
 
