@@ -43,7 +43,7 @@ export type RoundPoints = {
 
 export type MatchRound = {
   cardsDealt: number;
-  turn: number;
+  turn: number | null;
   leadSeat: number;
   bids: Bid[];
   tricks: WonTrick[];
@@ -67,6 +67,7 @@ export type Room = {
   round?: MatchRound;
   rounds?: RoundPoints[][];
   over?: boolean;
+  resultAt?: number;
 };
 
 export class ApiError extends Error {
@@ -117,6 +118,13 @@ export async function selectTrump(roomId: string, playerId: string, suit: string
   return call(`/api/rooms/${roomId}/trump`, {
     method: "POST",
     body: { playerId, suit },
+  });
+}
+
+export async function acceptResult(roomId: string, playerId: string): Promise<Room> {
+  return call(`/api/rooms/${roomId}/result`, {
+    method: "POST",
+    body: { playerId },
   });
 }
 

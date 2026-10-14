@@ -1,6 +1,6 @@
 import random
 
-from bid import bidding_seat, round_opener, seat_of
+from bid import bidding_seat, seat_of
 from deal import cards_dealt, ranking, round_deals, scores, sort_hand
 from rooms import public_room
 
@@ -28,9 +28,12 @@ def trick_winner(trick, trump):
     return max(trick, key=strength)["seat"]
 
 
-def play_card(item, caller_id, suit, rank, rng=None):
+RESULT_WAIT_MS = 5000
+
+
+def play_card(item, caller_id, suit, rank, rng=None, now=None):
     players = item.get("players") or []
-    if item.get("over") or not item.get("trump") or not players:
+    if item.get("over") or item.get("resultAt") is not None or not item.get("trump") or not players:
         return None
     if suit not in ("clubs", "diamonds", "hearts", "spades") or rank not in PLAY_RANKS:
         return None
@@ -68,10 +71,10 @@ def play_card(item, caller_id, suit, rank, rng=None):
         updated["turn"] = winner
         meta["leadSeat"] = winner
         return updated, meta
-    return score_round(updated, meta, rng or random.Random())
+    return score_round(updated, meta, now)
 
 
-def score_round(item, meta, rng):
+def score_round(item, meta, now=None):
     players = item["players"]
     count = len(players)
     won = [0 for _ in players]
@@ -82,9 +85,31 @@ def score_round(item, meta, rng):
     rounds = [list(entry) for entry in item.get("rounds") or []]
     rounds.append(result)
     item["rounds"] = rounds
-    deals = round_deals(count)
+    item["resultAt"] = int(now if now is not None else 0)
+    item.pop("turn", None)
     meta["scored"] = True
     meta["hands"] = None
+    return item, meta
+
+
+def accept_result(item, caller_id, now, rng=None):
+    if item.get("over") or item.get("resultAt") is None:
+        return None
+    seat = seat_of(item, caller_id)
+    if seat is None:
+        return None
+    if seat != 1 and int(now) < int(item["resultAt"]) + RESULT_WAIT_MS:
+        return None
+    return continue_match(dict(item), rng or random.Random())
+
+
+def continue_match(item, rng):
+    players = item["players"]
+    count = len(players)
+    deals = round_deals(count)
+    rounds = item.get("rounds") or []
+    item.pop("resultAt", None)
+    meta = {"continued": True, "hands": None}
     for key in ("bids", "trump", "trumpSeat", "trick", "tricks"):
         item.pop(key, None)
     if len(rounds) >= len(deals):
@@ -147,6 +172,18 @@ def scored_notice(item, meta):
         ],
         "ranking": ranking(item),
         "gains": [{"seat": int(entry["seat"]), "name": names[int(entry["seat"])], "points": int(entry["points"])} for entry in result],
+        "over": bool(item.get("over")),
+    }
+    if meta.get("openerSeat") is not None:
+        notice["openerSeat"] = int(meta["openerSeat"])
+    return notice
+
+
+def continued_notice(item, meta):
+    notice = {
+        "kind": "continued",
+        "roomId": item["roomId"],
+        "seats": public_room(item, None)["seats"],
         "over": bool(item.get("over")),
     }
     if meta.get("openerSeat") is not None:

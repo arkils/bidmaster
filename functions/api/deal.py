@@ -113,6 +113,8 @@ def match_view(item, caller_id, include_cards=True):
     body["ranking"] = ranking(item)
     body["rounds"] = rounds_public(item)
     body["over"] = bool(item.get("over"))
+    if item.get("resultAt") is not None:
+        body["resultAt"] = int(item["resultAt"])
     if not item.get("over"):
         from bid import round_public
 

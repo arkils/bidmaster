@@ -20,3 +20,4 @@ Earlier records remain in `docs/adr/`. Do not renumber them. New decisions start
 | [0008](0008-iot-core-notifications.md) | IoT Core notifications | ACCEPTED |
 | [0009](0009-player-id.md) | Player id beside the name | ACCEPTED |
 | [0010](0010-cdk-typescript-from-laptop.md) | CDK in TypeScript, deployed from a laptop | ACCEPTED |
+| [0011](0011-tailwind-shadcn.md) | Tailwind and shadcn for the shell | ACCEPTED |

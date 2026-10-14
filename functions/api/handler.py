@@ -9,7 +9,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 from bid import bid_notice, select_trump, submit_bid, trump_notice
-from play import card_notice, hand_notices, play_card, scored_notice
+from play import accept_result, card_notice, continued_notice, hand_notices, play_card, scored_notice
 from deal import hand_notice, match_view, start_match, started_notice
 from rooms import (
     create_item,
@@ -41,6 +41,8 @@ def handler(event, context):
         return create_room(body)
     if method == "POST" and path.endswith("/play"):
         return play_room(room_id, body)
+    if method == "POST" and path.endswith("/result"):
+        return result_room(room_id, body)
     if method == "POST" and path.endswith("/bid"):
         return bid_room(room_id, body)
     if method == "POST" and path.endswith("/trump"):
@@ -147,7 +149,7 @@ def play_room(room_id, body):
     if item is None:
         return respond(404, {"error": "there is no room with that id"})
     player_id = str(body.get("playerId") or "").strip()
-    played = play_card(item, player_id, body.get("suit"), body.get("rank"))
+    played = play_card(item, player_id, body.get("suit"), body.get("rank"), now=int(time.time() * 1000))
     if played is None:
         return respond(403, with_iot(present(item, player_id, include_cards=False)))
     updated, meta = played
@@ -157,6 +159,28 @@ def play_room(room_id, body):
     publish_payload(card_notice(updated, meta))
     if meta.get("scored"):
         publish_payload(scored_notice(updated, meta))
+    for owner, cards in hand_notices(updated, meta, player_id):
+        iot.publish(
+            topic=player_topic(updated["roomId"], owner),
+            qos=0,
+            payload=json.dumps({"kind": "hand", "roomId": updated["roomId"], "cards": cards}).encode(),
+        )
+    return respond(200, with_iot(present(updated, player_id, include_cards=False)))
+
+
+def result_room(room_id, body):
+    item = load_item(room_id)
+    if item is None:
+        return respond(404, {"error": "there is no room with that id"})
+    player_id = str(body.get("playerId") or "").strip()
+    accepted = accept_result(item, player_id, int(time.time() * 1000))
+    if accepted is None:
+        return respond(403, with_iot(present(item, player_id, include_cards=False)))
+    updated, meta = accepted
+    if not save_result(item, updated):
+        current = load_item(room_id)
+        return respond(403, with_iot(present(current, player_id, include_cards=False)))
+    publish_payload(continued_notice(updated, meta))
     for owner, cards in hand_notices(updated, meta, player_id):
         iot.publish(
             topic=player_topic(updated["roomId"], owner),
@@ -231,6 +255,20 @@ def save_if_turn(current, updated):
             ConditionExpression="#turn = :turn",
             ExpressionAttributeNames={"#turn": "turn"},
             ExpressionAttributeValues={":turn": int(current["turn"])},
+        )
+    except ClientError as error:
+        if error.response["Error"]["Code"] != "ConditionalCheckFailedException":
+            raise
+        return False
+    return True
+
+
+def save_result(current, updated):
+    try:
+        table.put_item(
+            Item=updated,
+            ConditionExpression="resultAt = :at",
+            ExpressionAttributeValues={":at": current["resultAt"]},
         )
     except ClientError as error:
         if error.response["Error"]["Code"] != "ConditionalCheckFailedException":

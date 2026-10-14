@@ -41,5 +41,20 @@ The user recorded **Review GO** on 2026-10-14, that Implementation Planning may 
 | [IMPL-014](impl/IMPL-014-own-seat.md) | DONE | Important | IMPL-013 | Own seat chip |
 | [IMPL-015](impl/IMPL-015-deal-cap.md) | DONE | Important | IMPL-006 | Deal at most 10 |
 | [IMPL-016](impl/IMPL-016-own-seat-on-felt.md) | DONE | Important | IMPL-014 | Own seat on the felt |
+| [IMPL-017](impl/IMPL-017-shadcn-table.md) | DONE | Important | IMPL-016 | Shell and table restyle |
+| [IMPL-018](impl/IMPL-018-table-comments.md) | DONE | Important | IMPL-017 | Table comments |
+| [IMPL-019](impl/IMPL-019-seat-scores.md) | DONE | Important | IMPL-018 | Seat bid and tricks |
+| [IMPL-020](impl/IMPL-020-center-and-room-name.md) | DONE | Important | IMPL-019 | Center, turn line, and room name |
+| [IMPL-021](impl/IMPL-021-seat-spread.md) | DONE | Important | IMPL-020 | Small table, page, and names |
+| [IMPL-022](impl/IMPL-022-shell-colors.md) | DONE | Important | IMPL-021 | Shell colors |
+| [IMPL-023](impl/IMPL-023-under-table-align.md) | DONE | Important | IMPL-022 | Align the controls under the table |
+| [IMPL-024](impl/IMPL-024-play-sound-and-turn.md) | DONE | Important | IMPL-023 | Play sound and turn mark |
+| [IMPL-025](impl/IMPL-025-emerald-gold.md) | DONE | Important | IMPL-022 | Royal emerald and gold |
+| [IMPL-026](impl/IMPL-026-last-bid.md) | DONE | Important | IMPL-025 | Disable the last bidder's forbidden number |
+| [IMPL-027](impl/IMPL-027-round-result.md) | DONE | Important | IMPL-026 | Pause for the round result |
+| [IMPL-028](impl/IMPL-028-trump-cards.md) | DONE | Important | IMPL-027 | Trump choice as four cards |
+| [IMPL-029](impl/IMPL-029-card-rank.md) | DONE | Important | IMPL-028 | Keep the rank in the left corner |
+| [IMPL-030](impl/IMPL-030-result-ok.md) | DONE | Important | IMPL-029 | Dismiss the round result |
+| [IMPL-031](impl/IMPL-031-card-mp3.md) | DONE | Important | IMPL-030 | Use the new card sound |
 
 The order is a chain. Split or reorder a later task only after discovery shows the product needs a different cut. Do that in the task’s notes log and in this table before starting the reordered work.

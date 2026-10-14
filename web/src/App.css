@@ -1,128 +1,17 @@
-body {
-  margin: 0;
-  background: var(--page);
-  color: var(--ink);
-  font-family: var(--font);
-  overflow-x: hidden;
-}
-
-main {
-  box-sizing: border-box;
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-button,
-input,
-select {
-  font: inherit;
-  font-size: 1rem;
-}
-
-button {
-  min-height: var(--control);
-  padding: 0.5rem 1rem;
-}
-
-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid #ccc;
-  padding: 1.25rem;
-  width: min(24rem, calc(100vw - 2rem));
-}
-
-dialog form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-input {
-  min-height: var(--control);
-  padding: 0.4rem 0.6rem;
-}
-
-ol {
-  padding-left: 1.25rem;
-}
-
-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: end;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 0.35rem 0.5rem;
-  border-bottom: 1px solid #ddd;
-}
-
-.graph {
-  width: 100%;
-  height: auto;
-}
-
-.seats,
-.legend,
-.cards {
-  padding: 0;
-  list-style: none;
-}
-
-.legend,
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.legend span {
-  display: inline-block;
-  width: 0.75rem;
-  height: 0.75rem;
-  margin-right: 0.35rem;
-}
-
-.cards li {
-  border: 1px solid #ccc;
-  border-radius: 0.35rem;
-  padding: 0.4rem 0.6rem;
-}
-
-select {
-  font: inherit;
-  font-size: 1rem;
-  min-height: var(--control);
-}
-
 .table-wrap {
   margin-top: 1rem;
 }
 
-.table {
+.felt {
   position: relative;
-  min-height: 32rem;
-  background: var(--felt);
-  border-radius: 1.5rem;
-  color: var(--card);
+  min-height: 34rem;
+  border-radius: 50%;
+  background-color: var(--color-felt);
+  background-image: radial-gradient(ellipse at 50% 42%, var(--color-felt-light) 0%, var(--color-felt) 62%, #043828 100%);
+  box-shadow:
+    inset 0 0 0 4px var(--color-gold),
+    inset 0 0 2.5rem rgb(0 0 0 / 0.28),
+    0 12px 28px rgb(41 39 31 / 0.16);
 }
 
 .seat-chip {
@@ -132,35 +21,86 @@ select {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.35rem 0.3rem;
-  background: var(--card);
-  color: var(--ink);
-  border-radius: 0.6rem;
-  font-size: 0.8rem;
+  gap: 0.1rem;
+  min-width: 4.75rem;
+  padding: 0.4rem 0.45rem 0.4rem;
+  background: var(--color-card);
+  color: var(--color-ink);
+  border-radius: 0.9rem;
   line-height: 1.15;
   text-align: center;
   transform: translate(-50%, -50%);
   overflow-wrap: anywhere;
+  box-shadow: 0 2px 8px rgb(41 39 31 / 0.16);
 }
 
-.seat-chip.turn,
-.your-seat .turn {
-  outline: 3px solid var(--turn);
-  outline-offset: 2px;
-  animation: turn-pulse var(--motion-pulse) ease-in-out 2;
+.seat-name {
+  font-size: 0.8rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.seat-scores {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.15rem;
+}
+
+.seat-score {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.seat-bid {
+  background: var(--color-bid-wash);
+  color: var(--color-bid);
+}
+
+.seat-won {
+  background: var(--color-won-wash);
+  color: var(--color-won);
+}
+
+.seat-chip.turn {
+  box-shadow:
+    0 0 0 5px var(--color-turn),
+    0 0 18px rgb(228 173 61 / 0.85);
+  animation: turn-pulse 1.1s ease-in-out infinite;
+}
+
+.turn-star {
+  position: absolute;
+  top: 0.05rem;
+  right: 0.2rem;
+  color: var(--color-turn);
+  font-size: 0.85rem;
+  line-height: 1;
+  text-shadow: 0 0 6px rgb(228 173 61 / 0.9);
+}
+
+.table-center.gather {
+  z-index: 5;
 }
 
 .table-center {
   position: absolute;
   z-index: 1;
   left: 50%;
-  top: 50%;
+  top: 46%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  width: min(16rem, 42%);
+  width: min(16rem, 46%);
   text-align: center;
   transform: translate(-50%, -50%);
 }
@@ -169,11 +109,13 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3.5rem;
-  min-height: 4.8rem;
+  width: 3.6rem;
+  min-height: 5rem;
   margin: 0;
-  background: var(--card);
-  border-radius: 0.45rem;
+  background: linear-gradient(180deg, #fff, var(--color-card));
+  border: 1px solid rgb(28 25 23 / 0.16);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.22);
 }
 
 .trump-mark {
@@ -181,25 +123,71 @@ select {
   line-height: 1;
 }
 
+.bid-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bid-chip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.28rem 0.2rem 0.55rem;
+  background: var(--color-card);
+  color: var(--color-ink);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgb(41 39 31 / 0.16);
+}
+
+.bid-chip-name {
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.bid-chip-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 0.4rem;
+  background: var(--color-bid-wash);
+  color: var(--color-bid);
+  font-size: 0.9rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
 .trick,
 .hand {
   display: flex;
-  gap: 0.45rem;
   justify-content: center;
 }
 
 .trick {
   max-width: 100%;
-  overflow-x: auto;
 }
 
 .hand {
   width: 100%;
-  min-width: 0;
   max-width: 100%;
+  justify-content: safe center;
   overflow-x: auto;
-  justify-content: flex-start;
-  padding-bottom: 0.35rem;
+  padding: 0.85rem 0.35rem 0.35rem;
+}
+
+.hand > * {
+  margin-left: -1.15rem;
+}
+
+.hand > :first-child {
+  margin-left: 0;
 }
 
 .your-seat {
@@ -208,28 +196,53 @@ select {
   align-items: center;
   width: 100%;
   max-width: 100%;
-  margin-top: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.phase {
+  margin: 0.85rem 0 0.35rem;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  background: var(--color-turn-wash);
+  color: var(--color-felt);
+  font-size: 1.15rem;
+  font-weight: 750;
+  text-align: center;
 }
 
 .seat-chip.own {
   left: 50%;
   top: auto;
-  bottom: 0.85rem;
-  width: 5.4rem;
+  bottom: 1.35rem;
+  width: auto;
   transform: translateX(-50%);
-}
-
-.bid-form {
-  margin-bottom: 0.75rem;
 }
 
 .card-button {
   flex: 0 0 auto;
   width: auto;
-  min-height: var(--control);
+  min-height: 2.75rem;
   padding: 0;
   border: 0;
   background: transparent;
+  text-align: left;
+}
+
+.trump-choices {
+  display: grid;
+  grid-template-columns: repeat(2, 3.6rem);
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.card.trump-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trump-card .card-suit {
+  margin-top: 0;
 }
 
 .card-button.playable {
@@ -243,31 +256,34 @@ select {
 .card {
   position: relative;
   display: block;
+  text-align: left;
   flex: 0 0 auto;
-  width: 3.5rem;
-  min-height: 4.8rem;
-  background: var(--card);
-  color: var(--suit-black);
-  border-radius: 0.45rem;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+  width: 3.6rem;
+  min-height: 5rem;
+  background: linear-gradient(180deg, #fff, var(--color-card));
+  color: var(--color-suit-black);
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgb(41 39 31 / 0.14);
 }
 
 .card-red {
-  color: var(--suit-red);
+  color: var(--color-suit-red);
 }
 
 .card-rank {
   display: block;
-  padding: 0.25rem 0.35rem 0;
+  padding: 0.3rem 0.35rem 0;
   font-size: 1.35rem;
-  font-weight: 700;
+  font-weight: 750;
   line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .card-suit {
   display: block;
-  margin-top: 0.55rem;
-  font-size: 1.9rem;
+  margin-top: 0.45rem;
+  font-size: 1.85rem;
   line-height: 1;
   text-align: center;
 }
@@ -278,19 +294,6 @@ select {
   height: 1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
-}
-
-.card-back {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  min-height: 2rem;
-  background: var(--felt);
-  color: var(--card);
-  border: 2px solid var(--ink);
-  border-radius: 0.2rem;
-  font-size: 0.75rem;
 }
 
 .card-in {
@@ -305,12 +308,61 @@ select {
   animation: card-deal var(--motion-deal) ease-out both;
 }
 
+.graph {
+  width: 100%;
+  height: auto;
+  margin-top: 1rem;
+}
+
+.brand {
+  position: relative;
+  margin: 0.35rem 0 0;
+  padding-top: 1.35rem;
+  color: var(--color-felt);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.brand::before,
+.brand::after {
+  content: "";
+  display: inline-block;
+  width: 2.25rem;
+  height: 1px;
+  margin: 0 0.7rem 0.28rem;
+  vertical-align: middle;
+  background: var(--color-gold);
+}
+
+.brand-crown {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1.45rem;
+  height: 1.1rem;
+  overflow: visible;
+  color: var(--color-gold);
+  transform: translateX(-50%);
+}
+
+.room-name {
+  margin: 0.2rem 0 0;
+  color: var(--color-muted);
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
 .under-table {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  align-items: center;
-  margin-top: 1rem;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: 1.25rem;
 }
 
 @keyframes card-in {
@@ -344,42 +396,58 @@ select {
 @keyframes turn-pulse {
   0%,
   100% {
-    outline-color: var(--turn);
+    box-shadow:
+      0 0 0 5px var(--color-turn),
+      0 0 14px rgb(228 173 61 / 0.55);
   }
   50% {
-    outline-width: 4px;
+    box-shadow:
+      0 0 0 7px var(--color-turn),
+      0 0 22px rgb(228 173 61 / 0.95);
   }
 }
 
 @media (max-width: 40rem) {
-  .table {
-    min-height: 28rem;
+  .brand::before,
+  .brand::after {
+    width: 1.15rem;
+  }
+
+  .felt {
+    min-height: 30rem;
   }
 
   .seat-chip {
-    font-size: 0.75rem;
+    min-width: 3.4rem;
+    padding: 0.2rem 0.22rem 0.18rem;
+  }
+
+  .seat-name {
+    font-size: 0.72rem;
+  }
+
+  .seat-score {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.72rem;
   }
 
   .bid-form,
-  .bid-form label,
+  .bid-form > *,
   .bid-form input,
-  .bid-form button {
-    width: 100%;
-  }
-
+  .bid-form button,
   .under-table,
+  .under-table > *,
   .under-table form,
-  .under-table input,
-  .under-table select,
-  .under-table button,
-  .actions,
-  .actions button {
+  .under-table form > *,
+  .under-table button {
     width: 100%;
   }
 
+  .bid-form button,
   .card-button,
-  .table .actions,
-  .table .actions button {
+  .felt .actions,
+  .felt .actions button {
     width: auto;
   }
 }

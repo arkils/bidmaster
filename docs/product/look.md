@@ -1,43 +1,61 @@
 # Look
 
-Status: agreed on 2026-10-14 in [IMPL-011](../tasks/impl/IMPL-011-card-table.md). The trump mark, the turn highlight, and which hand cards are raised were added in [IMPL-012](../tasks/impl/IMPL-012-table-play.md). The circle of names was added in [IMPL-013](../tasks/impl/IMPL-013-seat-circle.md). The caller's own seat chip was added in [IMPL-014](../tasks/impl/IMPL-014-own-seat.md) and placed on the felt in [IMPL-016](../tasks/impl/IMPL-016-own-seat-on-felt.md).
+Status: agreed on 2026-10-14 in [IMPL-011](../tasks/impl/IMPL-011-card-table.md). The trump mark, the turn highlight, and which hand cards are raised were added in [IMPL-012](../tasks/impl/IMPL-012-table-play.md). The circle of names was added in [IMPL-013](../tasks/impl/IMPL-013-seat-circle.md). The caller's own seat chip was added in [IMPL-014](../tasks/impl/IMPL-014-own-seat.md) and placed on the felt in [IMPL-016](../tasks/impl/IMPL-016-own-seat-on-felt.md). The shell and the oval felt were agreed in [IMPL-017](../tasks/impl/IMPL-017-shadcn-table.md). [Decision 0011](../decisions/0011-tailwind-shadcn.md) is accepted. The title, the bid choices, the seat arc, and the controls under the table were agreed in [IMPL-018](../tasks/impl/IMPL-018-table-comments.md). The bid and tricks on a seat chip were agreed in [IMPL-019](../tasks/impl/IMPL-019-seat-scores.md). The center bids, the turn line, the room id under the title, and the centered actions were agreed in [IMPL-020](../tasks/impl/IMPL-020-center-and-room-name.md). The spread of a small table, the light page, and the name-only seat lists were agreed in [IMPL-021](../tasks/impl/IMPL-021-seat-spread.md). The page, the buttons, and the scoreboard header were agreed in [IMPL-022](../tasks/impl/IMPL-022-shell-colors.md). The royal emerald and gold theme was agreed in [IMPL-025](../tasks/impl/IMPL-025-emerald-gold.md). The card sound, the won trick moving to the winner, and the stronger turn mark were agreed in [IMPL-024](../tasks/impl/IMPL-024-play-sound-and-turn.md).
 
-The room page is a card table. The home page, the name popup, and the dashboard share the stone page. The felt is only the table. The dashboard stays a scoreboard.
+The room page is a card table. The home page, the name popup, and the dashboard share the page. The felt is only the table. The dashboard stays a scoreboard.
 
-Colors, type, and motion durations live in `web/src/tokens.css`. Components use those variables. A later restyle edits this record, then the tokens.
+Colors, type, and motion durations live in `web/src/tokens.css`. That file is the Tailwind theme. Shell controls use those tokens. A later restyle edits this record, then the tokens.
 
 ## Color
 
-- The page is stone, neither very dark nor very bright.
-- The table is muted olive.
-- Cards are white.
-- Hearts and diamonds are red.
-- Clubs and spades are near-black.
-- Page text is a plain sans.
+- The page is warm ivory, `#F5F0E6`.
+- The table is deep emerald, `#064E36`, with a forest highlight, `#0B6042`, and a thin antique-gold trim, `#C89A45`.
+- Cards are warm white, `#FFFCF7`.
+- Hearts and diamonds are `#C52D22`. Clubs and spades are `#1E1D1A`.
+- Page text is charcoal, `#29271F`. Secondary text is muted green-gray, `#657467`.
+- A filled button is antique gold, `#C89A45`, with deep emerald text. An outline button is warm white with a beige border, `#DDD3BF`.
+- The scoreboard header is deep emerald with warm white text. Its rows are warm ivory, separated by beige lines.
+- A bid number is pale amber, `#F6E3BF`, with dark gold text, `#B87516`. A tricks-won number is soft blue, `#DCE6FF`, with royal blue text, `#244FC5`.
+- The felt is an oval with the gold trim and an inner shadow.
+- The title is BidMaster in deep emerald, with a small gold crown and short gold lines.
+
+## Shell
+
+The page title is BidMaster, centered. The caller's name is not repeated under that title. On a room page, the room id is centered directly under that title. The full address is not printed.
+
+The name dialog, buttons, fields, the bids-first select, and the scoreboard table share one set of controls. An empty match list says there are no matches yet. Each past match is one row: the date, the room id, and the seat names, in separate parts. The names have no seat numbers. The color key under the graph is each name with its color, and no seat number. The ranking table still has its Seat column. Copy link, Leave room, Dashboard, the Bids first select, and Start match share one baseline under the table. The Bids first label stays above the select. On a phone those controls stay full width and stacked, still centered. Create room, Join room, the bids-first row, and the Room button on the dashboard are centered. The Dashboard and Your matches headings are centered. On the scoreboard graph, the Points and Rounds labels sit outside the plot.
 
 ## Cards
 
-A face-up card has a large rank in the corner and one large suit mark in the center. Jack, queen, king, and ace use that same face.
+A face-up card has a large rank in the left corner and one large suit mark in the center, with a thin border and a shadow. Jack, queen, king, and ace use that same face. When the card is playable, the rank stays in that left corner.
 
-The caller sees only their own cards, in a row below the table. The caller's own seat is a chip inside the felt, along the bottom edge: the name only, the bid once stored, the tricks won, and a face-down count. It is highlighted when it is that player's turn. It does not cover the trump mark, the trick, or another seat.
+The caller sees only their own cards, in a row below the table. Cards in that row may overlap so the row fits. The caller's own seat is a larger chip inside the felt, along the bottom edge. It is highlighted when it is that player's turn. It does not cover the trump mark, the trick, or another seat.
 
-Other seats sit around the table, clockwise from the caller's left. Each shows the name only, a face-down count, the bid once it is stored, and the tricks won. Those chips do not cover the trump mark, the trick, or each other.
+Other seats sit around the table, clockwise from the caller's left. A small table spreads those seats around the oval, far from the caller and from each other. A full table uses the same rim and still fits. Those chips do not cover the trump mark, the trick, or each other.
+
+A seat chip shows the name. It does not show how many cards are left. Once a round has started, it also shows two numbers: the bid once stored, and the tricks won so far. A bid that is not stored yet is a dash. Tricks won start at 0. The bid number is gold. The tricks-won number is blue. The words "bid" and "won" are not written on the chip.
+
+While bids are still being stored, each stored bid sits in the center of the felt on a small light chip: the name in ink and the number in the bid gold. That chip does not cover a seat. The trump mark and the trick stay as they are.
+
+The line with the hand says "Your bid", "Choose trump", or whose turn it is. It is a centered golden-yellow pill, `#F5CC70`, with deep emerald text, larger than body text. That line does not cover a seat, the trump mark, or the trick. On the caller's bid, the choices are buttons for each whole number from 0 through the cards dealt. Tapping one submits that bid. When that player is the last to bid, the one number that would make the bids equal the cards dealt is disabled. Every other number stays available. When no whole number in that range would make that total, every button stays enabled.
 
 A hand card stays flat, and is not a control, when it is not that player's turn to play. On that turn, a card the rules allow is enabled and raised. A card the rules do not allow stays visible, flat, and disabled.
 
+When a round is scored, a popup shows one table for that round: name, bid, tricks, and points. The columns line up, and points keep their sign. The table uses the same header and rows as the scoreboard. The felt stays on the finished round. The host, seat 1, can press OK at once. For the first 5 seconds, no other player's OK is accepted. After those 5 seconds, any seated player can press OK. One accepted OK hides the popup on every screen, and the next round is dealt only then. After the last round, OK hides the popup and deals nothing further. The dashboard stays a scoreboard.
+
 ## Trump
 
-Once chosen, trump is a suit mark in the center, above the trick. Hearts and diamonds use the red symbol. Clubs and spades use the near-black symbol. The mark does not cover a seat, the trick, or the caller's name.
+The player who chooses trump sees four cards in a 2×2 grid: clubs, diamonds, hearts, then spades. Each card is the same face as a hand card, with only the suit symbol in the center and no rank or suit name. Hearts and diamonds are red. Clubs and spades are near-black. The cards share one size. Tapping a card chooses that suit. A player who is not choosing does not see them. Once chosen, trump is a suit mark in the center, above the trick. Hearts and diamonds use the red symbol. Clubs and spades use the near-black symbol. The mark does not cover a seat, the trick, or the caller's name.
 
 ## Turn
 
-The seat whose turn it is, for a bid, the trump choice, or a card, is highlighted on every player's screen. The highlight uses the turn color in `web/src/tokens.css`. A seat that is not to move is not highlighted.
+The seat whose turn it is, for a bid, the trump choice, or a card, is highlighted on every player's screen. The highlight is a thick bright gold ring, `#E4AD3D`, a glow that continues, and a star on that chip. A seat that is not to move has none of those.
 
 ## Motion
 
 Motion is snappy.
 
-- A played card slides into the trick.
-- The winning card lifts when the trick is taken.
+- A played card slides into the trick and plays one short card sound from `card.mp3`.
+- When a trick is won, every card in it moves to the winner's seat chip. One sound plays for each of those cards, back to back.
 - A new hand deals in with a short slide.
-- The seat whose turn it is pulses briefly, and stays marked.
+- The seat whose turn it is keeps a thick gold ring, a continuing glow, and a star.

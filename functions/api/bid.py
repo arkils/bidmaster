@@ -83,7 +83,7 @@ def round_public(item):
     ]
     body = {
         "cardsDealt": cards_dealt(item),
-        "turn": int(item.get("turn")),
+        "turn": int(item["turn"]) if item.get("turn") is not None else None,
         "leadSeat": round_opener(item),
         "bids": bids,
         "tricks": [public_trick(entry) for entry in item.get("tricks") or []],

@@ -133,6 +133,11 @@ export class BidmasterStack extends cdk.Stack {
       integration: apiIntegration,
     });
     httpApi.addRoutes({
+      path: "/api/rooms/{roomId}/result",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: apiIntegration,
+    });
+    httpApi.addRoutes({
       path: "/api/rooms/{roomId}/bid",
       methods: [apigwv2.HttpMethod.POST],
       integration: apiIntegration,

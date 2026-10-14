@@ -3,7 +3,7 @@ import unittest
 
 from bid import select_trump, submit_bid
 from deal import deal_size, match_view, ranking, round_deals, start_match
-from play import play_card, points_for, trick_winner
+from play import accept_result, play_card, points_for, trick_winner
 from rooms import create_item, join_players
 
 
@@ -73,18 +73,31 @@ class PlayTests(unittest.TestCase):
         item, meta = play_card(item, "p1", "hearts", "ace")
         self.assertIsNone(meta.get("winner"))
         item, meta = play_card(item, "p2", "spades", "2")
-        item, meta = play_card(item, "p3", "diamonds", "king")
+        item, meta = play_card(item, "p3", "diamonds", "king", now=1000)
         self.assertEqual(meta["winner"], 2)
-        self.assertEqual(item["roundOpener"], 2)
-        self.assertEqual(item["cardsDealt"], 9)
-        self.assertEqual(len(item["hands"][0]), 9)
+        self.assertTrue(meta["scored"])
+        self.assertEqual(item["resultAt"], 1000)
+        self.assertEqual(item["cardsDealt"], 1)
+        self.assertEqual(item["trump"], "spades")
+        self.assertNotIn("turn", item)
         self.assertEqual(item["rounds"][0][0]["points"], 10)
         self.assertEqual(item["rounds"][0][1]["points"], -10)
-        self.assertNotIn("trump", item)
-        view = match_view(item, "p1")
+        self.assertIsNone(play_card(item, "p1", "hearts", "ace"))
+        self.assertIsNone(accept_result(item, "p2", 1000))
+        self.assertIsNone(accept_result(item, "p9", 7000))
+        continued, continued_meta = accept_result(item, "p2", 6000, random.Random(2))
+        self.assertEqual(continued["roundOpener"], 2)
+        self.assertEqual(continued["cardsDealt"], 9)
+        self.assertEqual(len(continued["hands"][0]), 9)
+        self.assertNotIn("trump", continued)
+        self.assertNotIn("resultAt", continued)
+        self.assertEqual(item["resultAt"], 1000)
+        self.assertEqual(continued_meta["openerSeat"], 2)
+        view = match_view(continued, "p1")
         self.assertNotIn("bids", str(view["rounds"]))
+        self.assertNotIn("resultAt", view)
         self.assertEqual(len(view["cards"]), 9)
-        stranger = match_view(item, "p9")
+        stranger = match_view(continued, "p9")
         self.assertNotIn("cards", stranger)
 
     def test_the_last_round_deals_no_further_hand(self):
@@ -97,15 +110,25 @@ class PlayTests(unittest.TestCase):
         item["turn"] = 1
         item, _ = play_card(item, "p1", "clubs", "ace")
         item, _ = play_card(item, "p2", "clubs", "king")
-        item, meta = play_card(item, "p3", "clubs", "queen")
-        self.assertTrue(item["over"])
+        item, meta = play_card(item, "p3", "clubs", "queen", now=2000)
+        self.assertFalse(item.get("over"))
         self.assertTrue(meta["scored"])
-        self.assertIsNone(meta.get("openerSeat"))
+        self.assertEqual(item["resultAt"], 2000)
+        self.assertIn("trump", item)
+        waiting = match_view(item, "p2")
+        self.assertEqual(waiting["resultAt"], 2000)
+        self.assertIn("round", waiting)
+        self.assertIsNone(accept_result(item, "p2", 2000))
+        item, continued = accept_result(item, "p1", 2000)
+        self.assertTrue(item["over"])
+        self.assertIsNone(continued.get("openerSeat"))
         self.assertNotIn("hands", item)
+        self.assertNotIn("resultAt", item)
         self.assertEqual(len(item["rounds"]), len(deals))
         view = match_view(item, "p1")
         self.assertNotIn("round", view)
         self.assertNotIn("cards", view)
+        self.assertNotIn("resultAt", view)
         self.assertEqual(len(view["rounds"]), len(deals))
 
     def test_more_successful_bids_rank_higher_when_scores_match(self):
@@ -123,6 +146,9 @@ class PlayTests(unittest.TestCase):
         self.assertEqual(len(round_deals(3)), 2 * deal_size(3))
         rng = random.Random(4)
         while not item.get("over"):
+            if item.get("resultAt") is not None:
+                item, _ = accept_result(item, "p1", int(item["resultAt"]), rng)
+                continue
             if not item.get("trump"):
                 count = len(item["players"])
                 opener = item["roundOpener"]
