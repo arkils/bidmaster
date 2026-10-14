@@ -179,6 +179,7 @@ function Table({
   const others = clockwiseFrom(room.seats, yourSeat);
   const tricks = round?.tricks ?? [];
   const [taken, setTaken] = useState<(typeof tricks)[number] | null>(null);
+  const [gather, setGather] = useState(false);
   const trickCount = useRef(tricks.length);
   const seenTrick = useRef(round?.trick.length ?? 0);
   const handKey = (room.cards ?? []).map((card) => `${card.suit}-${card.rank}`).join("|");
@@ -187,6 +188,7 @@ function Table({
 
   useEffect(() => {
     if (tricks.length > trickCount.current) {
+      setGather(false);
       setTaken(tricks[tricks.length - 1]);
     }
     trickCount.current = tricks.length;
@@ -202,6 +204,14 @@ function Table({
 
   useEffect(() => {
     if (!taken) {
+      return;
+    }
+    const pause = window.setTimeout(() => setGather(true), 2000);
+    return () => window.clearTimeout(pause);
+  }, [taken]);
+
+  useEffect(() => {
+    if (!taken || !gather) {
       return;
     }
     const count = taken.cards.length;
@@ -223,13 +233,16 @@ function Table({
         card.style.opacity = "0";
       });
     });
-    const clear = window.setTimeout(() => setTaken(null), count * 170 + 420);
+    const clear = window.setTimeout(() => {
+      setTaken(null);
+      setGather(false);
+    }, count * 170 + 420);
     return () => {
       window.cancelAnimationFrame(frame);
       timers.forEach((timer) => window.clearTimeout(timer));
       window.clearTimeout(clear);
     };
-  }, [taken]);
+  }, [taken, gather]);
 
   useEffect(() => {
     if (handKey && handKey !== seenHand.current) {
@@ -273,7 +286,7 @@ function Table({
             </div>
           );
         })}
-        <div className={`table-center ${taken ? "gather" : ""}`}>
+        <div className={`table-center ${gather ? "gather" : ""}`}>
           {round?.trump ? (
             <p className={`trump ${trumpRed ? "card-red" : "card-black"}`}>
               <span className="trump-mark" aria-hidden="true">
@@ -288,7 +301,13 @@ function Table({
                 <Face
                   key={`${card.seat}-${card.suit}-${card.rank}`}
                   card={card}
-                  className={card === shownTrick[shownTrick.length - 1] && !taken ? "card-in" : ""}
+                  className={
+                    taken && !gather && card.seat === taken.winner
+                      ? "card-win"
+                      : card === shownTrick[shownTrick.length - 1] && !taken
+                        ? "card-in"
+                        : ""
+                  }
                 />
               ))}
             </div>
@@ -430,7 +449,7 @@ function MatchList({ matches }: { matches: MatchSummary[] }) {
     <section className="mt-8">
       <h2 className="text-center text-xl font-semibold text-felt">Your matches</h2>
       {matches.length === 0 ? (
-        <p className="mt-3 text-sm">No matches yet.</p>
+        <p className="note">No matches yet.</p>
       ) : (
         <div className="mt-3">
           <ScoreTable>
@@ -470,7 +489,7 @@ function Dashboard({ room, matches }: { room: Room; matches: MatchSummary[] }) {
           <a href={roomPath(room.roomId)}>Room</a>
         </Button>
       </p>
-      <p className="mt-2">Started {room.startedOn}.</p>
+      <p className="note">Started {room.startedOn}.</p>
       <div className="mt-4">
         <ScoreTable>
           <TableHeader>
@@ -494,7 +513,7 @@ function Dashboard({ room, matches }: { room: Room; matches: MatchSummary[] }) {
         </ScoreTable>
       </div>
       <Graph room={room} />
-      <ul className="mt-3 flex list-none flex-wrap gap-3 p-0 text-sm">
+      <ul className="legend">
         {room.seats.map((seat) => (
           <li key={seat.seat} className="inline-flex items-center gap-2">
             <span className="inline-block size-3" style={{ background: LINE_COLORS[(seat.seat - 1) % LINE_COLORS.length] }} />
@@ -502,8 +521,8 @@ function Dashboard({ room, matches }: { room: Room; matches: MatchSummary[] }) {
           </li>
         ))}
       </ul>
-      {(room.rounds ?? []).length === 0 ? <p>No scored round yet.</p> : null}
-      {room.over ? <p>The ranking is final.</p> : null}
+      {(room.rounds ?? []).length === 0 ? <p className="note">No scored round yet.</p> : null}
+      {room.over ? <p className="note">The ranking is final.</p> : null}
       <MatchList matches={matches} />
     </section>
   );
@@ -613,10 +632,19 @@ export function App() {
         });
       })
       .catch((reason: unknown) => {
-        if (!cancelled) {
-          setRoom(null);
-          setError(reason instanceof ApiError ? reason.message : "the room could not be opened");
+        if (cancelled) {
+          return;
         }
+        setRoom(null);
+        const message = reason instanceof ApiError ? reason.message : "the room could not be opened";
+        if (location.screen === "room" && reason instanceof ApiError && reason.status === 404) {
+          setJoining(true);
+          setError(message === "the room could not be opened" ? "there is no room with that id" : message);
+          window.history.replaceState({}, "", "/");
+          setLocation({ screen: "home", roomId: "" });
+          return;
+        }
+        setError(message);
       });
     return () => {
       cancelled = true;
@@ -647,15 +675,24 @@ export function App() {
     }
   }
 
-  function onJoin(event: FormEvent<HTMLFormElement>) {
+  async function onJoin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!player) {
+      return;
+    }
     const data = new FormData(event.currentTarget);
     const id = String(data.get("roomId") ?? "").trim();
     if (!parsePath(roomPath(id)).roomId) {
       setError("there is no room with that id");
       return;
     }
-    go(roomPath(id));
+    setError("");
+    try {
+      await joinRoom(id, player.name, player.playerId);
+      go(roomPath(id));
+    } catch (reason) {
+      setError(reason instanceof ApiError ? reason.message : "there is no room with that id");
+    }
   }
 
   async function onStart(seat: number) {
@@ -746,8 +783,8 @@ export function App() {
   return (
     <main className="mx-auto box-border max-w-3xl px-6 py-8">
       <h1 className="brand">
-        <svg className="brand-crown" viewBox="0 0 24 18" aria-hidden="true">
-          <path fill="currentColor" d="M3 15.5h18l-1.4-8.2-4.3 3.8L12 4.2 8.7 11.1 4.4 7.3z" />
+        <svg className="brand-crown" viewBox="0 0 24 16" aria-hidden="true">
+          <path fill="currentColor" d="M2 14.5 4.2 5.2 8.2 9.4 12 2.2 15.8 9.4 19.8 5.2 22 14.5z" />
         </svg>
         BidMaster
       </h1>
@@ -793,7 +830,7 @@ export function App() {
       {location.screen === "room" && room?.resultAt != null ? <RoundResult room={room} onOk={onResult} /> : null}
       {location.screen === "room" && room ? (
         <section>
-          {room.seats.length === 0 ? <p className="mt-6">This room has no seated player. The room id stays reserved.</p> : <Table room={room} onBid={onBid} onTrump={onTrump} onPlay={onPlay} />}
+          {room.seats.length === 0 ? <p className="note">This room has no seated player. The room id stays reserved.</p> : <Table room={room} onBid={onBid} onTrump={onTrump} onPlay={onPlay} />}
           <div className="under-table">
             <Button type="button" variant="outline" onClick={() => navigator.clipboard.writeText(pageUrl)}>
               Copy link
@@ -813,7 +850,7 @@ export function App() {
         </section>
       ) : null}
       {error ? (
-        <p className="mt-4 text-sm font-medium text-suit-red" role="alert">
+        <p className="note note-alert" role="alert">
           {error}
         </p>
       ) : null}

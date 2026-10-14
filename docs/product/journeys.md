@@ -40,7 +40,7 @@ The room id is two ordinary words joined by a hyphen, in the style of `funny-mon
   1. The player chooses Join room.
   2. The player enters the room id, for example `funny-monkey`.
   3. The player joins the room, using the name already entered.
-- End: the player is in the room. The match has not started. A join that would seat an 11th player is refused, and the player sees the message “room is full”. A join after the match has started is refused with that same message.
+- End: the player is in the room. The match has not started. A join that would seat an 11th player is refused, and the player sees the message “room is full”. A join after the match has started is refused with that same message. An id that is not two words with a hyphen, or that names no room, stays on this page. The join field stays open, the address does not change, and the message is “there is no room with that id”.
 
 ## The host leaves before the start
 

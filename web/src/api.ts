@@ -161,11 +161,16 @@ async function call(path: string, options: { method: string; body?: unknown }): 
     headers: options.body ? { "content-type": "application/json" } : undefined,
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
-  const payload = (await response.json()) as Room & { error?: string };
+  let payload: Partial<Room> & { error?: string } = {};
+  try {
+    payload = (await response.json()) as Partial<Room> & { error?: string };
+  } catch {
+    payload = {};
+  }
   if (!response.ok) {
     throw new ApiError(payload.error || "the room could not be opened", response.status);
   }
-  return payload;
+  return payload as Room;
 }
 
 export function roomTopic(roomId: string): string {

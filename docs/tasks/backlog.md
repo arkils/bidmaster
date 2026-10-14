@@ -58,3 +58,19 @@ The user recorded **Review GO** on 2026-10-14, that Implementation Planning may 
 | [IMPL-031](impl/IMPL-031-card-mp3.md) | DONE | Important | IMPL-030 | Use the new card sound |
 
 The order is a chain. Split or reorder a later task only after discovery shows the product needs a different cut. Do that in the task’s notes log and in this table before starting the reordered work.
+
+## Version 2 preps
+
+Work after version 1 goes in this table. One task is `IN_PROGRESS` at a time. Take the lowest `TODO` whose blockers are `DONE`.
+
+| ID | Status | Priority | Blocked by | Summary |
+| --- | --- | --- | --- | --- |
+| [V2-001](v2/V2-001-clear-stored-games.md) | DONE | Important | — | Clear stored games before the actual deployment |
+| [V2-002](v2/V2-002-custom-domain.md) | DONE | Important | — | Host the site at bidmaster.arkil.in |
+| [V2-003](v2/V2-003-plain-text.md) | DONE | Important | — | Restyle plain sentences |
+| [V2-004](v2/V2-004-crown.md) | DONE | Important | — | Seat the crown on the title |
+| [V2-005](v2/V2-005-table-depth.md) | DONE | Important | — | Give the felt a lit center, texture, and a raised gold rim |
+| [V2-006](v2/V2-006-favicon.md) | DONE | Important | — | Add a card favicon |
+| [V2-007](v2/V2-007-trick-pause.md) | DONE | Important | — | Highlight the winning card, then wait 2 seconds |
+| [V2-008](v2/V2-008-crown-lift.md) | DONE | Important | — | Lift the crown off the letters |
+| [V2-009](v2/V2-009-wrong-room-id.md) | DONE | Important | — | Stay on the page for a wrong room id |

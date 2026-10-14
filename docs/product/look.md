@@ -16,14 +16,15 @@ Colors, type, and motion durations live in `web/src/tokens.css`. That file is th
 - A filled button is antique gold, `#C89A45`, with deep emerald text. An outline button is warm white with a beige border, `#DDD3BF`.
 - The scoreboard header is deep emerald with warm white text. Its rows are warm ivory, separated by beige lines.
 - A bid number is pale amber, `#F6E3BF`, with dark gold text, `#B87516`. A tricks-won number is soft blue, `#DCE6FF`, with royal blue text, `#244FC5`.
-- The felt is an oval with the gold trim and an inner shadow.
-- The title is BidMaster in deep emerald, with a small gold crown and short gold lines.
+- The felt is an oval, lighter toward the center and deep emerald at the rim, with a cloth grain across it. The gold rim is a raised rail: a bright edge, antique gold, a darker edge, and a shadow under the oval.
+- The title is BidMaster in deep emerald, with a small gold crown just above the word, clear of the letters, and short gold lines.
+- The browser tab shows a playing card: warm white, an antique-gold edge, and an emerald club. The file is `web/public/favicon.png`.
 
 ## Shell
 
 The page title is BidMaster, centered. The caller's name is not repeated under that title. On a room page, the room id is centered directly under that title. The full address is not printed.
 
-The name dialog, buttons, fields, the bids-first select, and the scoreboard table share one set of controls. An empty match list says there are no matches yet. Each past match is one row: the date, the room id, and the seat names, in separate parts. The names have no seat numbers. The color key under the graph is each name with its color, and no seat number. The ranking table still has its Seat column. Copy link, Leave room, Dashboard, the Bids first select, and Start match share one baseline under the table. The Bids first label stays above the select. On a phone those controls stay full width and stacked, still centered. Create room, Join room, the bids-first row, and the Room button on the dashboard are centered. The Dashboard and Your matches headings are centered. On the scoreboard graph, the Points and Rounds labels sit outside the plot.
+The name dialog, buttons, fields, the bids-first select, and the scoreboard table share one set of controls. A sentence of copy is centered in the muted green-gray. That covers an empty match list, the date a match started, a dashboard with no scored round, a final ranking, a room with no seated player, and the names in the graph color key. An error uses that same line in red. An empty match list says there are no matches yet. Each past match is one row: the date, the room id, and the seat names, in separate parts. The names have no seat numbers. The color key under the graph is each name with its color, and no seat number. The ranking table still has its Seat column. Copy link, Leave room, Dashboard, the Bids first select, and Start match share one baseline under the table. The Bids first label stays above the select. On a phone those controls stay full width and stacked, still centered. Create room, Join room, the bids-first row, and the Room button on the dashboard are centered. The Dashboard and Your matches headings are centered. On the scoreboard graph, the Points and Rounds labels sit outside the plot.
 
 ## Cards
 
@@ -56,6 +57,6 @@ The seat whose turn it is, for a bid, the trump choice, or a card, is highlighte
 Motion is snappy.
 
 - A played card slides into the trick and plays one short card sound from `card.mp3`.
-- When a trick is won, every card in it moves to the winner's seat chip. One sound plays for each of those cards, back to back.
+- When the last card of a trick is played, the cards stay in the center and the winning card is highlighted. After 2 seconds, every card in the trick moves to the winner's seat chip. One sound plays for each of those cards, back to back.
 - A new hand deals in with a short slide.
 - The seat whose turn it is keeps a thick gold ring, a continuing glow, and a star.

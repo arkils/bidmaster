@@ -6,7 +6,7 @@ Source of truth for what to do next is `docs/tasks/backlog.md`, then the task fi
 
 1. Read `docs/00-discovery-status.md`.
 2. In `docs/tasks/backlog.md`, find the one task that is `IN_PROGRESS`. Continue it.
-3. If none is `IN_PROGRESS`, take the lowest ID with status `TODO` whose **Blocked by** tasks are all `DONE`. Ignore `BLOCKED`, `DONE`, and `CANCELLED`.
+3. If none is `IN_PROGRESS`, take the lowest ID with status `TODO` in the Version 2 preps table whose **Blocked by** tasks are all `DONE`. Ignore `BLOCKED`, `DONE`, and `CANCELLED`. Version 1 tasks stay in the first table.
 4. Set that task to `IN_PROGRESS` in the task file and in the backlog.
 5. Read its **Read first** list completely. Then do the work.
 6. When the acceptance criteria and the definition of done are met, set it to `DONE` in both places before starting another task.
@@ -19,8 +19,9 @@ One task is `IN_PROGRESS` at a time.
 | --- | --- | --- | --- |
 | Discovery | `DISC-` | `docs/tasks/discovery/` | Done |
 | Review | `REV-` | `docs/tasks/review/` | Done |
-| Planning | `PREP-` | `docs/tasks/prep/` | Now. Authors `IMPL-*.md` for one agreed milestone slice. No code |
-| Implementation | `IMPL-` | `docs/tasks/impl/` | Now. Code to that file’s acceptance criteria |
+| Planning | `PREP-` | `docs/tasks/prep/` | Done for version 1. Authors `IMPL-*.md` for one agreed milestone slice. No code |
+| Implementation | `IMPL-` | `docs/tasks/impl/` | Version 1 is done through IMPL-031 |
+| Version 2 prep | `V2-` | `docs/tasks/v2/` | Now. Work after version 1. One task at a time, including the script or doc that task names |
 
 Planning may add `PREP-*` files. It writes `IMPL-*.md` files only after the user agrees that slice. Those files stay unstarted until **Build GO**.
 

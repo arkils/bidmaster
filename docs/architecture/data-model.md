@@ -18,7 +18,7 @@ A kept match has:
 
 The dashboard opens a kept match by its room id and shows all of those rounds: cumulative scores, the ranking, and the graph of each round's gain or loss. It also lists every kept match whose seats include this browser's player id. Cumulative scores are the sum of the round results. Rank follows `docs/game/rules.md`. A higher cumulative score ranks first. When scores are equal, more successful bids rank higher. When the score and the number of successful bids are both equal, those players share the rank. Players who share the highest rank share the win. A successful bid is a round whose points are positive, which is the exact-bid rule in `docs/game/rules.md`.
 
-One room id names one room record. A later room does not reuse an id that already belongs to a room record. A started match keeps that id. An unstarted room is not a past match and is not listed as a result. No operation deletes it, so its id stays reserved too.
+One room id names one room record. A later room does not reuse an id that already belongs to a room record. A started match keeps that id. An unstarted room is not a past match and is not listed as a result. The website has no action that deletes a room, so its id stays reserved. Before the actual deployment, an operator can clear every stored room with the script in [clear-stored-data.md](clear-stored-data.md). After that script runs, those room ids are free.
 
 ## What looking back does not include
 

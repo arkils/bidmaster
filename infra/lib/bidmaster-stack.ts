@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as cdk from "aws-cdk-lib";
 import * as cr from "aws-cdk-lib/custom-resources";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
 import * as integrations from "aws-cdk-lib/aws-apigatewayv2-integrations";
 import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
@@ -13,8 +14,13 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
 
+export interface BidmasterStackProps extends cdk.StackProps {
+  readonly domainName: string;
+  readonly certificate: acm.ICertificate;
+}
+
 export class BidmasterStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: BidmasterStackProps) {
     super(scope, id, props);
 
     cdk.Tags.of(this).add("Project", "bidmaster");
@@ -167,6 +173,8 @@ export class BidmasterStack extends cdk.Stack {
     cdk.Tags.of(spaRewrite).add("Name", "bidmaster-spa-rewrite");
 
     const distribution = new cloudfront.Distribution(this, "FrontDoor", {
+      domainNames: [props.domainName],
+      certificate: props.certificate,
       priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
       defaultRootObject: "index.html",
       defaultBehavior: {
@@ -201,7 +209,10 @@ export class BidmasterStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, "SiteUrl", {
-      value: `https://${distribution.distributionDomainName}`,
+      value: `https://${props.domainName}`,
+    });
+    new cdk.CfnOutput(this, "DistributionDomain", {
+      value: distribution.distributionDomainName,
     });
     new cdk.CfnOutput(this, "IotEndpoint", {
       value: iotEndpoint,

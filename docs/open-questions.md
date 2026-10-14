@@ -29,6 +29,7 @@ An unknown stays here until the user answers it or explicitly defers it. A defer
 | OQ-23 | When a room is outside 3 to 10 players before the start, how can the host still reach a startable room? | ANSWERED | — |
 | OQ-24 | May a player outside India wait longer than 2 seconds on a bid or a card? | ANSWERED | — |
 | OQ-25 | What is the first milestone slice that Implementation Planning writes `IMPL-*.md` files for? | ANSWERED | — |
+| OQ-26 | Where is DNS for `arkil.in` managed? | ANSWERED | — |
 
 ## OQ-1 resolution
 
@@ -144,3 +145,7 @@ Prior notes that are easy to mistake for answers:
 
 - `docs/game/rules.md` is the version-1 game. It does not by itself name the rest of the product boundary.
 - The Digital section of `docs/tasks.md` lists earlier ideas (a review of a finished match, a separate rules engine, an authoritative server, Android and iOS). DISC-002 classifies them in `docs/product/requirements.md`. Android and iOS are FUTURE in the vision. A trick-by-trick review stays unaccepted. Looking back at each round's points is confirmed in OQ-17. A separate rules engine and an authoritative server stay unaccepted. Room creation and joining are confirmed in `docs/product/vision.md`.
+
+## OQ-26 resolution
+
+Answered 2026-10-15. DNS for `arkil.in` is managed at GoDaddy. The site name is `bidmaster.arkil.in`. CloudFront stays the front door, and the GoDaddy records are added by hand. The record is `docs/architecture/delivery.md`.

@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build:web": "npm run build --prefix ../web",
-    "deploy": "python3 -m pip install -r ../functions/api/requirements.txt -t ../functions/api && npm run build:web && cdk deploy --require-approval never"
+    "deploy": "python3 -m pip install -r ../functions/api/requirements.txt -t ../functions/api && npm run build:web && cdk deploy --all --require-approval never"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

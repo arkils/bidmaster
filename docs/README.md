@@ -20,6 +20,7 @@ Start at `docs/00-discovery-status.md`. It names the phase, the active task, and
 | What version 1 stores | [architecture/data-model.md](architecture/data-model.md) |
 | What the browser and the backend say to each other | [architecture/contracts.md](architecture/contracts.md) |
 | How version 1 is deployed | [architecture/delivery.md](architecture/delivery.md) |
+| How to clear stored rooms before the actual deployment | [architecture/clear-stored-data.md](architecture/clear-stored-data.md) |
 | What is undecided | [open-questions.md](open-questions.md) |
 | What we are assuming | [assumptions.md](assumptions.md) |
 | What can go wrong | [risks.md](risks.md) |
