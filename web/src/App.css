@@ -1,11 +1,14 @@
 body {
   margin: 0;
-  font-family: sans-serif;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font);
+  overflow-x: hidden;
 }
 
 main {
   box-sizing: border-box;
-  max-width: 40rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 1.5rem;
 }
@@ -24,7 +27,7 @@ select {
 }
 
 button {
-  min-height: 2.75rem;
+  min-height: var(--control);
   padding: 0.5rem 1rem;
 }
 
@@ -45,7 +48,7 @@ dialog form {
 }
 
 input {
-  min-height: 2.75rem;
+  min-height: var(--control);
   padding: 0.4rem 0.6rem;
 }
 
@@ -107,19 +110,276 @@ td {
 select {
   font: inherit;
   font-size: 1rem;
-  min-height: 2.75rem;
+  min-height: var(--control);
+}
+
+.table-wrap {
+  margin-top: 1rem;
+}
+
+.table {
+  position: relative;
+  min-height: 32rem;
+  background: var(--felt);
+  border-radius: 1.5rem;
+  color: var(--card);
+}
+
+.seat-chip {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.35rem 0.3rem;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.15;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  overflow-wrap: anywhere;
+}
+
+.seat-chip.turn,
+.your-seat .turn {
+  outline: 3px solid var(--turn);
+  outline-offset: 2px;
+  animation: turn-pulse var(--motion-pulse) ease-in-out 2;
+}
+
+.table-center {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(16rem, 42%);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.trump {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  min-height: 4.8rem;
+  margin: 0;
+  background: var(--card);
+  border-radius: 0.45rem;
+}
+
+.trump-mark {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.trick,
+.hand {
+  display: flex;
+  gap: 0.45rem;
+  justify-content: center;
+}
+
+.trick {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.hand {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  justify-content: flex-start;
+  padding-bottom: 0.35rem;
+}
+
+.your-seat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0.75rem;
+}
+
+.seat-chip.own {
+  left: 50%;
+  top: auto;
+  bottom: 0.85rem;
+  width: 5.4rem;
+  transform: translateX(-50%);
+}
+
+.bid-form {
+  margin-bottom: 0.75rem;
+}
+
+.card-button {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: var(--control);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.card-button.playable {
+  transform: translateY(-0.75rem);
+}
+
+.card-button:disabled {
+  opacity: 0.45;
+}
+
+.card {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 3.5rem;
+  min-height: 4.8rem;
+  background: var(--card);
+  color: var(--suit-black);
+  border-radius: 0.45rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+}
+
+.card-red {
+  color: var(--suit-red);
+}
+
+.card-rank {
+  display: block;
+  padding: 0.25rem 0.35rem 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.card-suit {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 1.9rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.card-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.card-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  min-height: 2rem;
+  background: var(--felt);
+  color: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 0.2rem;
+  font-size: 0.75rem;
+}
+
+.card-in {
+  animation: card-in var(--motion-slide) ease-out;
+}
+
+.card-lift {
+  animation: card-lift var(--motion-lift) ease-out forwards;
+}
+
+.card-deal {
+  animation: card-deal var(--motion-deal) ease-out both;
+}
+
+.under-table {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+@keyframes card-in {
+  from {
+    transform: translateY(-1rem);
+    opacity: 0.2;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes card-lift {
+  to {
+    transform: translateY(-0.85rem);
+  }
+}
+
+@keyframes card-deal {
+  from {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes turn-pulse {
+  0%,
+  100% {
+    outline-color: var(--turn);
+  }
+  50% {
+    outline-width: 4px;
+  }
 }
 
 @media (max-width: 40rem) {
-  .actions,
-  .actions button,
-  form,
-  input,
-  button {
+  .table {
+    min-height: 28rem;
+  }
+
+  .seat-chip {
+    font-size: 0.75rem;
+  }
+
+  .bid-form,
+  .bid-form label,
+  .bid-form input,
+  .bid-form button {
     width: 100%;
   }
 
-  .cards button {
+  .under-table,
+  .under-table form,
+  .under-table input,
+  .under-table select,
+  .under-table button,
+  .actions,
+  .actions button {
+    width: 100%;
+  }
+
+  .card-button,
+  .table .actions,
+  .table .actions button {
     width: auto;
   }
 }

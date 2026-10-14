@@ -1,0 +1,15 @@
+:root {
+  --page: #cfc6b8;
+  --ink: #1c1917;
+  --felt: #6d7a4a;
+  --card: #f7f4ef;
+  --suit-red: #b42318;
+  --suit-black: #1c1917;
+  --turn: #c4841d;
+  --font: sans-serif;
+  --motion-slide: 180ms;
+  --motion-lift: 280ms;
+  --motion-deal: 220ms;
+  --motion-pulse: 700ms;
+  --control: 2.75rem;
+}

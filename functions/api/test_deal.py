@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from deal import deal_hands, deal_size, deck, hand_notice, match_view, start_match, started_notice
+from deal import deal_hands, deal_size, deck, hand_notice, match_view, round_deals, start_match, started_notice
 from rooms import create_item, join_players
 
 
@@ -16,11 +16,16 @@ def seated_room():
 
 class DealTests(unittest.TestCase):
     def test_deal_size_follows_the_deck(self):
-        self.assertEqual(deal_size(3), 17)
-        self.assertEqual(deal_size(4), 13)
+        self.assertEqual(deal_size(3), 10)
+        self.assertEqual(deal_size(4), 10)
         self.assertEqual(deal_size(5), 10)
         self.assertEqual(deal_size(6), 8)
         self.assertEqual(deal_size(10), 5)
+        self.assertEqual(len(round_deals(3)), 20)
+        self.assertEqual(len(round_deals(4)), 20)
+        self.assertEqual(len(round_deals(5)), 20)
+        self.assertEqual(len(round_deals(6)), 16)
+        self.assertEqual(len(round_deals(10)), 10)
 
     def test_hands_are_unique_and_equal(self):
         hands = deal_hands(6, random.Random(1))
@@ -38,8 +43,10 @@ class DealTests(unittest.TestCase):
         self.assertEqual([player["name"] for player in started["players"]], ["Ada", "Bea", "Cid"])
         view = match_view(started, "p2")
         self.assertNotIn("hands", view)
-        self.assertEqual(len(view["cards"]), 17)
+        self.assertEqual(len(view["cards"]), 10)
         self.assertEqual(view["yourSeat"], 2)
+        self.assertTrue(all(entry["cardsLeft"] == 10 for entry in view["seats"]))
+        self.assertNotIn("suit", str(view["seats"]))
         self.assertTrue(all(entry["rank"] == 1 and entry["score"] == 0 for entry in view["ranking"]))
         notice = started_notice(started)
         self.assertEqual(notice["openerSeat"], 2)
@@ -48,6 +55,16 @@ class DealTests(unittest.TestCase):
         private = hand_notice(started, 2)
         self.assertEqual(private["cards"], view["cards"])
         self.assertNotIn("p1", str(private))
+        cards = deck()
+        started["hands"] = [cards[index * 17 : (index + 1) * 17] for index in range(3)]
+        started["cardsDealt"] = 17
+        kept = match_view(started, "p2")
+        self.assertEqual(len(kept["cards"]), 17)
+        self.assertEqual(kept["round"]["cardsDealt"], 17)
+        started.pop("cardsDealt", None)
+        started["hands"] = [hand[:15] for hand in started["hands"]]
+        started["tricks"] = [{"winner": 1, "cards": []}, {"winner": 2, "cards": []}]
+        self.assertEqual(match_view(started, "p2")["round"]["cardsDealt"], 17)
 
     def test_start_is_refused_without_changing_the_room(self):
         item = seated_room()

@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ApiError,
   createRoom,
@@ -25,59 +25,244 @@ const LINE_COLORS = ["#0b6e4f", "#9a3412", "#1d4ed8", "#a16207", "#7e22ce", "#be
 
 const SUITS = ["clubs", "diamonds", "hearts", "spades"];
 
-function Bidding({
+const SUIT_MARK: Record<string, string> = {
+  clubs: "♣",
+  diamonds: "♦",
+  hearts: "♥",
+  spades: "♠",
+};
+
+function rankLabel(rank: string): string {
+  if (rank === "ace") {
+    return "A";
+  }
+  if (rank === "jack") {
+    return "J";
+  }
+  if (rank === "queen") {
+    return "Q";
+  }
+  if (rank === "king") {
+    return "K";
+  }
+  return rank;
+}
+
+function seatSpot(index: number, total: number): { left: string; top: string; width: string } {
+  const along = total === 1 ? 0.5 : index / (total - 1);
+  const angle = Math.PI + along * Math.PI;
+  const room = total <= 1 ? 22 : 2 * 36 * Math.sin(Math.PI / (2 * (total - 1))) * 0.82;
+  return {
+    left: `${50 + 36 * Math.cos(angle)}%`,
+    top: `${46 + 38 * Math.sin(angle)}%`,
+    width: `min(5.4rem, ${room}%)`,
+  };
+}
+
+function clockwiseFrom(seats: Room["seats"], yourSeat: number): Room["seats"] {
+  const count = seats.length;
+  const others = [];
+  for (let step = 1; step < count; step += 1) {
+    const number = ((yourSeat - 1 + step) % count) + 1;
+    const seat = seats.find((entry) => entry.seat === number);
+    if (seat) {
+      others.push(seat);
+    }
+  }
+  return others;
+}
+
+function cardAllowed(card: Card, hand: Card[], trick: { suit: string }[]): boolean {
+  const led = trick[0]?.suit;
+  if (!led) {
+    return true;
+  }
+  if (!hand.some((held) => held.suit === led)) {
+    return true;
+  }
+  return card.suit === led;
+}
+
+function Face({
+  card,
+  className,
+  delay,
+}: {
+  card: Card;
+  className?: string;
+  delay?: string;
+}) {
+  const red = card.suit === "hearts" || card.suit === "diamonds";
+  return (
+    <span className={`card ${red ? "card-red" : "card-black"} ${className ?? ""}`} style={delay ? { animationDelay: delay } : undefined}>
+      <span className="card-rank">{rankLabel(card.rank)}</span>
+      <span className="card-suit" aria-hidden="true">
+        {SUIT_MARK[card.suit]}
+      </span>
+      <span className="card-name">
+        {card.rank} of {card.suit}
+      </span>
+    </span>
+  );
+}
+
+function Table({
   room,
   onBid,
   onTrump,
+  onPlay,
 }: {
   room: Room;
   onBid: (bid: number) => void;
   onTrump: (suit: string) => void;
+  onPlay: (card: Card) => void;
 }) {
   const round = room.round;
-  if (!round) {
-    return null;
+  const yourSeat = room.yourSeat ?? 1;
+  const you = room.seats.find((seat) => seat.seat === yourSeat);
+  const others = clockwiseFrom(room.seats, yourSeat);
+  const tricks = round?.tricks ?? [];
+  const [taken, setTaken] = useState<(typeof tricks)[number] | null>(null);
+  const trickCount = useRef(tricks.length);
+  const handKey = (room.cards ?? []).map((card) => `${card.suit}-${card.rank}`).join("|");
+  const [dealing, setDealing] = useState(false);
+  const seenHand = useRef("");
+
+  useEffect(() => {
+    if (tricks.length > trickCount.current) {
+      setTaken(tricks[tricks.length - 1]);
+      trickCount.current = tricks.length;
+      const timer = window.setTimeout(() => setTaken(null), 280);
+      return () => window.clearTimeout(timer);
+    }
+    trickCount.current = tricks.length;
+  }, [tricks, trickCount]);
+
+  useEffect(() => {
+    if (handKey && handKey !== seenHand.current) {
+      setDealing(true);
+      seenHand.current = handKey;
+      const timer = window.setTimeout(() => setDealing(false), 420);
+      return () => window.clearTimeout(timer);
+    }
+    seenHand.current = handKey;
+  }, [handKey, seenHand]);
+
+  const won = room.seats.map(() => 0);
+  for (const trick of tricks) {
+    won[trick.winner - 1] += 1;
   }
-  const stillBidding = !round.trump && round.bids.length < room.seats.length;
-  const choosingTrump = !round.trump && round.bids.length === room.seats.length;
+  const shownTrick = taken?.cards ?? round?.trick ?? [];
+  const yourTurn = Boolean(round) && room.yourSeat === round?.turn && !room.over;
+  const stillBidding = Boolean(round) && !round?.trump && (round?.bids.length ?? 0) < room.seats.length;
+  const choosingTrump = Boolean(round) && !round?.trump && round?.bids.length === room.seats.length;
+
+  const playing = yourTurn && Boolean(round?.trump);
+  const hand = room.cards ?? [];
+  const yourBid = round?.bids.find((entry) => entry.seat === you?.seat);
+  const liveTrick = round?.trick ?? [];
+  const trumpRed = round?.trump === "hearts" || round?.trump === "diamonds";
+
   return (
-    <section>
-      {round.bids.length > 0 ? (
-        <ul className="seats">
-          {round.bids.map((entry) => (
-            <li key={entry.seat}>
-              {entry.seat}. {entry.name} bid {entry.bid}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      {round.trump ? (
-        <p>
-          Trump is {round.trump}. Seat {round.leadSeat} leads.
-        </p>
-      ) : null}
-      {stillBidding && room.yourSeat === round.turn ? (
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            onBid(Number(new FormData(event.currentTarget).get("bid")));
-          }}
-        >
-          <label htmlFor="bid">Bid, 0 through {round.cardsDealt}</label>
-          <input id="bid" name="bid" type="number" min={0} max={round.cardsDealt} step={1} required />
-          <button type="submit">Bid</button>
-        </form>
-      ) : null}
-      {choosingTrump && room.yourSeat === round.trumpSeat ? (
-        <div className="actions">
-          {SUITS.map((suit) => (
-            <button key={suit} type="button" onClick={() => onTrump(suit)}>
-              {suit}
-            </button>
-          ))}
+    <div className="table-wrap">
+      <div className="table">
+        {others.map((seat, index) => {
+          const bid = round?.bids.find((entry) => entry.seat === seat.seat);
+          return (
+            <div key={seat.seat} className={`seat-chip ${round?.turn === seat.seat ? "turn" : ""}`} style={seatSpot(index, others.length)}>
+              <span>{seat.name}</span>
+              {bid ? <span>bid {bid.bid}</span> : null}
+              {round?.trump ? <span>won {won[seat.seat - 1]}</span> : null}
+              {seat.cardsLeft !== undefined ? <span className="card-back">{seat.cardsLeft}</span> : null}
+            </div>
+          );
+        })}
+        <div className="table-center">
+          {round?.trump ? (
+            <p className={`trump ${trumpRed ? "card-red" : "card-black"}`}>
+              <span className="trump-mark" aria-hidden="true">
+                {SUIT_MARK[round.trump]}
+              </span>
+              <span className="card-name">Trump is {round.trump}.</span>
+            </p>
+          ) : null}
+          {shownTrick.length > 0 ? (
+            <div className="trick">
+              {shownTrick.map((card) => (
+                <Face
+                  key={`${card.seat}-${card.suit}-${card.rank}`}
+                  card={card}
+                  className={`${card === shownTrick[shownTrick.length - 1] && !taken ? "card-in" : ""} ${taken && card.seat === taken.winner ? "card-lift" : ""}`}
+                />
+              ))}
+            </div>
+          ) : null}
+          {stillBidding && round && round.bids.length > 0 ? (
+            <ul className="seats">
+              {round.bids.map((entry) => (
+                <li key={entry.seat}>
+                  {entry.name} bid {entry.bid}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {choosingTrump && yourTurn ? (
+            <div className="actions">
+              {SUITS.map((suit) => (
+                <button key={suit} type="button" className="suit-choice" onClick={() => onTrump(suit)}>
+                  {SUIT_MARK[suit]} {suit}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
+        {you ? (
+          <div className={`seat-chip own ${round?.turn === yourSeat ? "turn" : ""}`}>
+            <span>{you.name}</span>
+            {yourBid ? <span>bid {yourBid.bid}</span> : null}
+            {round?.trump ? <span>won {won[you.seat - 1]}</span> : null}
+            {you.cardsLeft !== undefined ? <span className="card-back">{you.cardsLeft}</span> : null}
+          </div>
+        ) : null}
+      </div>
+      {you ? (
+        <div className="your-seat">
+          {stillBidding && yourTurn && round ? (
+            <form
+              className="bid-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                onBid(Number(new FormData(event.currentTarget).get("bid")));
+              }}
+            >
+              <label htmlFor="bid">Bid, 0 through {round.cardsDealt}</label>
+              <input id="bid" name="bid" type="number" min={0} max={round.cardsDealt} step={1} required />
+              <button type="submit">Bid</button>
+            </form>
+          ) : null}
+          {hand.length ? (
+            <div className="hand">
+              {hand.map((card, index) => {
+                const allowed = cardAllowed(card, hand, liveTrick);
+                return playing ? (
+                  <button
+                    key={`${card.suit}-${card.rank}`}
+                    type="button"
+                    className={`card-button ${allowed ? "playable" : ""}`}
+                    disabled={!allowed}
+                    onClick={() => onPlay(card)}
+                  >
+                    <Face card={card} className={dealing ? "card-deal" : ""} delay={`${index * 40}ms`} />
+                  </button>
+                ) : (
+                  <Face key={`${card.suit}-${card.rank}`} card={card} className={dealing ? "card-deal" : ""} delay={`${index * 40}ms`} />
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       ) : null}
-    </section>
+    </div>
   );
 }
 
@@ -86,8 +271,8 @@ function Graph({ room }: { room: Room }) {
   if (rounds.length === 0) {
     return (
       <svg className="graph" viewBox="0 0 320 140" role="img" aria-label="No scored round yet">
-        <line x1="36" y1="16" x2="36" y2="112" stroke="#444" />
-        <line x1="36" y1="112" x2="300" y2="112" stroke="#444" />
+        <line x1="36" y1="16" x2="36" y2="112" stroke="currentColor" />
+        <line x1="36" y1="112" x2="300" y2="112" stroke="currentColor" />
         <text x="8" y="70" fontSize="12">
           Points
         </text>
@@ -105,8 +290,8 @@ function Graph({ room }: { room: Room }) {
   const yAt = (points: number) => 112 - ((points - low) / span) * 96;
   return (
     <svg className="graph" viewBox="0 0 320 140" role="img" aria-label="Points gained or lost each round">
-      <line x1="36" y1="16" x2="36" y2="112" stroke="#444" />
-      <line x1="36" y1="112" x2="300" y2="112" stroke="#444" />
+      <line x1="36" y1="16" x2="36" y2="112" stroke="currentColor" />
+      <line x1="36" y1="112" x2="300" y2="112" stroke="currentColor" />
       <text x="8" y="70" fontSize="12">
         Points
       </text>
@@ -127,59 +312,6 @@ function Graph({ room }: { room: Room }) {
         );
       })}
     </svg>
-  );
-}
-
-function Trick({ room }: { room: Room }) {
-  const round = room.round;
-  if (!round?.trump) {
-    return null;
-  }
-  const won = room.seats.map(() => 0);
-  for (const trick of round.tricks) {
-    won[trick.winner - 1] += 1;
-  }
-  return (
-    <section>
-      {round.trick.length > 0 ? (
-        <ul className="seats">
-          {round.trick.map((card) => (
-            <li key={`${card.seat}-${card.suit}-${card.rank}`}>
-              {card.seat}. {card.rank} of {card.suit}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      <ul className="seats">
-        {room.seats.map((seat) => (
-          <li key={seat.seat}>
-            {seat.seat}. {seat.name} won {won[seat.seat - 1]}
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function Hand({ room, onPlay }: { room: Room; onPlay: (card: Card) => void }) {
-  if (!room.cards?.length) {
-    return null;
-  }
-  const yourTurn = Boolean(room.round?.trump) && room.yourSeat === room.round?.turn && !room.over;
-  return (
-    <ul className="cards">
-      {room.cards.map((card) => (
-        <li key={`${card.suit}-${card.rank}`}>
-          {yourTurn ? (
-            <button type="button" onClick={() => onPlay(card)}>
-              {card.rank} of {card.suit}
-            </button>
-          ) : (
-            `${card.rank} of ${card.suit}`
-          )}
-        </li>
-      ))}
-    </ul>
   );
 }
 
@@ -480,44 +612,36 @@ export function App() {
       {location.screen === "dashboard" && room?.started ? <Dashboard room={room} matches={matches} /> : null}
       {location.screen === "room" && room ? (
         <section>
-          <p>{pageUrl}</p>
-          <button type="button" onClick={() => navigator.clipboard.writeText(pageUrl)}>
-            Copy link
-          </button>
-          {room.started ? (
-            <p>
-              <a href={dashboardPath(room.roomId)}>Dashboard</a>
-            </p>
-          ) : null}
-          {room.seats.length === 0 ? <p>This room has no seated player. The room id stays reserved.</p> : null}
-          <ul className="seats">
-            {room.seats.map((seat) => (
-              <li key={seat.seat}>
-                {seat.seat}. {seat.name}
-              </li>
-            ))}
-          </ul>
-          {room.started ? <Bidding room={room} onBid={onBid} onTrump={onTrump} /> : null}
-          {room.started ? <Trick room={room} /> : null}
-          {room.started ? <Hand room={room} onPlay={onPlay} /> : null}
-          {room.yourSeat === 1 && !room.started ? (
-            <button type="button" onClick={onLeave}>
-              Leave room
+          {room.seats.length === 0 ? <p>This room has no seated player. The room id stays reserved.</p> : <Table room={room} onBid={onBid} onTrump={onTrump} onPlay={onPlay} />}
+          <div className="under-table">
+            <p>{pageUrl}</p>
+            <button type="button" onClick={() => navigator.clipboard.writeText(pageUrl)}>
+              Copy link
             </button>
-          ) : null}
-          {room.yourSeat === 1 && !room.started && room.seats.length >= 3 ? (
-            <form onSubmit={onStart}>
-              <label htmlFor="opener">Bids first</label>
-              <select id="opener" name="seat" defaultValue={1}>
-                {room.seats.map((seat) => (
-                  <option key={seat.seat} value={seat.seat}>
-                    {seat.seat}. {seat.name}
-                  </option>
-                ))}
-              </select>
-              <button type="submit">Start match</button>
-            </form>
-          ) : null}
+            {room.started ? (
+              <p>
+                <a href={dashboardPath(room.roomId)}>Dashboard</a>
+              </p>
+            ) : null}
+            {room.yourSeat === 1 && !room.started ? (
+              <button type="button" onClick={onLeave}>
+                Leave room
+              </button>
+            ) : null}
+            {room.yourSeat === 1 && !room.started && room.seats.length >= 3 ? (
+              <form onSubmit={onStart}>
+                <label htmlFor="opener">Bids first</label>
+                <select id="opener" name="seat" defaultValue={1}>
+                  {room.seats.map((seat) => (
+                    <option key={seat.seat} value={seat.seat}>
+                      {seat.seat}. {seat.name}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit">Start match</button>
+              </form>
+            ) : null}
+          </div>
         </section>
       ) : null}
       {error ? <p>{error}</p> : null}

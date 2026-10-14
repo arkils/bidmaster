@@ -3,6 +3,7 @@ const apiBase = import.meta.env.VITE_API_BASE ?? "";
 export type Seat = {
   seat: number;
   name: string;
+  cardsLeft?: number;
 };
 
 export type Card = {

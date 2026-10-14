@@ -23,10 +23,10 @@ class BidTests(unittest.TestCase):
         self.assertEqual(item["turn"], 3)
         item, error = submit_bid(item, "p3", 4)
         self.assertIsNone(error)
-        item, error = submit_bid(item, "p1", 4)
+        item, error = submit_bid(item, "p1", 3)
         self.assertIsNone(error)
         self.assertEqual(item["trumpSeat"], 3)
-        self.assertEqual([entry["bid"] for entry in round_public(item)["bids"]], [2, 4, 4])
+        self.assertEqual([entry["bid"] for entry in round_public(item)["bids"]], [2, 4, 3])
         self.assertNotIn("cards", round_public(item))
 
     def test_illegal_bids_are_not_applied(self):
@@ -45,7 +45,7 @@ class BidTests(unittest.TestCase):
         item, _ = submit_bid(item, "p1", 2)
         item, _ = submit_bid(item, "p2", 1)
         item, _ = submit_bid(item, "p3", 3)
-        refused, error = submit_bid(item, "p4", 7)
+        refused, error = submit_bid(item, "p4", 4)
         self.assertIsNone(refused)
         self.assertEqual(error, TOTAL_EQUALS_TRICKS)
         accepted, error = submit_bid(item, "p4", 0)

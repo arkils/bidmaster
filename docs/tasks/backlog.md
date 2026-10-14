@@ -35,5 +35,11 @@ The user recorded **Review GO** on 2026-10-14, that Implementation Planning may 
 | [IMPL-005](impl/IMPL-005-bid-and-trump.md) | DONE | Blocking | IMPL-004 | Bid and trump |
 | [IMPL-006](impl/IMPL-006-play.md) | DONE | Blocking | IMPL-005 | Play the match |
 | [IMPL-007](impl/IMPL-007-look-back.md) | DONE | Blocking | IMPL-006 | Look back at a match |
+| [IMPL-011](impl/IMPL-011-card-table.md) | DONE | Important | IMPL-007 | Card table look |
+| [IMPL-012](impl/IMPL-012-table-play.md) | DONE | Important | IMPL-011 | Table play layout |
+| [IMPL-013](impl/IMPL-013-seat-circle.md) | DONE | Important | IMPL-012 | Seats in a circle |
+| [IMPL-014](impl/IMPL-014-own-seat.md) | DONE | Important | IMPL-013 | Own seat chip |
+| [IMPL-015](impl/IMPL-015-deal-cap.md) | DONE | Important | IMPL-006 | Deal at most 10 |
+| [IMPL-016](impl/IMPL-016-own-seat-on-felt.md) | DONE | Important | IMPL-014 | Own seat on the felt |
 
 The order is a chain. Split or reorder a later task only after discovery shows the product needs a different cut. Do that in the task’s notes log and in this table before starting the reordered work.

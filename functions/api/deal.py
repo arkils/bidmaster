@@ -13,7 +13,7 @@ def deck():
 
 
 def deal_size(player_count):
-    return 52 // player_count
+    return min(10, 52 // player_count)
 
 
 def round_deals(player_count):
@@ -22,8 +22,15 @@ def round_deals(player_count):
 
 
 def cards_dealt(item):
-    if item.get("cardsDealt") is not None:
-        return int(item["cardsDealt"])
+    hands = item.get("hands") or []
+    from_hands = max((len(hand) for hand in hands), default=0) + len(item.get("tricks") or [])
+    stored = item.get("cardsDealt")
+    if stored is not None and from_hands:
+        return max(int(stored), from_hands)
+    if stored is not None:
+        return int(stored)
+    if from_hands:
+        return from_hands
     players = item.get("players") or []
     return deal_size(len(players)) if players else 0
 
@@ -110,6 +117,11 @@ def match_view(item, caller_id, include_cards=True):
         from bid import round_public
 
         body["round"] = round_public(item)
+        hands = item.get("hands") or []
+        for seat in body["seats"]:
+            index = seat["seat"] - 1
+            if index < len(hands):
+                seat["cardsLeft"] = len(hands[index])
         if include_cards and body.get("yourSeat") and item.get("hands"):
             hand = item["hands"][body["yourSeat"] - 1]
             body["cards"] = sort_hand(hand)

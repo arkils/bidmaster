@@ -10,15 +10,15 @@ A match is a sequence of rounds. A round is a deal, a bid from each player, a tr
 
 A match has 3 to 10 players. Seating order is fixed for the match. That order is the turn order.
 
-Every player is dealt the same number of cards in a round. M is the largest number of cards that can be dealt equally from the 52-card deck: the greatest whole number for which M multiplied by the number of players is at most 52.
+Every player is dealt the same number of cards in a round. M is the largest number of cards that can be dealt equally from the 52-card deck: the greatest whole number for which M multiplied by the number of players is at most 52. M is never more than 10.
 
 ## Round progression
 
-Rounds deal M cards, then one fewer each round, down to 1. The one-card round is then played a second time. Deals then increase by one each round, back to M. M is dealt on the first round and again on the last round. The number of rounds is 2M.
+Rounds deal M cards, then one fewer each round, down to 1. The one-card round is then played a second time. Deals then increase by one each round, back to M. M is dealt on the first round and again on the last round. The number of rounds is 2M. Because M is never more than 10, a match has at most 20 rounds.
 
 When M is 5, the deals are 5, 4, 3, 2, 1, 1, 2, 3, 4, 5. That is 10 rounds.
 
-Five players give M = 10, because 5 × 10 = 50 and 5 × 11 = 55. The deals run from 10 down to 1, the one-card round is played again, then deals run back to 10. That match has 20 rounds.
+Three players could be dealt 17, because 3 × 17 = 51. M is 10. Four players could be dealt 13, because 4 × 13 = 52. M is 10. Five players give M = 10, because 5 × 10 = 50 and 5 × 11 = 55. Each of those matches deals 10 on the first round and again on the last round, and has 20 rounds. Cards that are not dealt stay out of that round.
 
 Six players cannot be dealt 9 cards, because 6 × 9 = 54. M = 8, because 6 × 8 = 48. That match has 16 rounds.
 
