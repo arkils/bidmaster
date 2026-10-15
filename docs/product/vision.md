@@ -19,7 +19,7 @@ CONFIRMED on 2026-10-13:
 - The first time someone arrives, a popup asks for their name. The site stores that name and a player id in a cookie. The screen shows the name. After that, they choose Create room or Join room. The room has a memorable two-word id in its URL, in the style of `funny-monkey`. A player joins by opening that URL or by typing the id. The host starts the match when they think everyone has joined, and chooses who bids first in round 1. Seats follow the order in which players joined.
 - Invited players can join that room and play a complete game.
 - That game is the tabletop rules in `docs/game/rules.md`: a match of 3 to 10 players, equal deals, bids, trump, tricks, exact-bid scoring, and a winner after the last round. Players who share the highest rank share the win.
-- A dashboard, visible once the match starts, shows each player's cumulative score, a ranking table, and a graph with one line per player for how many points they gained or lost each round. DynamoDB keeps every started match, and the dashboard can open an earlier match by its room id and show that same result for every round. It can also list the matches this browser's player id played.
+- A dashboard shows each player's cumulative score, a ranking table, a graph with one line per player for how many points they gained or lost each round, and a second graph of each player's running total from 0. Play starts on the room page. After the match has started, anyone can open that dashboard by its room id and watch the scores, without joining. DynamoDB keeps every started match, and the same dashboard shows that result for every round. It can also list the matches this browser's player id played.
 
 ## Non-goals
 

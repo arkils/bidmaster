@@ -28,7 +28,7 @@ Status: recorded by [DISC-007](../tasks/discovery/DISC-007-non-functional-requir
 - Version 1 states no uptime percentage and no cost ceiling.
 - While players are in a room, the table is live. One player's action is published to the others. A missed notice is repaired by loading the room.
 - A bid or a card should feel real-time. A delay of 1 or 2 seconds is acceptable. There is no stricter limit. Confirmed 2026-10-14. The first request after a quiet period can be slower, because a cold start can delay it. That cold start is already a consequence of [decision 0002](../decisions/0002-serverless-hosting.md). A player far from Mumbai may also wait longer than 2 seconds, and that extra wait is acceptable.
-- From the moment the match starts, every player in the room sees the dashboard: cumulative scores, rank, and the graph of each round's gain or loss.
+- Play starts on the room page. After the match has started, anyone can open its dashboard and watch the cumulative scores, the rank, the graph of each round's gain or loss, and the graph of each player's running total. The home list of matches stays limited to this browser.
 - A started match is kept, and it does not expire.
 - Version 1 is not a source of income.
 

@@ -37,6 +37,22 @@ Delivery is in `docs/architecture/delivery.md`: AWS CDK in TypeScript from a lap
 
 [V2-010](tasks/v2/V2-010-bid-sound.md) is done. A chosen bid plays `bid.mp3` once. A bid already stored when the table opens does not play. [V2-012](tasks/v2/V2-012-stadium-table.md) is done. The felt is a stadium, horizontal on a wide screen and vertical on a phone.
 
+[V2-013](tasks/v2/V2-013-trump-above-table.md) is done. After trump is chosen, a small suit mark sits between the room id and the stadium. The trick overlaps in the center. A full trick of 10 cards stays inside the stadium.
+
+[V2-014](tasks/v2/V2-014-trump-chooser-refresh.md) is done. The player who chooses trump sees the suit mark without refreshing. [V2-015](tasks/v2/V2-015-last-trick-pause.md) is done. The last trick of a round keeps the 2 second pause, and the round result opens after it. [V2-016](tasks/v2/V2-016-trump-gap.md) is done. The trump mark's place stays empty until a suit is chosen, and that height is already reserved. [V2-017](tasks/v2/V2-017-graph-markers.md) is done. The dashboard graph marks each round number and a point range that covers every point in the frame.
+
+[V2-018](tasks/v2/V2-018-start-in-room.md) is done. Starting the match leaves every player on the room page. [V2-019](tasks/v2/V2-019-name-without-seat.md) is done. Names are shown without a seat number. [V2-020](tasks/v2/V2-020-public-dashboard.md) is done. Anyone can open a started match's dashboard and watch the score.
+
+[V2-021](tasks/v2/V2-021-turn-buzz.md) is done. On a player's turn, `buzz.mp3` starts at 5 seconds and repeats every 5 seconds. A phone vibrates then when the browser allows it.
+
+[V2-022](tasks/v2/V2-022-dashboard-listener.md) is done. The dashboard listens on its own connection, so opening it does not stop live updates on the room.
+
+[V2-023](tasks/v2/V2-023-buzz-interval.md) is done. The turn buzz starts at 10 seconds and repeats every 10 seconds.
+
+[V2-024](tasks/v2/V2-024-total-graph.md) is done. The dashboard keeps the round-points graph and adds a graph of each player's running total, starting at 0.
+
+[V2-025](tasks/v2/V2-025-rules-page.md) is done. A rules page explains how to play. Home and the room link to it, and the page links back. It is not deployed yet. The running-total graph from V2-024 is also waiting for that deploy.
+
 ## Next step
 
-No version 2 prep is waiting. The user chooses the next change. New work is a `V2-*` task under Version 2 preps in [backlog.md](tasks/backlog.md). Do not change code until that task is `IN_PROGRESS`.
+No version 2 prep is waiting. The user chooses the next change. New work is a `V2-*` task under Version 2 preps in [backlog.md](tasks/backlog.md). Do not change code until that task is `IN_PROGRESS`. Do not deploy until the user asks.

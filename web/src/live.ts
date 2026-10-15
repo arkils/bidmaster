@@ -6,6 +6,8 @@ export type LiveNotice = {
   seats?: Seat[];
   openerSeat?: number;
   cards?: Card[];
+  trump?: string;
+  leadSeat?: number;
 };
 
 export function watchRoom(
@@ -14,6 +16,7 @@ export function watchRoom(
   roomId: string,
   playerId: string,
   onNotice: (notice: LiveNotice) => void,
+  privateHand = true,
 ): () => void {
   const token = encodeURIComponent(`${roomId}#${playerId}`);
   const client = mqtt.connect(
@@ -28,7 +31,9 @@ export function watchRoom(
   );
   client.on("connect", () => {
     client.subscribe(roomTopic(roomId));
-    client.subscribe(playerTopic(roomId, playerId));
+    if (privateHand) {
+      client.subscribe(playerTopic(roomId, playerId));
+    }
   });
   client.on("message", (_topic, payload) => {
     onNotice(JSON.parse(payload.toString()) as LiveNotice);

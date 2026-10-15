@@ -66,19 +66,30 @@ Seating order is the order in which players joined the room, earliest first. The
 ## Play the match
 
 - Person: every player in the match.
-- Start: the host has started the match.
+- Start: the host has started the match. The players are on the room page.
 - Steps: the players play the match in `docs/game/rules.md`. That is a deal, a private hand, a bid from each player, a trump suit, tricks until the dealt cards are gone, a round score, and the next round, through the last round. A player sees only their own cards.
 - End: the players are ranked by those rules, and the dashboard shows that result.
 
+## Rules
+
+- Person: anyone, including a player who has not given a name.
+- Start: the home page, or a room.
+- Steps:
+  1. From home, Rules sits below Create room and Join room and opens `/rules`.
+  2. From a room, Rules sits with Copy link and Dashboard and opens `/rules/{roomId}`.
+  3. The page explains the match in `docs/game/rules.md`. Opening it does not join the room.
+- End: Home returns to the home page. Table returns to the room the player left.
+
 ## Dashboard
 
-- Person: every player in the room.
-- Start: the match has started. The dashboard is on screen from that moment, at `/dashboard/{roomId}`, for example `/dashboard/funny-monkey`. The room page stays at `/{roomId}`.
+- Person: anyone with the dashboard address, including a player in the match.
+- Start: the match has started. Play stays on the room page, at `/{roomId}`. The dashboard is at `/dashboard/{roomId}`, for example `/dashboard/funny-monkey`. Opening it does not ask for a name and does not join the room.
 - What it shows:
   1. Each player's cumulative score for this match. Every score starts at 0 and updates when a round is scored.
   2. A table that ranks the players and shows each cumulative score. Rank follows `docs/game/rules.md`: a higher cumulative score ranks first. When scores are equal, more successful bids rank higher. When the score and the number of successful bids are both equal, those players share the rank. Players who share the highest rank share the win.
   3. A graph with one line per player. For each round that has been scored, the line shows how many points that player gained or lost in that round.
-- End: after the last round is scored, the table shows the final ranking and the graph includes every round.
+  4. A second graph with one line per player. Each line starts at 0 and, after every scored round, shows that player's cumulative score.
+- End: after the last round is scored, the table shows the final ranking and both graphs include every round.
 
 ## Look back at a match
 
@@ -87,7 +98,7 @@ Seating order is the order in which players joined the room, earliest first. The
 - Steps:
   1. The player opens the dashboard for that room id, for example `funny-monkey`.
   2. The dashboard shows the date the match started, the players who were there, and every round that has been scored.
-  3. For those rounds it shows the same three views as the live dashboard: cumulative scores, the ranking, and the graph of points gained or lost each round.
+  3. For those rounds it shows the same views as the live dashboard: cumulative scores, the ranking, the graph of points gained or lost each round, and the graph of each player's running total.
 - End: the player has seen that match's results. The cards, bids, and trump of those rounds are not part of this view.
 
 The dashboard also lists the matches this browser's player id sat in. Each entry shows the date, the room id, and the names the players used. Opening one shows that match's rounds, as above. Another browser, or this browser after the cookie is cleared, has a different player id and does not show this list.

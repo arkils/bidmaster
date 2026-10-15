@@ -77,3 +77,16 @@ Work after version 1 goes in this table. One task is `IN_PROGRESS` at a time. Ta
 | [V2-010](v2/V2-010-bid-sound.md) | DONE | Important | — | Play a sound when a bid is chosen |
 | [V2-011](v2/V2-011-seats-and-hand-gap.md) | DONE | Important | — | Seats near the rim, and a steady hand row |
 | [V2-012](v2/V2-012-stadium-table.md) | DONE | Important | — | Change the oval felt to a stadium |
+| [V2-013](v2/V2-013-trump-above-table.md) | DONE | Important | — | Trump above the stadium, trick of 10 in the center |
+| [V2-014](v2/V2-014-trump-chooser-refresh.md) | DONE | Important | — | Update the trump chooser without a refresh |
+| [V2-015](v2/V2-015-last-trick-pause.md) | DONE | Important | — | Pause 2 seconds before the round result |
+| [V2-016](v2/V2-016-trump-gap.md) | DONE | Important | — | Reserve the trump mark so the table does not drop |
+| [V2-017](v2/V2-017-graph-markers.md) | DONE | Important | — | Mark rounds and a point range on the dashboard graph |
+| [V2-018](v2/V2-018-start-in-room.md) | DONE | Important | — | Stay in the room when the match starts |
+| [V2-019](v2/V2-019-name-without-seat.md) | DONE | Important | — | Show names without seat numbers |
+| [V2-020](v2/V2-020-public-dashboard.md) | DONE | Important | — | Let anyone watch a started dashboard |
+| [V2-021](v2/V2-021-turn-buzz.md) | DONE | Important | — | Buzz 5 seconds into a player's turn, then every 5 seconds |
+| [V2-022](v2/V2-022-dashboard-listener.md) | DONE | Important | — | Give the dashboard its own live connection |
+| [V2-023](v2/V2-023-buzz-interval.md) | DONE | Important | — | Buzz 10 seconds into a turn, then every 10 seconds |
+| [V2-024](v2/V2-024-total-graph.md) | DONE | Important | — | Add a graph of each player's running total |
+| [V2-025](v2/V2-025-rules-page.md) | DONE | Important | — | Add a rules page and link it from home and the room |

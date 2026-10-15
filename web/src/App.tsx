@@ -11,6 +11,7 @@ import {
   parsePath,
   playCard,
   roomPath,
+  rulesPath,
   selectTrump,
   startMatch,
   submitBid,
@@ -38,9 +39,40 @@ function playCardSound() {
   playClip("/card.mp3");
 }
 
+function keepChosenTrump(current: Room | null, loaded: Room): Room {
+  const trump = current?.round?.trump;
+  const round = loaded.round;
+  if (!current?.round || !trump || !round || round.trump) {
+    return loaded;
+  }
+  if ((current.rounds?.length ?? 0) !== (loaded.rounds?.length ?? 0) || current.round.cardsDealt !== round.cardsDealt) {
+    return loaded;
+  }
+  return {
+    ...loaded,
+    round: {
+      ...round,
+      trump,
+      turn: current.round.turn,
+      leadSeat: current.round.leadSeat,
+    },
+  };
+}
+
 function playBidSound() {
   playClip("/bid.mp3");
 }
+
+function playTurnBuzz() {
+  playClip("/buzz.mp3");
+  try {
+    navigator.vibrate?.(200);
+  } catch {
+    // A browser that refuses vibration still plays the buzz.
+  }
+}
+
+const TURN_BUZZ_MS = 10000;
 
 const LINE_COLORS = ["#0b6e4f", "#9a3412", "#1d4ed8", "#a16207", "#7e22ce", "#be123c", "#0f766e", "#b45309", "#334155", "#4d7c0f"];
 
@@ -281,12 +313,24 @@ function Table({
   const stillBidding = Boolean(round) && !round?.trump && (round?.bids.length ?? 0) < room.seats.length;
   const choosingTrump = Boolean(round) && !round?.trump && round?.bids.length === room.seats.length;
 
+  useEffect(() => {
+    if (!yourTurn) {
+      return;
+    }
+    let pending = 0;
+    const buzz = () => {
+      playTurnBuzz();
+      pending = window.setTimeout(buzz, TURN_BUZZ_MS);
+    };
+    pending = window.setTimeout(buzz, TURN_BUZZ_MS);
+    return () => window.clearTimeout(pending);
+  }, [yourTurn]);
+
   const playing = yourTurn && Boolean(round?.trump);
   const phase = phaseText(room, yourTurn, stillBidding, choosingTrump);
   const hand = room.cards ?? [];
   const yourBid = round?.bids.find((entry) => entry.seat === you?.seat);
   const liveTrick = round?.trick ?? [];
-  const trumpRed = round?.trump === "hearts" || round?.trump === "diamonds";
 
   return (
     <div className="table-wrap">
@@ -305,14 +349,6 @@ function Table({
           );
         })}
         <div className={`table-center ${gather ? "gather" : ""}`}>
-          {round?.trump ? (
-            <p className={`trump ${trumpRed ? "card-red" : "card-black"}`}>
-              <span className="trump-mark" aria-hidden="true">
-                {SUIT_MARK[round.trump]}
-              </span>
-              <span className="card-name">Trump is {round.trump}.</span>
-            </p>
-          ) : null}
           {shownTrick.length > 0 ? (
             <div className="trick">
               {shownTrick.map((card) => (
@@ -413,51 +449,99 @@ function Table({
   );
 }
 
-function Graph({ room }: { room: Room }) {
+function pointScale(values: number[]): number[] {
+  let low = Math.min(...values);
+  let high = Math.max(...values);
+  if (low === high) {
+    const pad = Math.max(10, Math.abs(low) || 10);
+    low -= pad;
+    high += pad;
+  }
+  const rough = (high - low) / 4;
+  const power = 10 ** Math.floor(Math.log10(rough));
+  const fraction = rough / power;
+  const nice = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
+  const step = Math.max(1, nice * power);
+  const start = Math.floor(low / step) * step;
+  const end = Math.ceil(high / step) * step;
+  const ticks: number[] = [];
+  for (let value = start; value <= end + step * 0.001; value += step) {
+    ticks.push(Math.round(value));
+  }
+  return ticks;
+}
+
+function Graph({ room, totals = false }: { room: Room; totals?: boolean }) {
   const rounds = room.rounds ?? [];
+  const label = totals ? "Total" : "Points";
   if (rounds.length === 0) {
     return (
-      <svg className="graph" viewBox="0 0 340 168" role="img" aria-label="No scored round yet">
+      <svg className="graph" viewBox="0 0 340 176" role="img" aria-label="No scored round yet">
         <line x1="64" y1="16" x2="64" y2="120" stroke="currentColor" />
         <line x1="64" y1="120" x2="320" y2="120" stroke="currentColor" />
-        <text x="8" y="72" fontSize="12">
-          Points
+        <text x="8" y="12" fontSize="12">
+          {label}
         </text>
-        <text x="168" y="148" fontSize="12">
+        <text x="168" y="164" fontSize="12">
           Rounds
         </text>
       </svg>
     );
   }
-  const values = rounds.flatMap((result) => result.map((entry) => entry.points));
-  const low = Math.min(0, ...values);
-  const high = Math.max(0, ...values);
+  const lines = room.seats.map((seat) => {
+    const gained = rounds.map((result) => result.find((entry) => entry.seat === seat.seat)?.points ?? 0);
+    if (!totals) return gained;
+    let sum = 0;
+    return [0, ...gained.map((points) => (sum += points))];
+  });
+  const ticks = pointScale(lines.flat());
+  const low = ticks[0];
+  const high = ticks[ticks.length - 1];
   const span = high - low || 1;
-  const xAt = (index: number) => 64 + (index / Math.max(rounds.length - 1, 1)) * 240;
+  const count = lines[0]?.length ?? rounds.length;
+  const xAt = (index: number) => 64 + (index / Math.max(count - 1, 1)) * 240;
   const yAt = (points: number) => 120 - ((points - low) / span) * 96;
+  const roundSize = rounds.length > 12 ? 8 : 11;
   return (
-    <svg className="graph" viewBox="0 0 340 168" role="img" aria-label="Points gained or lost each round">
+    <svg
+      className="graph"
+      viewBox="0 0 340 176"
+      role="img"
+      aria-label={totals ? "Total points after each round" : "Points gained or lost each round"}
+    >
       <line x1="64" y1="16" x2="64" y2="120" stroke="currentColor" />
       <line x1="64" y1="120" x2="320" y2="120" stroke="currentColor" />
-      <text x="8" y="72" fontSize="12">
-        Points
+      <text x="8" y="12" fontSize="12">
+        {label}
       </text>
-      <text x="168" y="148" fontSize="12">
+      {ticks.map((tick) => (
+        <g key={tick}>
+          <line x1="60" y1={yAt(tick)} x2="64" y2={yAt(tick)} stroke="currentColor" />
+          <text x="56" y={yAt(tick) + 4} fontSize="11" textAnchor="end">
+            {tick}
+          </text>
+        </g>
+      ))}
+      {rounds.map((_, index) => (
+        <g key={index}>
+          <line x1={xAt(totals ? index + 1 : index)} y1="120" x2={xAt(totals ? index + 1 : index)} y2="124" stroke="currentColor" />
+          <text x={xAt(totals ? index + 1 : index)} y="140" fontSize={roundSize} textAnchor="middle">
+            {index + 1}
+          </text>
+        </g>
+      ))}
+      <text x="168" y="164" fontSize="12">
         Rounds
       </text>
-      {room.seats.map((seat) => {
-        const points = rounds.map((result) => result.find((entry) => entry.seat === seat.seat)?.points ?? 0);
-        const line = points.map((value, index) => `${xAt(index)},${yAt(value)}`).join(" ");
-        return (
-          <polyline
-            key={seat.seat}
-            points={line}
-            fill="none"
-            stroke={LINE_COLORS[(seat.seat - 1) % LINE_COLORS.length]}
-            strokeWidth="2"
-          />
-        );
-      })}
+      {room.seats.map((seat, seatIndex) => (
+        <polyline
+          key={seat.seat}
+          points={(lines[seatIndex] ?? []).map((value, index) => `${xAt(index)},${yAt(value)}`).join(" ")}
+          fill="none"
+          stroke={LINE_COLORS[(seat.seat - 1) % LINE_COLORS.length]}
+          strokeWidth="2"
+        />
+      ))}
     </svg>
   );
 }
@@ -498,6 +582,102 @@ function MatchList({ matches }: { matches: MatchSummary[] }) {
   );
 }
 
+function Rules({ roomId }: { roomId: string }) {
+  const back = roomId ? roomPath(roomId) : "/";
+  const backLabel = roomId ? "Table" : "Home";
+  return (
+    <article className="rules">
+      <h2>Rules</h2>
+      <p className="mt-3 flex justify-center">
+        <Button asChild variant="outline">
+          <a href={back}>{backLabel}</a>
+        </Button>
+      </p>
+      <h3>How a match is played</h3>
+      <p>
+        A match is a run of rounds. Each round is a deal, a bid from every player, a trump suit, and then tricks until the dealt cards are gone. The winner is the highest rank after the scores are added up. A tie on the score is broken by how many bids were exact.
+      </p>
+      <h3>Players</h3>
+      <p>A match has 3 to 10 players. Seats stay fixed, and that order is the turn order. Play goes clockwise.</p>
+      <h3>The deal</h3>
+      <p>
+        Every player is dealt the same number of cards. That number is the most that can be dealt equally from a 52-card deck, and it is never more than 10. Cards that are not dealt stay out of the round. They are not played, and they are not trump.
+      </p>
+      <p>
+        The first round deals that many cards. Each following round deals one fewer, down to 1. The one-card round is played twice. The deals then rise by one card each round, back to the first number. That number is dealt on the first round and again on the last. A match has twice as many rounds as cards in the first deal, and never more than 20.
+      </p>
+      <p>With a first deal of 5, the rounds are 5, 4, 3, 2, 1, 1, 2, 3, 4, 5. The next round starts only after the current round has been scored.</p>
+      <h3>Bidding</h3>
+      <p>
+        Players bid before any card is played, clockwise, one bid each. A bid is a whole number from 0 through the cards dealt this round. A bid cannot be changed. There are as many tricks as cards dealt, and the bids together must not add up to that number.
+      </p>
+      <p>
+        Any player may bid first in round 1. That same player leads the first trick. The first bidder moves one seat clockwise every round, so the player who bid first bids last in the next round. The last bidder must choose a number that keeps the total different from the cards dealt. Any other bid from that player is refused.
+      </p>
+      <p>Four players with 7 cards, and the first three bids 2, 1, and 3: the last player cannot bid 1, because the total would be 7.</p>
+      <h3>Trump</h3>
+      <p>
+        After every bid is locked, one player names a trump suit for the round. It stays fixed. The chooser is the first player in that round's bidding order to bid the highest number. A later player who bids the same number does not take the choice. When every bid is 0, the player who bid first selects trump.
+      </p>
+      <h3>The cards</h3>
+      <p>
+        The deck is 52 cards: clubs, diamonds, hearts, and spades. Each suit runs from 2 up through 10, Jack, Queen, King, and Ace. There are no jokers. The deck is shuffled before every round. Each player may look at their own hand before bidding, and sees only those cards.
+      </p>
+      <h3>Tricks</h3>
+      <p>
+        Each trick, every player plays one card, clockwise. One player wins the trick. The winner leads the next trick. Play continues until every dealt card has been played. The player who bid first leads the first trick.
+      </p>
+      <p>
+        The first card sets the led suit. A player who still holds that suit must play it. A player with none of that suit may play any other card, and it does not have to be trump. Trump beats every card that is not trump. If more than one trump is played, the higher trump wins. If no trump is played, the highest card of the led suit wins. Any other card cannot win the trick.
+      </p>
+      <h3>Scoring</h3>
+      <p>
+        A player scores only by matching the bid exactly. The size of a miss does not change the points, and a miss scores the same amount with a minus. A bid of 0 scores +10 when exact and −10 otherwise. A bid above 0 scores the bid times 11 when exact, and minus that number otherwise. The round score is added to the match score.
+      </p>
+      <ScoreTable>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Bid</TableHead>
+            <TableHead>Tricks</TableHead>
+            <TableHead>Points</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>0</TableCell>
+            <TableCell>0</TableCell>
+            <TableCell>+10</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>0</TableCell>
+            <TableCell>1</TableCell>
+            <TableCell>−10</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>1</TableCell>
+            <TableCell>1</TableCell>
+            <TableCell>+11</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>2</TableCell>
+            <TableCell>2</TableCell>
+            <TableCell>+22</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>2</TableCell>
+            <TableCell>3</TableCell>
+            <TableCell>−22</TableCell>
+          </TableRow>
+        </TableBody>
+      </ScoreTable>
+      <h3>The winner</h3>
+      <p>
+        After the last round, the higher cumulative score ranks first. Only a tie on that score looks at successful bids. A successful bid is a round won with exactly the bid, and two exact bids count as two, whatever the numbers were. More successful bids rank higher. When the score and that count are both equal, those players share the rank. The highest rank wins, and players who share it share the win.
+      </p>
+    </article>
+  );
+}
+
 function Dashboard({ room, matches }: { room: Room; matches: MatchSummary[] }) {
   return (
     <section className="mt-6">
@@ -513,7 +693,6 @@ function Dashboard({ room, matches }: { room: Room; matches: MatchSummary[] }) {
           <TableHeader>
             <TableRow>
               <TableHead>Rank</TableHead>
-              <TableHead>Seat</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Score</TableHead>
             </TableRow>
@@ -522,7 +701,6 @@ function Dashboard({ room, matches }: { room: Room; matches: MatchSummary[] }) {
             {(room.ranking ?? []).map((entry) => (
               <TableRow key={entry.seat}>
                 <TableCell>{entry.rank}</TableCell>
-                <TableCell>{entry.seat}</TableCell>
                 <TableCell>{entry.name}</TableCell>
                 <TableCell>{entry.score}</TableCell>
               </TableRow>
@@ -531,6 +709,7 @@ function Dashboard({ room, matches }: { room: Room; matches: MatchSummary[] }) {
         </ScoreTable>
       </div>
       <Graph room={room} />
+      <Graph room={room} totals />
       <ul className="legend">
         {room.seats.map((seat) => (
           <li key={seat.seat} className="inline-flex items-center gap-2">
@@ -553,7 +732,12 @@ export function App() {
   const [room, setRoom] = useState<Room | null>(null);
   const [matches, setMatches] = useState<MatchSummary[]>([]);
   const [error, setError] = useState("");
+  const [resultVisible, setResultVisible] = useState(false);
   const closedResult = useRef<number | null>(null);
+  const seenResultRoom = useRef<string | null>(null);
+  const heldResult = useRef<number | null>(null);
+  const waitingResult = useRef<number | null>(null);
+  const watchId = useRef(crypto.randomUUID());
 
   function go(path: string) {
     window.history.pushState({}, "", path);
@@ -571,6 +755,56 @@ export function App() {
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+
+  useEffect(() => {
+    if (location.screen !== "room") {
+      seenResultRoom.current = null;
+      heldResult.current = null;
+      waitingResult.current = null;
+      setResultVisible(false);
+      return;
+    }
+    if (!room) {
+      return;
+    }
+    const at = room.resultAt ?? null;
+    const firstLook = seenResultRoom.current !== room.roomId;
+    if (firstLook) {
+      seenResultRoom.current = room.roomId;
+      heldResult.current = null;
+      waitingResult.current = null;
+    }
+    if (at == null) {
+      heldResult.current = null;
+      waitingResult.current = null;
+      setResultVisible(false);
+      return;
+    }
+    if (heldResult.current === at || waitingResult.current === at) {
+      return;
+    }
+    if (firstLook) {
+      heldResult.current = at;
+      setResultVisible(true);
+      return;
+    }
+    waitingResult.current = at;
+    setResultVisible(false);
+    const timer = window.setTimeout(() => {
+      if (waitingResult.current !== at) {
+        return;
+      }
+      waitingResult.current = null;
+      heldResult.current = at;
+      setResultVisible(true);
+    }, 2000);
+    return () => {
+      window.clearTimeout(timer);
+      if (waitingResult.current === at) {
+        waitingResult.current = null;
+      }
+    };
+  }, [location.screen, room?.roomId, room?.resultAt]);
 
   useEffect(() => {
     if (!player) {
@@ -594,12 +828,18 @@ export function App() {
   }, [player]);
 
   useEffect(() => {
-    if (!player || !location.roomId) {
+    if (location.screen === "rules" || !location.roomId || (location.screen !== "dashboard" && !player)) {
       return;
     }
     let stop = () => {};
     let cancelled = false;
-    const open = location.screen === "dashboard" ? loadRoom(location.roomId, player.playerId) : joinRoom(location.roomId, player.name, player.playerId);
+    const callerId = player?.playerId ?? "";
+    const watching = location.screen === "dashboard";
+    const liveId = watching || !player ? watchId.current : player.playerId;
+    const open =
+      location.screen === "dashboard" || !player
+        ? loadRoom(location.roomId, callerId)
+        : joinRoom(location.roomId, player.name, player.playerId);
     open
       .then((next) => {
         if (cancelled) {
@@ -612,11 +852,7 @@ export function App() {
         }
         setRoom(next);
         setError("");
-        stop = watchRoom(next.iotEndpoint, next.authorizerName, next.roomId, player.playerId, (notice) => {
-          if (notice.kind === "started" && location.screen === "room") {
-            go(dashboardPath(next.roomId));
-            return;
-          }
+        stop = watchRoom(next.iotEndpoint, next.authorizerName, next.roomId, liveId, (notice) => {
           setRoom((current) => {
             if (!current) {
               return current;
@@ -628,12 +864,20 @@ export function App() {
               cards: notice.cards ?? current.cards,
               started: notice.kind === "started" ? true : current.started,
             };
+            if (notice.kind === "trump" && notice.trump && current.round) {
+              merged.round = {
+                ...current.round,
+                trump: notice.trump,
+                turn: notice.leadSeat ?? current.round.turn,
+                leadSeat: notice.leadSeat ?? current.round.leadSeat,
+              };
+            }
             if (notice.kind === "continued") {
               return { ...merged, resultAt: undefined };
             }
             return merged;
           });
-          loadRoom(next.roomId, player.playerId)
+          loadRoom(next.roomId, callerId)
             .then((loaded) => {
               if (cancelled) {
                 return;
@@ -644,10 +888,10 @@ export function App() {
               if (loaded.resultAt == null) {
                 closedResult.current = null;
               }
-              setRoom(loaded);
+              setRoom((current) => keepChosenTrump(current, loaded));
             })
             .catch(() => undefined);
-        });
+        }, !watching);
       })
       .catch((reason: unknown) => {
         if (cancelled) {
@@ -720,7 +964,7 @@ export function App() {
     setError("");
     try {
       await startMatch(room.roomId, player.playerId, seat);
-      go(dashboardPath(room.roomId));
+      setRoom(await loadRoom(room.roomId, player.playerId));
     } catch (reason) {
       setError(reason instanceof ApiError ? reason.message : "the match could not be started");
     }
@@ -807,7 +1051,17 @@ export function App() {
         BidMaster
       </h1>
       {location.screen === "room" && room ? <p className="room-name">{room.roomId}</p> : null}
-      <Dialog open={!player}>
+      {location.screen === "room" && room ? (
+        room.round?.trump ? (
+          <p className={`trump-spot ${room.round.trump === "hearts" || room.round.trump === "diamonds" ? "card-red" : "card-black"}`}>
+            <span aria-hidden="true">{SUIT_MARK[room.round.trump]}</span>
+            <span className="card-name">Trump is {room.round.trump}.</span>
+          </p>
+        ) : (
+          <p className="trump-spot trump-spot-empty" aria-hidden="true" />
+        )
+      ) : null}
+      <Dialog open={!player && location.screen !== "dashboard" && location.screen !== "rules"}>
         <DialogContent
           onPointerDownOutside={(event) => event.preventDefault()}
           onEscapeKeyDown={(event) => event.preventDefault()}
@@ -843,15 +1097,26 @@ export function App() {
           )}
         </div>
       ) : null}
+      {player && location.screen === "home" ? (
+        <p className="mt-3 flex justify-center">
+          <Button asChild variant="outline">
+            <a href={rulesPath()}>Rules</a>
+          </Button>
+        </p>
+      ) : null}
       {player && location.screen === "home" ? <MatchList matches={matches} /> : null}
+      {location.screen === "rules" ? <Rules roomId={location.roomId} /> : null}
       {location.screen === "dashboard" && room?.started ? <Dashboard room={room} matches={matches} /> : null}
-      {location.screen === "room" && room?.resultAt != null ? <RoundResult room={room} onOk={onResult} /> : null}
+      {location.screen === "room" && resultVisible && room?.resultAt != null ? <RoundResult room={room} onOk={onResult} /> : null}
       {location.screen === "room" && room ? (
         <section>
           {room.seats.length === 0 ? <p className="note">This room has no seated player. The room id stays reserved.</p> : <Table room={room} onBid={onBid} onTrump={onTrump} onPlay={onPlay} />}
           <div className="under-table">
             <Button type="button" variant="outline" onClick={() => navigator.clipboard.writeText(pageUrl)}>
               Copy link
+            </Button>
+            <Button asChild variant="outline">
+              <a href={rulesPath(room.roomId)}>Rules</a>
             </Button>
             {room.started ? (
               <Button asChild variant="outline">
@@ -947,7 +1212,7 @@ function StartForm({ seats, onStart }: { seats: Room["seats"]; onStart: (seat: n
         <Select id="opener" label="Bids first" value={seat} onValueChange={setSeat}>
           {seats.map((entry) => (
             <SelectItem key={entry.seat} value={String(entry.seat)}>
-              {entry.seat}. {entry.name}
+              {entry.name}
             </SelectItem>
           ))}
         </Select>

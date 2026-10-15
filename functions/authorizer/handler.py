@@ -8,14 +8,23 @@ table = boto3.resource("dynamodb").Table(os.environ["ROOMS_TABLE"])
 
 def handler(event, context):
     room_id, player_id = identity(event)
-    if not room_id or not player_id or not seated(room_id, player_id):
+    item = room_item(room_id) if room_id and player_id else None
+    if item is None:
+        return deny()
+    is_seated = any(player["playerId"] == player_id for player in item.get("players", []))
+    if not is_seated and not item.get("started"):
         return deny()
     account = context.invoked_function_arn.split(":")[4]
     region = os.environ["AWS_REGION"]
     room = f"bidmaster/room/{room_id}"
-    player = f"bidmaster/room/{room_id}/player/{player_id}"
     topic = f"arn:aws:iot:{region}:{account}:topic"
     topicfilter = f"arn:aws:iot:{region}:{account}:topicfilter"
+    subscribe = [f"{topicfilter}/{room}"]
+    receive = [f"{topic}/{room}"]
+    if is_seated:
+        player = f"bidmaster/room/{room_id}/player/{player_id}"
+        subscribe.append(f"{topicfilter}/{player}")
+        receive.append(f"{topic}/{player}")
     return {
         "isAuthenticated": True,
         "principalId": principal_id(player_id),
@@ -26,16 +35,8 @@ def handler(event, context):
                 "Version": "2012-10-17",
                 "Statement": [
                     {"Effect": "Allow", "Action": "iot:Connect", "Resource": "*"},
-                    {
-                        "Effect": "Allow",
-                        "Action": "iot:Subscribe",
-                        "Resource": [f"{topicfilter}/{room}", f"{topicfilter}/{player}"],
-                    },
-                    {
-                        "Effect": "Allow",
-                        "Action": "iot:Receive",
-                        "Resource": [f"{topic}/{room}", f"{topic}/{player}"],
-                    },
+                    {"Effect": "Allow", "Action": "iot:Subscribe", "Resource": subscribe},
+                    {"Effect": "Allow", "Action": "iot:Receive", "Resource": receive},
                 ],
             }
         ],
@@ -65,11 +66,8 @@ def principal_id(player_id):
     return re.sub(r"[^a-zA-Z0-9]", "", player_id)[:128]
 
 
-def seated(room_id, player_id):
-    item = table.get_item(Key={"roomId": room_id}).get("Item")
-    if not item:
-        return False
-    return any(player["playerId"] == player_id for player in item.get("players", []))
+def room_item(room_id):
+    return table.get_item(Key={"roomId": room_id}).get("Item")
 
 
 def deny():

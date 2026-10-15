@@ -191,6 +191,10 @@ export function dashboardPath(roomId: string): string {
   return `/dashboard/${roomId}`;
 }
 
+export function rulesPath(roomId = ""): string {
+  return roomId ? `/rules/${roomId}` : "/rules";
+}
+
 export function roomIdFromPath(path: string): string {
   const id = path.replace(/^\/+|\/+$/g, "");
   if (!roomIdPattern.test(id)) {
@@ -199,8 +203,11 @@ export function roomIdFromPath(path: string): string {
   return id;
 }
 
-export function parsePath(path: string): { screen: "home" | "room" | "dashboard"; roomId: string } {
+export function parsePath(path: string): { screen: "home" | "room" | "dashboard" | "rules"; roomId: string } {
   const parts = path.replace(/^\/+|\/+$/g, "").split("/").filter(Boolean);
+  if (parts[0] === "rules" && (parts.length === 1 || (parts.length === 2 && roomIdPattern.test(parts[1])))) {
+    return { screen: "rules", roomId: parts[1] ?? "" };
+  }
   if (parts.length === 2 && parts[0] === "dashboard" && roomIdPattern.test(parts[1])) {
     return { screen: "dashboard", roomId: parts[1] };
   }

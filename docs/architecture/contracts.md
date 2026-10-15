@@ -34,7 +34,7 @@ A call that the rules or the journeys forbid is not applied. The match stays as 
 
 ## Load a room
 
-- Caller: a browser that knows the room id. This is also how the dashboard looks back at a match.
+- Caller: a browser that knows the room id. This is also how the dashboard looks back at a match, including a browser that is not seated and has no player id.
 - Channel: HTTP API.
 - Inputs: the room id, and the caller's player id when the cookie has one.
 - Outputs before the match starts: the room id and the joined players in join order. Each player is a seat number and a name.
@@ -77,11 +77,11 @@ Cumulative scores, rank, and the graph are calculated from the round points. Ran
 
 ## Subscribe
 
-- Caller: the browser of a player who has joined the room.
+- Caller: the browser of a player who has joined the room, or a browser watching a started match.
 - Channel: AWS IoT Core. The authorizer is a Python Lambda.
-- Inputs: the room id and the player's id.
-- Outputs: the subscription is allowed. The browser may subscribe to the room topic. It may subscribe to that player id's topic only for that same id and room.
-- Errors: the player id is not seated in that room. The subscription is refused. Knowing the room id is not enough.
+- Inputs: the room id and an id. A seated player's room page uses that player's id. A dashboard page uses a different id for that page, even when the browser belongs to a seated player. That id is not the seated player's id.
+- Outputs: the subscription is allowed for the room topic. The seated player's room page may also subscribe to that player id's topic for that same room, and that connection stays up while a dashboard is open. A dashboard receives the room's public notices and not a player's cards.
+- Errors: there is no such room. The match has not started and the id is not seated. The subscription is refused. A dashboard is not given a player's topic. Joining the room to play is still refused after the match has started.
 
 ## Room notice
 

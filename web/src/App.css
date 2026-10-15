@@ -104,32 +104,14 @@
   position: absolute;
   z-index: 1;
   left: 50%;
-  top: 46%;
+  top: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  width: min(16rem, 46%);
+  width: min(26rem, 78%);
   text-align: center;
   transform: translate(-50%, -50%);
-}
-
-.trump {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.6rem;
-  min-height: 5rem;
-  margin: 0;
-  background: linear-gradient(180deg, #fff, var(--color-card));
-  border: 1px solid rgb(28 25 23 / 0.16);
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 0.22);
-}
-
-.trump-mark {
-  font-size: 2.4rem;
-  line-height: 1;
 }
 
 .bid-list {
@@ -181,6 +163,11 @@
 
 .trick {
   max-width: 100%;
+  justify-content: center;
+}
+
+.trick > * + * {
+  margin-left: -1.35rem;
 }
 
 .hand {
@@ -328,6 +315,32 @@
   animation: card-deal var(--motion-deal) ease-out both;
 }
 
+.rules {
+  margin-top: 1.5rem;
+  color: var(--color-ink);
+}
+
+.rules h2,
+.rules h3 {
+  margin: 1.4rem 0 0;
+  color: var(--color-felt);
+  font-weight: 650;
+  text-align: center;
+}
+
+.rules h2 {
+  font-size: 1.25rem;
+}
+
+.rules h3 {
+  font-size: 1.05rem;
+}
+
+.rules p {
+  margin: 0.7rem 0 0;
+  line-height: 1.5;
+}
+
 .graph {
   width: 100%;
   height: auto;
@@ -403,6 +416,26 @@
   text-align: center;
 }
 
+.trump-spot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin: 0.45rem auto 0;
+  border: 1px solid var(--color-gold);
+  border-radius: 0.4rem;
+  background: var(--color-card);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.trump-spot-empty {
+  border-color: transparent;
+  background: transparent;
+}
+
 .under-table {
   display: flex;
   flex-wrap: wrap;
@@ -462,6 +495,10 @@
 
   .felt {
     min-height: 30rem;
+  }
+
+  .trick > * + * {
+    margin-left: -2.35rem;
   }
 
   .seat-chip {
