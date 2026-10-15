@@ -17,7 +17,7 @@ Earlier records remain in `docs/adr/`. Do not renumber them. New decisions start
 | [0005](0005-mumbai-region.md) | Mumbai region | ACCEPTED |
 | [0006](0006-react-and-python.md) | React and Python | ACCEPTED |
 | [0007](0007-api-gateway-and-live-updates.md) | API Gateway and live updates | ACCEPTED. HTTP API remains. WebSocket push superseded by 0008. |
-| [0008](0008-iot-core-notifications.md) | IoT Core notifications | ACCEPTED |
+| [0008](0008-iot-core-notifications.md) | IoT Core notifications | ACCEPTED. Amended 2026-10-15 for the public dashboard and the round-result accept. |
 | [0009](0009-player-id.md) | Player id beside the name | ACCEPTED |
 | [0010](0010-cdk-typescript-from-laptop.md) | CDK in TypeScript, deployed from a laptop | ACCEPTED |
 | [0011](0011-tailwind-shadcn.md) | Tailwind and shadcn for the shell | ACCEPTED |

@@ -23,12 +23,14 @@ Status: recorded by [DISC-002](../tasks/discovery/DISC-002-requirements.md) and 
 - Players in the room can play a complete match under `docs/game/rules.md`.
 - A rules page explains how to play, following `docs/game/rules.md`. Home links to it below Create room and Join room. A room links to it beside Copy link and Dashboard. The page links back to that room, or back to home when it was opened from home. Opening it does not ask for a name and does not join a room.
 - When the host starts the match, the players stay on the room page and play from there.
+- The screen shows each player's name and does not print a seat number. Seats stay numbered in the stored match and in messages, so two players can share a name.
+- When a round is scored, the next round does not start. The last trick keeps its pause, then every player sees that round's result. The host, seat 1, can press OK at once. Any other seated player can press OK after 5 seconds. One accepted OK hides the result for everyone. The next round is dealt only then. After the last round, OK hides the result and deals nothing further.
 - A dashboard shows each player's cumulative score for this match, starting at 0 and updating when a round is scored. It includes a ranking table of those scores, ranked by `docs/game/rules.md`. It includes a graph with one line per player, showing how many points that player gained or lost in each scored round, and a second graph whose lines start at 0 and show each player's cumulative score after every scored round. After the match has started, anyone can open `/dashboard/{roomId}` and watch those scores, without a seat and without a name. That page does not join the room.
 - DynamoDB keeps every match the host has started, including after everyone has left. The kept record is the date the match started, the room id as its name, the players who were there (each with a player id and the name they used), and the points each player gained or lost in each scored round. See [the data model](../architecture/data-model.md).
 - From the dashboard, a player can open an earlier match by its room id and see every scored round of that match: the cumulative scores, the ranking, and both graphs. The dashboard also lists the matches stored for this browser's player id.
 - Version 1 is not a source of income.
 - Version 1 has no public lobby. A game starts from an invitation.
-- While players are in a room, the table is live. One player's action is published to the others through AWS IoT Core. See [decision 0008](../decisions/0008-iot-core-notifications.md). The HTTP API remains [decision 0007](../decisions/0007-api-gateway-and-live-updates.md).
+- While players are in a room, the table is live. One player's action is published to the others through AWS IoT Core. See [decision 0008](../decisions/0008-iot-core-notifications.md). The HTTP API remains [decision 0007](../decisions/0007-api-gateway-and-live-updates.md). The dashboard listens on its own connection. Opening it does not stop live updates on the room.
 
 ## PROPOSED
 

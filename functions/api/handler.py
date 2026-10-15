@@ -159,12 +159,7 @@ def play_room(room_id, body):
     publish_payload(card_notice(updated, meta))
     if meta.get("scored"):
         publish_payload(scored_notice(updated, meta))
-    for owner, cards in hand_notices(updated, meta, player_id):
-        iot.publish(
-            topic=player_topic(updated["roomId"], owner),
-            qos=0,
-            payload=json.dumps({"kind": "hand", "roomId": updated["roomId"], "cards": cards}).encode(),
-        )
+    publish_hands(updated, meta, player_id)
     return respond(200, with_iot(present(updated, player_id, include_cards=False)))
 
 
@@ -181,12 +176,7 @@ def result_room(room_id, body):
         current = load_item(room_id)
         return respond(403, with_iot(present(current, player_id, include_cards=False)))
     publish_payload(continued_notice(updated, meta))
-    for owner, cards in hand_notices(updated, meta, player_id):
-        iot.publish(
-            topic=player_topic(updated["roomId"], owner),
-            qos=0,
-            payload=json.dumps({"kind": "hand", "roomId": updated["roomId"], "cards": cards}).encode(),
-        )
+    publish_hands(updated, meta, player_id)
     return respond(200, with_iot(present(updated, player_id, include_cards=False)))
 
 
@@ -308,6 +298,15 @@ def publish(kind, item):
 
 def publish_payload(payload):
     iot.publish(topic=room_topic(payload["roomId"]), qos=0, payload=json.dumps(payload).encode())
+
+
+def publish_hands(item, meta, caller_id):
+    for owner, cards in hand_notices(item, meta, caller_id):
+        iot.publish(
+            topic=player_topic(item["roomId"], owner),
+            qos=0,
+            payload=json.dumps({"kind": "hand", "roomId": item["roomId"], "cards": cards}).encode(),
+        )
 
 
 def publish_started(item):

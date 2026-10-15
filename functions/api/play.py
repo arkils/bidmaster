@@ -1,7 +1,7 @@
 import random
 
 from bid import bidding_seat, seat_of
-from deal import cards_dealt, ranking, round_deals, scores, sort_hand
+from deal import cards_dealt, deck, ranking, round_deals, scores, sort_hand
 from rooms import public_room
 
 PLAY_RANKS = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace")
@@ -134,8 +134,6 @@ def continue_match(item, rng):
 
 
 def deal_hands_of(player_count, size, rng):
-    from deal import deck
-
     cards = deck()
     rng.shuffle(cards)
     return [cards[index * size : (index + 1) * size] for index in range(player_count)]

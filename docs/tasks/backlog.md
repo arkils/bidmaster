@@ -61,7 +61,7 @@ The order is a chain. Split or reorder a later task only after discovery shows t
 
 ## Version 2 preps
 
-Work after version 1 goes in this table. One task is `IN_PROGRESS` at a time. Take the lowest `TODO` whose blockers are `DONE`.
+Version 2 closed on 2026-10-15. This table is the record. Do not add a version 3 task here.
 
 | ID | Status | Priority | Blocked by | Summary |
 | --- | --- | --- | --- | --- |
@@ -91,3 +91,4 @@ Work after version 1 goes in this table. One task is `IN_PROGRESS` at a time. Ta
 | [V2-024](v2/V2-024-total-graph.md) | DONE | Important | — | Add a graph of each player's running total |
 | [V2-025](v2/V2-025-rules-page.md) | DONE | Important | — | Add a rules page and link it from home and the room |
 | [V2-026](v2/V2-026-room-link-label.md) | DONE | Important | — | Use Room for the link back to the room |
+| [V2-027](v2/V2-027-close-v2.md) | DONE | Important | — | Close version 2 and match the documents to the site |

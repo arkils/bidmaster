@@ -36,7 +36,11 @@ export function watchRoom(
     }
   });
   client.on("message", (_topic, payload) => {
-    onNotice(JSON.parse(payload.toString()) as LiveNotice);
+    try {
+      onNotice(JSON.parse(payload.toString()) as LiveNotice);
+    } catch {
+      // A notice that is not JSON is ignored. The next load repairs the table.
+    }
   });
   return () => {
     client.end(true);

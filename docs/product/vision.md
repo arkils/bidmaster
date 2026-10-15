@@ -21,6 +21,17 @@ CONFIRMED on 2026-10-13:
 - That game is the tabletop rules in `docs/game/rules.md`: a match of 3 to 10 players, equal deals, bids, trump, tricks, exact-bid scoring, and a winner after the last round. Players who share the highest rank share the win.
 - A dashboard shows each player's cumulative score, a ranking table, a graph with one line per player for how many points they gained or lost each round, and a second graph of each player's running total from 0. Play starts on the room page. After the match has started, anyone can open that dashboard by its room id and watch the scores, without joining. DynamoDB keeps every started match, and the same dashboard shows that result for every round. It can also list the matches this browser's player id played.
 
+## Version 2
+
+CONFIRMED on 2026-10-15. Version 2 is finished. It keeps version 1 and adds what the version 2 tasks shipped:
+
+- Players open `https://bidmaster.arkil.in`.
+- A rules page explains the match. Opening it does not ask for a name and does not join a room.
+- The screen shows each player's name and does not print a seat number. The stored match still numbers the seats.
+- A scored round stays on the table until the host, or any player after 5 seconds, presses OK. The next round starts only then.
+- Anyone can watch a started match's dashboard. That page has its own live connection, so opening it does not stop the room.
+- A bid, a played card, and a player's own turn have the sounds in [look.md](look.md).
+
 ## Non-goals
 
 CONFIRMED. Version 1 is not a source of income.

@@ -4,7 +4,7 @@ Date: 2026-10-13
 
 ## Status
 
-ACCEPTED
+ACCEPTED. Amended on 2026-10-15 for the public dashboard and for accepting a scored round. The current behavior is below. The contracts are the detailed record.
 
 ## Context
 
@@ -14,18 +14,18 @@ ACCEPTED
 
 AWS IoT Core in Mumbai (`ap-south-1`) is the notification carrier. The match stays in DynamoDB. Python Lambda remains the runtime. No container starts when a match begins. API Gateway keeps its HTTP API and drops its WebSocket API.
 
-- The HTTP API, behind CloudFront, handles the operations in [the contracts](../architecture/contracts.md): create, join, leave before the match starts, load, start, a bid, trump, a card, and the list of matches for one player id.
+- The HTTP API, behind CloudFront, handles the operations in [the contracts](../architecture/contracts.md): create, join, leave before the match starts, load, start, a bid, trump, a card, accepting a scored round, and the list of matches for one player id. Playing the last card of a round stores the score. It does not deal the next round.
 - Lambda checks the rules, writes the match to DynamoDB, publishes one notice, and stops.
-- A shared topic for the room carries the bid, the played card, the trick, and, after a round is scored, the cumulative scores, the ranking, and that round's gain or loss. A player in that message is a seat number plus the name on the seat.
+- A shared topic for the room carries the bid, the played card, the trick, a scored round that is waiting, and the accept that continues or ends the match. A player in that message is a seat number plus the name on the seat. The screen shows the name and does not print the seat number.
 - A separate topic for each player id carries only that player's cards. The visible name is not the topic key. See [decision 0009](0009-player-id.md).
-- An IoT authorizer, itself a Python Lambda, allows a subscription only for a player id that has joined that room. The room id is the invite, so knowing the id is not enough to subscribe.
+- An IoT authorizer, itself a Python Lambda, allows the room topic for a player id that has joined that room. After the match has started, it also allows the room topic for a browser that is only watching. That watcher does not receive a player's cards. A dashboard uses its own connection, so opening it does not replace the room's. Before the match starts, knowing the room id is not enough to subscribe, and it is never enough to join the match.
 - With nobody connected, nothing stays running. This matches [decision 0002](0002-serverless-hosting.md).
 
 ## How a notice works
 
 IoT Core holds each MQTT session. Lambda runs only for a moment, then stops. The function does not keep a socket to the browsers.
 
-1. The React app subscribes to the room topic and to that player id's topic. IoT Core runs the authorizer. The authorizer reads the room in DynamoDB and allows the subscription only when that player id has joined.
+1. The React app on the room page subscribes to the room topic and to that player id's topic. A dashboard subscribes only to the room topic, with its own id. IoT Core runs the authorizer. The authorizer reads the room in DynamoDB. Before the match starts, it allows the subscription only when that player id has joined. After the match starts, a watcher may subscribe to the room topic and not to a player's cards.
 2. A player sends an action, such as a bid or a card, on the HTTP API. API Gateway runs the Python action function.
 3. The function loads the match from DynamoDB, applies the rules, and saves the match.
 4. The function publishes the public result to the room topic. It publishes that player's cards only to that player id's topic.

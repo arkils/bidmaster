@@ -807,7 +807,7 @@ export function App() {
   }, [location.screen, room?.roomId, room?.resultAt]);
 
   useEffect(() => {
-    if (!player) {
+    if (!player || (location.screen !== "home" && location.screen !== "dashboard")) {
       return;
     }
     let cancelled = false;
@@ -825,7 +825,7 @@ export function App() {
     return () => {
       cancelled = true;
     };
-  }, [player]);
+  }, [player, location.screen]);
 
   useEffect(() => {
     if (location.screen === "rules" || !location.roomId || (location.screen !== "dashboard" && !player)) {

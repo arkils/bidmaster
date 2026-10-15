@@ -10,7 +10,9 @@ Development. Implement one `IMPL-*` task at a time, inside that file’s accepta
 
 Development. Started 2026-10-14, when the user recorded **Build GO**.
 
-Code is allowed only inside the active `IMPL-*` task. Do not implement a task that is not `IN_PROGRESS`.
+Version 1 and version 2 are closed. Version 2 closed on 2026-10-15. No task is waiting.
+
+Code is allowed only inside the one task that is `IN_PROGRESS`. Do not start version 3, and do not change application code, until the user agrees that work and a task for it is `IN_PROGRESS`.
 
 ## Gates
 
@@ -56,7 +58,7 @@ The task files for the first milestone are `docs/tasks/impl/IMPL-001-deploy.md` 
 1. Read `docs/00-discovery-status.md`.
 2. Read `docs/tasks/backlog.md`.
 3. Read `docs/01-development-gate.md`. Confirm the user has recorded **Build GO**.
-4. Continue the `IMPL-*` task that is `IN_PROGRESS`. If none is, take the lowest-ID `TODO` that is not blocked.
+4. Continue the task that is `IN_PROGRESS`. If none is, stop. Version 1 and version 2 are closed. Do not open a new task until the user agrees version 3 work.
 5. Read that task’s **Read first** list completely before writing.
 
 ## Q&A

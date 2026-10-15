@@ -16,9 +16,9 @@ Status: recorded by [DISC-007](../tasks/discovery/DISC-007-non-functional-requir
 
 - A player sees only their own cards. Those cards are sent only on that player id's topic, and only in a load response for that player id.
 - The screen shows the typed name. It does not show the player id.
-- A public message names a player by seat number and the name on that seat. It does not include other players' ids.
-- The dashboard lists only the matches stored for the player id in this browser's cookie. It is not a list of every match on the site.
-- Anyone who knows a room id can open that match and see its public result: the date, the names, the seats, and each round's points. During a round still being played, that also includes the bids, the trump, the played cards, and whose turn it is. It does not include the other players' cards.
+- A message names a player by seat number and the name on that seat. It does not include other players' ids. The screen shows the name and does not print the seat number.
+- The dashboard lists only the matches stored for the player id in this browser's cookie. It is not a list of every match on the site. That list is loaded on the home page and on the dashboard. Opening a room or the rules page does not load it.
+- Anyone who knows a room id can open that match and see its public result: the date, the names, and each round's points. During a round still being played, that also includes the bids, the trump, the played cards, and whose turn it is. It does not include the other players' cards or how many cards they still hold.
 - There is no account and no password. Clearing the cookie, or using another browser, starts a new player id. Older matches stay stored under the old id.
 
 ### What use feels like
@@ -28,7 +28,8 @@ Status: recorded by [DISC-007](../tasks/discovery/DISC-007-non-functional-requir
 - Version 1 states no uptime percentage and no cost ceiling.
 - While players are in a room, the table is live. One player's action is published to the others. A missed notice is repaired by loading the room.
 - A bid or a card should feel real-time. A delay of 1 or 2 seconds is acceptable. There is no stricter limit. Confirmed 2026-10-14. The first request after a quiet period can be slower, because a cold start can delay it. That cold start is already a consequence of [decision 0002](../decisions/0002-serverless-hosting.md). A player far from Mumbai may also wait longer than 2 seconds, and that extra wait is acceptable.
-- Play starts on the room page. After the match has started, anyone can open its dashboard and watch the cumulative scores, the rank, the graph of each round's gain or loss, and the graph of each player's running total. The home list of matches stays limited to this browser.
+- Play starts on the room page. After the match has started, anyone can open its dashboard and watch the cumulative scores, the rank, the graph of each round's gain or loss, and the graph of each player's running total. That page uses its own live connection, so the room keeps its own. The home list of matches stays limited to this browser.
+- A scored round stays on the table until the host, or any other player after 5 seconds, presses OK. The next round starts only then.
 - A started match is kept, and it does not expire.
 - Version 1 is not a source of income.
 

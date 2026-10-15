@@ -45,7 +45,7 @@ class DealTests(unittest.TestCase):
         self.assertNotIn("hands", view)
         self.assertEqual(len(view["cards"]), 10)
         self.assertEqual(view["yourSeat"], 2)
-        self.assertTrue(all(entry["cardsLeft"] == 10 for entry in view["seats"]))
+        self.assertTrue(all("cardsLeft" not in entry for entry in view["seats"]))
         self.assertNotIn("suit", str(view["seats"]))
         self.assertTrue(all(entry["rank"] == 1 and entry["score"] == 0 for entry in view["ranking"]))
         notice = started_notice(started)

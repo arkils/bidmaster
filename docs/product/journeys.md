@@ -67,7 +67,7 @@ Seating order is the order in which players joined the room, earliest first. The
 
 - Person: every player in the match.
 - Start: the host has started the match. The players are on the room page.
-- Steps: the players play the match in `docs/game/rules.md`. That is a deal, a private hand, a bid from each player, a trump suit, tricks until the dealt cards are gone, a round score, and the next round, through the last round. A player sees only their own cards.
+- Steps: the players play the match in `docs/game/rules.md`. That is a deal, a private hand, a bid from each player, a trump suit, tricks until the dealt cards are gone, a round score, and the next round, through the last round. A player sees only their own cards. The screen shows names and does not print seat numbers. When a round is scored, the last trick keeps its pause, then the result stays up until the host, or any player after 5 seconds, presses OK. That OK hides the result for everyone, and the next round starts only then. After the last round, OK hides the result and deals nothing further.
 - End: the players are ranked by those rules, and the dashboard shows that result.
 
 ## Rules
@@ -83,7 +83,7 @@ Seating order is the order in which players joined the room, earliest first. The
 ## Dashboard
 
 - Person: anyone with the dashboard address, including a player in the match.
-- Start: the match has started. Play stays on the room page, at `/{roomId}`. The dashboard is at `/dashboard/{roomId}`, for example `/dashboard/funny-monkey`. Opening it does not ask for a name and does not join the room.
+- Start: the match has started. Play stays on the room page, at `/{roomId}`. The dashboard is at `/dashboard/{roomId}`, for example `/dashboard/funny-monkey`. Opening it does not ask for a name and does not join the room. It listens on its own connection, so the room page keeps its own.
 - What it shows:
   1. Each player's cumulative score for this match. Every score starts at 0 and updates when a round is scored.
   2. A table that ranks the players and shows each cumulative score. Rank follows `docs/game/rules.md`: a higher cumulative score ranks first. When scores are equal, more successful bids rank higher. When the score and the number of successful bids are both equal, those players share the rank. Players who share the highest rank share the win.

@@ -6,7 +6,7 @@
 | Phase started | 2026-10-14 |
 | Agent | Development (`AGENTS.md`) |
 | Code | Allowed only inside the one task that is `IN_PROGRESS` |
-| Active task | None. Version 2 preps are in [backlog.md](tasks/backlog.md). |
+| Active task | None. Version 2 is closed. |
 | Documentation gate | PASS on 2026-10-14. See [01-development-gate.md](01-development-gate.md). |
 | Review GO | Recorded by the user on 2026-10-14 |
 | Build GO | Recorded by the user on 2026-10-14 |
@@ -55,6 +55,8 @@ Delivery is in `docs/architecture/delivery.md`: AWS CDK in TypeScript from a lap
 
 [V2-026](tasks/v2/V2-026-room-link-label.md) is done. The rules page and the dashboard both say Room for the link back to the room. That label was deployed on 2026-10-15.
 
+[V2-027](tasks/v2/V2-027-close-v2.md) is done. The user recorded on 2026-10-15 that version 2 development and bug fixes are finished. The living product and architecture documents match that site: a scored round waits for OK, the screen shows names without seat numbers, the dashboard has both graphs, and a dashboard listens without taking a seat.
+
 ## Next step
 
-No version 2 prep is waiting. The user chooses the next change. New work is a `V2-*` task under Version 2 preps in [backlog.md](tasks/backlog.md). Do not change code until that task is `IN_PROGRESS`.
+Version 2 is closed. The next step is a discussion of version 3. Do not write version 3 scope, and do not change application code, until the user agrees that work.

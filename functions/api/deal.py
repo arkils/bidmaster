@@ -119,11 +119,6 @@ def match_view(item, caller_id, include_cards=True):
         from bid import round_public
 
         body["round"] = round_public(item)
-        hands = item.get("hands") or []
-        for seat in body["seats"]:
-            index = seat["seat"] - 1
-            if index < len(hands):
-                seat["cardsLeft"] = len(hands[index])
         if include_cards and body.get("yourSeat") and item.get("hands"):
             hand = item["hands"][body["yourSeat"] - 1]
             body["cards"] = sort_hand(hand)

@@ -4,7 +4,7 @@ Status: recorded by [DISC-006](../tasks/discovery/DISC-006-interface-contracts.m
 
 The React app calls the HTTP API behind CloudFront. Live notices are MQTT messages on AWS IoT Core. The browser cookie holds the typed name and a player id. Giving a name is not a call: both values are written in the browser. See [decision 0009](../decisions/0009-player-id.md). There is no user account and no API Gateway WebSocket.
 
-On every HTTP call the caller is that browser. The player id identifies the player. The name is what the screen shows. Seats are numbered from 1 in join order. The host is seat 1. A public mention of a player is that seat number plus the name on the seat, so two players with the same name stay distinct. Responses and room notices do not include other players' ids. The caller's own id stays in the cookie. A missed notice is repaired by loading the room again. DynamoDB remains the match.
+On every HTTP call the caller is that browser. The player id identifies the player. The screen shows the name and does not print the seat number. Seats are numbered from 1 in join order. The host is seat 1. A message still carries that seat number and the name on the seat, so two players with the same name stay distinct. Responses and room notices do not include other players' ids, and they do not include how many cards another player still holds. The caller's own id stays in the cookie. A missed notice is repaired by loading the room again. DynamoDB remains the match.
 
 A call that the rules or the journeys forbid is not applied. The match stays as it was. Version 1 does not add a program message for every illegal or out-of-turn action. The rejection sentence the rules already state is named on **Submit a bid**. **Join a room** names the message “room is full” when the room already has 10 players, and when the match has already started.
 
@@ -38,7 +38,7 @@ A call that the rules or the journeys forbid is not applied. The match stays as 
 - Channel: HTTP API.
 - Inputs: the room id, and the caller's player id when the cookie has one.
 - Outputs before the match starts: the room id and the joined players in join order. Each player is a seat number and a name.
-- Outputs after the match starts: the date the host started it, the players in seat order as a seat number and the name they used in this match, and the points each player gained or lost in each scored round. The current round, while it is still being played, includes the bids already submitted, the trump suit once chosen, the tricks already won, the cards in the trick in progress, and whose turn it is. Each of those is tied to a seat number. The caller's own cards are included only when the caller's player id is seated. Scored rounds do not include cards, bids, or trump.
+- Outputs after the match starts: the date the host started it, the players in seat order as a seat number and the name they used in this match, and the points each player gained or lost in each scored round. The current round, while it is still being played, includes the bids already submitted, the trump suit once chosen, the tricks already won, the cards in the trick in progress, and whose turn it is. Each of those is tied to a seat number. While a scored round is waiting, the output includes the time it was scored. The caller's own cards are included only when the caller's player id is seated. Scored rounds do not include cards, bids, or trump.
 - Errors: there is no room with that id.
 
 Cumulative scores, rank, and the graph are calculated from the round points. Rank follows `docs/game/rules.md`.
@@ -72,8 +72,16 @@ Cumulative scores, rank, and the graph are calculated from the round points. Ran
 - Caller: the seated player whose turn it is to play.
 - Channel: HTTP API.
 - Inputs: the room id, the caller's player id, and one card from that player's hand.
-- Outputs: the card is in the trick, tied to the caller's seat. When the trick is complete, the output gives the winning seat. That seat leads the next trick, unless the round's dealt cards are gone. When the round's dealt cards are gone, the output includes each seat's points for the round, added to the kept results. The next round is then dealt, or the match is over and the ranking is final. When the next round is dealt, the output names the seat that bids first in that round. The rules move that seat one place clockwise from the previous round. The caller's cards are not in this response. When the round continues, the caller's remaining cards go out on that player id's private topic. When this play deals the next round, each seated player's new hand goes out on that player's private topic.
+- Outputs: the card is in the trick, tied to the caller's seat. When the trick is complete, the output gives the winning seat. That seat leads the next trick, unless the round's dealt cards are gone. When the round's dealt cards are gone, the output includes each seat's points for the round, added to the kept results, and the time that result was scored. This call does not deal the next round. The table stays on that result until **Accept the round result**. The caller's cards are not in this response. When the round continues, the caller's remaining cards go out on that player id's private topic.
 - Errors: a play the rules forbid is not applied, and version 1 adds no further sentence. That includes a card the player does not hold, a play when it is not that player's turn, and a failure to follow the led suit while the player still holds that suit.
+
+## Accept the round result
+
+- Caller: a seated player, while a scored round is waiting.
+- Channel: HTTP API.
+- Inputs: the room id and the caller's player id.
+- Outputs: the waiting result is cleared for every subscriber. When another round remains, that round is dealt. The rules move the first bidder one place clockwise from the previous round, and the notice names that seat. Each seated player's new hand goes out on that player's private topic. When the accepted result was the last round, the match is over, the ranking is final, and no hand is dealt.
+- Errors: no result is waiting. The caller is not seated. The caller is not seat 1, and 5 seconds have not passed since the score. The accept is not applied.
 
 ## Subscribe
 
@@ -85,7 +93,7 @@ Cumulative scores, rank, and the graph are calculated from the round points. Ran
 
 ## Room notice
 
-- Caller: Lambda, after it has saved a successful join, leave, start, bid, trump, or card.
+- Caller: Lambda, after it has saved a successful join, leave, start, bid, trump, card, or accepted result.
 - Channel: the room's shared IoT topic. Every allowed subscriber for that room receives the same message.
 - Inputs: none from the browser. Lambda publishes.
 - Outputs: one of these public facts, and no player's cards. Each player in a notice is a seat number and the name on that seat.
@@ -95,7 +103,8 @@ Cumulative scores, rank, and the graph are calculated from the round points. Ran
   - A bid was stored on a seat, including the bid number. When bidding is complete, the seat that selects trump.
   - The trump suit.
   - A card played from a seat, including that card's suit and rank, the winning seat when the trick is complete, and the seat that leads next.
-  - A scored round: each seat's points gained or lost, the cumulative scores, the ranking, and that round's gain or loss for the graph. When another round is dealt, the seat that bids first in that round. When the match is over, the final ranking. Ranking names each seat.
+  - A scored round is waiting: each seat's points gained or lost, the cumulative scores, the ranking, and that round's gain or loss for the graph. The next round is not dealt in this notice.
+  - The waiting result was accepted. When another round is dealt, the notice names the seat that bids first. When the match is over, the notice says so and no hand is dealt. Ranking names each seat.
 - Errors: none. A subscriber who missed a notice loads the room.
 
 ## Private notice
