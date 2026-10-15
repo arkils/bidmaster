@@ -6,7 +6,7 @@ Source of truth for what to do next is `docs/tasks/backlog.md`, then the task fi
 
 1. Read `docs/00-discovery-status.md`.
 2. In `docs/tasks/backlog.md`, find the one task that is `IN_PROGRESS`. Continue it.
-3. If none is `IN_PROGRESS`, stop. Version 1 and version 2 are closed. Version 3 starts only after the user agrees that work.
+3. If none is `IN_PROGRESS`, stop. Version 1 and version 2 are closed. Version 3's target is recorded in [product/vision.md](../product/vision.md). Do not open a version 3 task until the user agrees that piece of work. Application code stays forbidden until a task for it is `IN_PROGRESS`.
 4. Set that task to `IN_PROGRESS` in the task file and in the backlog.
 5. Read its **Read first** list completely. Then do the work.
 6. When the acceptance criteria and the definition of done are met, set it to `DONE` in both places before starting another task.

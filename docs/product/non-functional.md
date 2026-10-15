@@ -10,7 +10,7 @@ Status: recorded by [DISC-007](../tasks/discovery/DISC-007-non-functional-requir
 - One match has 3 to 10 players, as `docs/game/rules.md` requires.
 - Many matches can run at the same time. Each match belongs to its own room. No maximum count was stated.
 - Players can open the site from outside India. The room and the match live in Mumbai (`ap-south-1`). A player far from Mumbai waits longer on each bid and card. That extra wait may pass 2 seconds, and it is acceptable. Confirmed 2026-10-14. See [decision 0005](../decisions/0005-mumbai-region.md).
-- The website is responsive. It works in a computer browser and in a phone browser. Confirmed 2026-10-14. Native Android and iOS apps stay FUTURE.
+- The website is responsive. It works in a computer browser and in a phone browser. Confirmed 2026-10-14. Native Android and iOS apps were left for later. Version 3, below, makes them the same website on a phone home screen.
 
 ### What stays private
 
@@ -33,12 +33,21 @@ Status: recorded by [DISC-007](../tasks/discovery/DISC-007-non-functional-requir
 - A started match is kept, and it does not expire.
 - Version 1 is not a source of income.
 
+## Version 3
+
+CONFIRMED on 2026-10-15. These are the target. They are not build tasks, and none of them is in progress.
+
+- The table should hold a player the way a short video holds a viewer, and the way a children's show holds a child. Each moment is attractive, rewarding, and already pulling toward the next bid, card, or trick. The draw is the look, the motion, and the feel of the screen. It is not a new way to start the next match. The rules in `docs/game/rules.md` stay the game. Which motions, sounds, and rewards do that are not chosen yet.
+- The page shows ads on the side. Version 3 is a source of income. Version 1 stays "not a source of income," above. Which ad network, and what a phone does when there is no side column, are not chosen yet.
+- Android and iOS are the same website, installed on a phone home screen. There is no native app and no store binary. The phone browser already works, above. Being installable is the new part.
+
+A public lobby, accounts, and any retention that blocks Leave room stay out of this target.
+
 ## OPEN
 
 None.
 
 ## FUTURE
 
-- An Android app.
-- An iOS app.
+None.
 

@@ -4,7 +4,7 @@ Status: recorded by [DISC-002](../tasks/discovery/DISC-002-requirements.md) and 
 
 ## CONFIRMED
 
-- Version 1 is a website people open in a browser. The site is responsive. It works on a computer and on a phone. Native Android and iOS apps stay FUTURE.
+- Version 1 is a website people open in a browser. The site is responsive. It works on a computer and on a phone. Native Android and iOS apps were left for later. Version 3, below, makes them the same website on a phone home screen.
 - The site is serverless on AWS. CloudFront is the front door. S3, Lambda, and DynamoDB run in Mumbai (`ap-south-1`). S3 holds the website files, Lambda runs each request, and DynamoDB stores the rooms and matches. See decisions [0002](../decisions/0002-serverless-hosting.md), [0003](../decisions/0003-aws-cloudfront.md), [0004](../decisions/0004-s3-lambda-dynamodb.md), and [0005](../decisions/0005-mumbai-region.md).
 - Many matches can run at the same time. Each match belongs to its own room.
 - The website is on the public internet. A player still enters a room by its URL or its room id.
@@ -32,14 +32,23 @@ Status: recorded by [DISC-002](../tasks/discovery/DISC-002-requirements.md) and 
 - Version 1 has no public lobby. A game starts from an invitation.
 - While players are in a room, the table is live. One player's action is published to the others through AWS IoT Core. See [decision 0008](../decisions/0008-iot-core-notifications.md). The HTTP API remains [decision 0007](../decisions/0007-api-gateway-and-live-updates.md). The dashboard listens on its own connection. Opening it does not stop live updates on the room.
 
+## Version 3
+
+CONFIRMED on 2026-10-15. These are the target. They are not build tasks, and none of them is in progress.
+
+- The table should hold a player the way a short video holds a viewer, and the way a children's show holds a child. Each moment is attractive, rewarding, and already pulling toward the next bid, card, or trick. The draw is the look, the motion, and the feel of the screen. It is not a new way to start the next match. The rules in `docs/game/rules.md` stay the game. Which motions, sounds, and rewards do that are not chosen yet.
+- The page shows ads on the side. Version 3 is a source of income. Version 1 stays "not a source of income," above. Which ad network, and what a phone does when there is no side column, are not chosen yet.
+- Android and iOS are the same website, installed on a phone home screen. There is no native app and no store binary. The phone browser already works, above. Being installable is the new part.
+
+A public lobby, accounts, and any retention that blocks Leave room stay out of this target.
+
 ## PROPOSED
 
 None.
 
 ## FUTURE
 
-- An Android app.
-- An iOS app.
+None.
 
 ## Classified out
 
@@ -50,4 +59,4 @@ These sentences appear only in the Digital section of `docs/tasks.md`. They are 
 - A rules engine kept separate from the interface. The Python functions on the HTTP and IoT path still apply `docs/game/rules.md`. That is not a separate rules service.
 - An authoritative server for online play, meaning a server process that stays up for the match. Lambda checks each action and then stops. That is the accepted design, and it is not this item.
 
-Creating a room and joining it are CONFIRMED above, from the vision. Web play is CONFIRMED above. Android and iOS are FUTURE above. Where `docs/game/rules.md` already states a rejection, that text stays in the rules. It is not restated here as a new digital requirement.
+Creating a room and joining it are CONFIRMED above, from the vision. Web play is CONFIRMED above. Android and iOS are the version 3 website, above. Where `docs/game/rules.md` already states a rejection, that text stays in the rules. It is not restated here as a new digital requirement.

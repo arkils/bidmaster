@@ -32,16 +32,24 @@ CONFIRMED on 2026-10-15. Version 2 is finished. It keeps version 1 and adds what
 - Anyone can watch a started match's dashboard. That page has its own live connection, so opening it does not stop the room.
 - A bid, a played card, and a player's own turn have the sounds in [look.md](look.md).
 
+## Version 3
+
+CONFIRMED on 2026-10-15. Version 3 is the target. It is not built, and no version 3 task is in progress. It keeps version 2 and aims at three outcomes:
+
+- The table should hold a player the way a short video holds a viewer, and the way a children's show holds a child. Each moment is attractive, rewarding, and already pulling toward the next bid, card, or trick. The draw is the look, the motion, and the feel of the screen. It is not a new way to start the next match. The rules in `docs/game/rules.md` stay the game. Which motions, sounds, and rewards do that are not chosen yet.
+- The page shows ads on the side. Version 3 is a source of income. Which ad network, and what a phone does when there is no side column, are not chosen yet.
+- Android and iOS are the same website, installed on a phone home screen. There is no native app and no store binary. The site already works in a phone browser. Being installable is the new part.
+
+A public lobby, accounts, and any retention that blocks Leave room stay out of this target.
+
 ## Non-goals
 
-CONFIRMED. Version 1 is not a source of income.
+CONFIRMED. Version 1 is not a source of income. Version 3 drops that non-goal. The page shows ads on the side.
 
-CONFIRMED. Version 1 has no public lobby. A game starts from an invitation.
-
-FUTURE. Android and iOS apps are wanted after version 1.
+CONFIRMED. There is no public lobby. A game starts from an invitation.
 
 ## Source material
 
 `docs/game/rules.md` is the version-1 game. Confirmed 2026-10-13.
 
-The Digital section of `docs/tasks.md` listed earlier ideas. Room creation and joining are confirmed above. Android and iOS are FUTURE, above. A trick-by-trick review of a finished match, a separate rules engine, and an authoritative server stay unaccepted. Looking back at each round's points is confirmed above. DISC-002 classifies the rest in `docs/product/requirements.md`.
+The Digital section of `docs/tasks.md` listed earlier ideas. Room creation and joining are confirmed above. Android and iOS are the version 3 website, above. A trick-by-trick review of a finished match, a separate rules engine, and an authoritative server stay unaccepted. Looking back at each round's points is confirmed above. DISC-002 classifies the rest in `docs/product/requirements.md`.

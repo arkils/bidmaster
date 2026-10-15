@@ -61,7 +61,7 @@ The order is a chain. Split or reorder a later task only after discovery shows t
 
 ## Version 2 preps
 
-Version 2 closed on 2026-10-15. This table is the record. Do not add a version 3 task here.
+Version 2 closed on 2026-10-15. This table is the record. The version 3 target is in [product/vision.md](../product/vision.md). Do not add a version 3 task here until a later pass names one piece of work.
 
 | ID | Status | Priority | Blocked by | Summary |
 | --- | --- | --- | --- | --- |
