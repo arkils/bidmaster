@@ -25,9 +25,9 @@ Draft the next phase’s `AGENTS-*.md` in this folder before the gate. Promote t
 
 [AGENTS-development.md](AGENTS-development.md) was copied to the root on 2026-10-14, when the user recorded **Build GO**. That root file is archived as [agent-development.md](agent-development.md).
 
-[AGENTS-v3-planning.md](AGENTS-v3-planning.md) was copied to the root on 2026-10-15, when the user recorded that version 3 planning may start. Root `AGENTS.md` is the active version 3 planning agent.
+[AGENTS-v3-planning.md](AGENTS-v3-planning.md) was copied to the root on 2026-10-15, when the user recorded that version 3 planning may start. That root file is archived as [agent-v3-planning.md](agent-v3-planning.md).
 
-[AGENTS-v3-development.md](AGENTS-v3-development.md) is a draft for the next phase. It is not active. Promote it only when the user records that version 3 build may start.
+[AGENTS-v3-development.md](AGENTS-v3-development.md) was copied to the root on 2026-10-15, when the user recorded that version 3 build may start. Root `AGENTS.md` is the active version 3 development agent.
 
 ## Archives
 
@@ -38,3 +38,4 @@ Draft the next phase’s `AGENTS-*.md` in this folder before the gate. Promote t
 | [agent-pre-development-review.md](agent-pre-development-review.md) | Pre-Development Review | 2026-10-14 |
 | [agent-implementation-planning.md](agent-implementation-planning.md) | Implementation Planning | 2026-10-14 |
 | [agent-development.md](agent-development.md) | Development | 2026-10-15 |
+| [agent-v3-planning.md](agent-v3-planning.md) | Version 3 Planning | 2026-10-15 |

@@ -34,9 +34,9 @@ CONFIRMED on 2026-10-15. Version 2 is finished. It keeps version 1 and adds what
 
 ## Version 3
 
-CONFIRMED on 2026-10-15. Version 3 is the target. It is not built, and no version 3 task is in progress. It keeps version 2 and aims at three outcomes:
+CONFIRMED on 2026-10-15. Version 3 is the target. It keeps version 2 and aims at three outcomes. The played-card landing and the reactions are in the room page. Side ads and the home-screen install are not built yet.
 
-- The table should hold a player the way a short video holds a viewer, and the way a children's show holds a child. Each moment is attractive, rewarding, and already pulling toward the next bid, card, or trick. The draw is the look, the motion, and the feel of the screen. It is not a new way to start the next match. The rules in `docs/game/rules.md` stay the game. Which motions, sounds, and rewards do that are not chosen yet.
+- The table should hold a player the way a short video holds a viewer, and the way a children's show holds a child. Each moment is attractive, rewarding, and already pulling toward the next bid, card, or trick. The draw is the look, the motion, and the feel of the screen. It is not a new way to start the next match. The rules in `docs/game/rules.md` stay the game. The first chosen motion is a played card, recorded below. The next chosen moment is a won trick, recorded below. The moment after that is a turn arriving, recorded below. A stored bid and a new deal are recorded below.
 - The page shows ads on the side. Version 3 is a source of income. Which ad network, and what a phone does when there is no side column, are not chosen yet.
 - Android and iOS are the same website, installed on a phone home screen. There is no native app and no store binary. The site already works in a phone browser. Being installable is the new part.
 
@@ -44,7 +44,15 @@ A public lobby, accounts, and any retention that blocks Leave room stay out of t
 
 CONFIRMED on 2026-10-15. The first slice is the look, the motion, and the feel of play. Side ads and the home-screen install wait. The first moment is a played card leaving the hand and landing in the trick. On the screen of the player who played it, that card lifts, travels to its place in the trick, and snaps down. `card.mp3` still plays once. No new sound and no score pop. A hand stays flat until it is that player's turn. A bid, the turn mark, a won trick, and a new deal stay as they are. The record of the choices is [OQ-27](../open-questions.md), [OQ-28](../open-questions.md), and [OQ-29](../open-questions.md).
 
-CONFIRMED on 2026-10-15. A seated player can send a reaction to the others at the table: one of 👏 😂 🔥 😮 😬, or one of these lines: Nice one, Well bid, Wow, Unlucky, Good game. The player cannot type a message. The dashboard does not show it, and the match does not store it. The task is [V3-002](../tasks/v3/V3-002-reactions.md). It is unstarted.
+CONFIRMED on 2026-10-15. The moment after the won trick is a turn arriving. When the turn moves to a seat, that chip lifts and the ring, the glow, and the star snap on. Every screen sees it. No new sound. The buzz still waits 10 seconds, and it still plays only on that player's own screen. A bid, the deal, a played card, and a won trick stay as they are. The record is [OQ-33](../open-questions.md). [V3-011](../tasks/v3/V3-011-turn-arrival.md) is done.
+
+CONFIRMED on 2026-10-15. A newly stored bid snaps into the center chip and into that seat's gold box together, on every screen. `bid.mp3` still plays once. No new sound. A bid already stored when the table opens still does not play. The bid buttons, the disabled last number, and the turn arrival stay as they are. The record is [OQ-34](../open-questions.md). [V3-012](../tasks/v3/V3-012-bid-snap.md) is done.
+
+CONFIRMED on 2026-10-15. On the caller's screen, a new hand lifts into the row and snaps down. The cards are staggered a little. No new sound. Other players still do not see the hand. The round result still waits for OK, and the deal still starts only then. After the last round, OK still deals nothing. The record is [OQ-35](../open-questions.md). [V3-013](../tasks/v3/V3-013-deal-snap.md) is done.
+
+CONFIRMED on 2026-10-15. The next moment is a won trick. During the 2 second hold, the winning card lifts. The cards of a trick that does not end the round then travel to the winner's chip and snap down. `card.mp3` still plays once for each of those cards, back to back. No new sound and no score pop. The round result still opens after the pause. On 2026-10-16 the user changed the last trick: the last trick of every round, including the last trick of the match, also travels to the winner after that pause. [V3-017](../tasks/v3/V3-017-last-trick.md) is done. [V3-014](../tasks/v3/V3-014-trick-sounds.md) is done: those sounds are not cut off when the cards arrive. [V3-016](../tasks/v3/V3-016-card-from-seat.md) is done: on every other screen the played card lifts off that player's seat chip. A bid, the turn mark, the deal, and the played-card landing stay as they are. The record of the choices is [OQ-30](../open-questions.md) and [OQ-31](../open-questions.md). [V3-003](../tasks/v3/V3-003-won-trick.md) is done.
+
+CONFIRMED on 2026-10-15. A seated player can send a reaction to the others at the table: one of 👏 😂 🔥 😮 😬, or one of these lines: Nice one, Well bid, Wow, Unlucky, Good game. The player cannot type a message. The dashboard does not show it, and the match does not store it. The task is [V3-002](../tasks/v3/V3-002-reactions.md).
 
 ## Non-goals
 

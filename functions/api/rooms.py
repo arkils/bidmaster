@@ -103,3 +103,21 @@ def notice(kind, item):
         "roomId": item["roomId"],
         "seats": public_room(item, None)["seats"],
     }
+
+
+REACTIONS = ("👏", "😂", "🔥", "😮", "😬", "Nice one", "Well bid", "Wow", "Unlucky", "Good game")
+
+
+def reaction_notice(item, player_id, reaction):
+    if reaction not in REACTIONS:
+        return None
+    for index, player in enumerate(item.get("players") or [], start=1):
+        if player.get("playerId") == player_id:
+            return {
+                "kind": "reaction",
+                "roomId": item["roomId"],
+                "seat": index,
+                "name": player["name"],
+                "reaction": reaction,
+            }
+    return None

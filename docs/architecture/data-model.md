@@ -46,5 +46,6 @@ The room holds the room id, the host's player id and name, and each joined playe
 ## Not stored
 
 - API Gateway connection ids. Live notices use AWS IoT Core. See [decision 0008](../decisions/0008-iot-core-notifications.md).
+- A reaction. It is a live notice only. The match does not keep it, and reloading the room does not bring it back.
 - A user account or a password. There is still no public lobby. A past match is opened by its room id. The only match list is the one for the player id in this browser's cookie.
 - The cards, bids, and trump of a scored round, as a history the dashboard shows later.

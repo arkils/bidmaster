@@ -91,9 +91,17 @@ Cumulative scores, rank, and the graph are calculated from the round points. Ran
 - Outputs: the subscription is allowed for the room topic. The seated player's room page may also subscribe to that player id's topic for that same room, and that connection stays up while a dashboard is open. A dashboard receives the room's public notices and not a player's cards.
 - Errors: there is no such room. The match has not started and the id is not seated. The subscription is refused. A dashboard is not given a player's topic. Joining the room to play is still refused after the match has started.
 
+## Send a reaction
+
+- Caller: a seated player, on the room page.
+- Channel: HTTP API.
+- Inputs: the room id, the caller's player id, and one of 👏 😂 🔥 😮 😬, or one of Nice one, Well bid, Wow, Unlucky, Good game.
+- Outputs: every seated player's room page shows the sender's name and that emoji or line, on that sender's seat. Each bubble stays for 5 seconds. Several seats can show a bubble at the same time. A newer reaction from the same seat replaces only that bubble and starts another 5 seconds. The match is not changed.
+- Errors: the caller is not seated, or the text is not one of those ten. The reaction is not published, and version 3 adds no further sentence. The player cannot type a message. The dashboard does not show a reaction. Reloading the room does not bring a reaction back.
+
 ## Room notice
 
-- Caller: Lambda, after it has saved a successful join, leave, start, bid, trump, card, or accepted result.
+- Caller: Lambda, after it has saved a successful join, leave, start, bid, trump, card, or accepted result. A reaction is the exception: Lambda publishes it and does not save the match.
 - Channel: the room's shared IoT topic. Every allowed subscriber for that room receives the same message.
 - Inputs: none from the browser. Lambda publishes.
 - Outputs: one of these public facts, and no player's cards. Each player in a notice is a seat number and the name on that seat.
@@ -105,7 +113,8 @@ Cumulative scores, rank, and the graph are calculated from the round points. Ran
   - A card played from a seat, including that card's suit and rank, the winning seat when the trick is complete, and the seat that leads next.
   - A scored round is waiting: each seat's points gained or lost, the cumulative scores, the ranking, and that round's gain or loss for the graph. The next round is not dealt in this notice.
   - The waiting result was accepted. When another round is dealt, the notice names the seat that bids first. When the match is over, the notice says so and no hand is dealt. Ranking names each seat.
-- Errors: none. A subscriber who missed a notice loads the room.
+  - A reaction from a seated player: that seat's name and one of 👏 😂 🔥 😮 😬, or one of Nice one, Well bid, Wow, Unlucky, Good game. It is not saved. A subscriber who missed it does not receive it by loading the room. The dashboard does not show it.
+- Errors: none. A subscriber who missed a notice loads the room, except a missed reaction, which is gone.
 
 ## Private notice
 

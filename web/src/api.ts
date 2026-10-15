@@ -120,6 +120,15 @@ export async function selectTrump(roomId: string, playerId: string, suit: string
   });
 }
 
+export const REACTIONS = ["👏", "😂", "🔥", "😮", "😬", "Nice one", "Well bid", "Wow", "Unlucky", "Good game"] as const;
+
+export async function sendReaction(roomId: string, playerId: string, reaction: string): Promise<void> {
+  await call(`/api/rooms/${roomId}/react`, {
+    method: "POST",
+    body: { playerId, reaction },
+  });
+}
+
 export async function acceptResult(roomId: string, playerId: string): Promise<Room> {
   return call(`/api/rooms/${roomId}/result`, {
     method: "POST",

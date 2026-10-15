@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import {
   acceptResult,
   ApiError,
@@ -10,13 +10,16 @@ import {
   loadRoom,
   parsePath,
   playCard,
+  REACTIONS,
   roomPath,
   rulesPath,
   selectTrump,
+  sendReaction,
   startMatch,
   submitBid,
   type Card,
   type MatchSummary,
+  type PlayedCard,
   type Room,
 } from "./api";
 import { Button } from "./components/ui/button";
@@ -37,6 +40,16 @@ function playClip(src: string) {
 
 function playCardSound() {
   playClip("/card.mp3");
+}
+
+function motionMs(name: string, fallback: number) {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name);
+  const value = Number.parseFloat(raw);
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function cardId(card: { suit: string; rank: string }) {
+  return `${card.suit}-${card.rank}`;
 }
 
 function keepChosenTrump(current: Room | null, loaded: Room): Room {
@@ -84,6 +97,11 @@ const SUIT_MARK: Record<string, string> = {
   hearts: "♥",
   spades: "♠",
 };
+
+function Speech({ text }: { text: string }) {
+  const emoji = !/[A-Za-z]/.test(text);
+  return <span className={emoji ? "speech speech-emoji" : "speech"}>{text}</span>;
+}
 
 function rankLabel(rank: string): string {
   if (rank === "ace") {
@@ -160,13 +178,13 @@ function cardAllowed(card: Card, hand: Card[], trick: { suit: string }[]): boole
   return card.suit === led;
 }
 
-function SeatScores({ name, bid, won }: { name: string; bid?: number; won: number }) {
+function SeatScores({ name, bid, won, snap }: { name: string; bid?: number; won: number; snap?: boolean }) {
   const bidLabel = bid === undefined ? "–" : String(bid);
   return (
     <>
       <span className="seat-name">{name}</span>
       <span className="seat-scores">
-        <span className="seat-score seat-bid">
+        <span className={`seat-score seat-bid ${snap ? "bid-snap" : ""}`}>
           {bidLabel}
           <span className="card-name">Bid {bidLabel}</span>
         </span>
@@ -183,14 +201,20 @@ function Face({
   card,
   className,
   delay,
+  landing,
 }: {
   card: Card;
   className?: string;
   delay?: string;
+  landing?: boolean;
 }) {
   const red = card.suit === "hearts" || card.suit === "diamonds";
   return (
-    <span className={`card ${red ? "card-red" : "card-black"} ${className ?? ""}`} style={delay ? { animationDelay: delay } : undefined}>
+    <span
+      className={`card ${red ? "card-red" : "card-black"} ${className ?? ""}`}
+      style={delay ? { animationDelay: delay } : undefined}
+      data-landing={landing ? cardId(card) : undefined}
+    >
       <span className="card-rank">{rankLabel(card.rank)}</span>
       <span className="card-suit" aria-hidden="true">
         {SUIT_MARK[card.suit]}
@@ -202,16 +226,152 @@ function Face({
   );
 }
 
+function FlyingCard({
+  card,
+  from,
+  to,
+  onDone,
+}: {
+  card: Card;
+  from: DOMRect;
+  to: DOMRect | null;
+  onDone: () => void;
+}) {
+  const nodeRef = useRef<HTMLSpanElement>(null);
+  const fromRef = useRef(from);
+  const onDoneRef = useRef(onDone);
+  const liftDone = useRef<Promise<void>>(Promise.resolve());
+  onDoneRef.current = onDone;
+
+  useEffect(() => {
+    const node = nodeRef.current;
+    if (!node) {
+      return;
+    }
+    const liftAnim = node.animate(
+      [
+        { transform: "translate3d(0, 0, 0) scale(1)" },
+        { transform: "translate3d(0, -1rem, 0) scale(1.06)" },
+      ],
+      { duration: motionMs("--motion-lift", 140), easing: "ease-out", fill: "forwards" },
+    );
+    liftDone.current = liftAnim.finished.then(() => undefined).catch(() => undefined);
+    return () => liftAnim.cancel();
+  }, []);
+
+  useEffect(() => {
+    if (!to) {
+      return;
+    }
+    const node = nodeRef.current;
+    if (!node) {
+      return;
+    }
+    let cancelled = false;
+    let travelAnim: Animation | undefined;
+    void liftDone.current.then(() => {
+      if (cancelled || !nodeRef.current) {
+        return;
+      }
+      const origin = fromRef.current;
+      const dx = to.left - origin.left;
+      const dy = to.top - origin.top;
+      const travel = motionMs("--motion-travel", 220);
+      const snap = motionMs("--motion-snap", 90);
+      const total = travel + snap;
+      travelAnim = node.animate(
+        [
+          { transform: "translate3d(0, -1rem, 0) scale(1.06)", easing: "cubic-bezier(0.16, 0.84, 0.3, 1)" },
+          {
+            transform: `translate3d(${dx}px, ${dy - 14}px, 0) scale(1.04)`,
+            offset: travel / total,
+            easing: "cubic-bezier(0.45, 0, 0.85, 0.35)",
+          },
+          { transform: `translate3d(${dx}px, ${dy}px, 0) scale(1)` },
+        ],
+        { duration: total, fill: "forwards" },
+      );
+      travelAnim.onfinish = () => {
+        if (!cancelled) {
+          onDoneRef.current();
+        }
+      };
+    });
+    return () => {
+      cancelled = true;
+      travelAnim?.cancel();
+    };
+  }, [to]);
+
+  return (
+    <span ref={nodeRef} className="card-flight" style={{ left: from.left, top: from.top, width: from.width, height: from.height }}>
+      <Face card={card} />
+    </span>
+  );
+}
+
+function GatherFlight({
+  card,
+  from,
+  to,
+  delay,
+  onDone,
+}: {
+  card: Card;
+  from: DOMRect;
+  to: DOMRect;
+  delay: number;
+  onDone: () => void;
+}) {
+  const nodeRef = useRef<HTMLSpanElement>(null);
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
+
+  useEffect(() => {
+    const node = nodeRef.current;
+    if (!node) {
+      return;
+    }
+    const dx = to.left - from.left;
+    const dy = to.top - from.top;
+    const travel = motionMs("--motion-travel", 220);
+    const snap = motionMs("--motion-snap", 90);
+    const total = travel + snap;
+    const anim = node.animate(
+      [
+        { transform: "translate3d(0, 0, 0) scale(1)", easing: "cubic-bezier(0.16, 0.84, 0.3, 1)" },
+        {
+          transform: `translate3d(${dx}px, ${dy - 14}px, 0) scale(1.04)`,
+          offset: travel / total,
+          easing: "cubic-bezier(0.45, 0, 0.85, 0.35)",
+        },
+        { transform: `translate3d(${dx}px, ${dy}px, 0) scale(1)` },
+      ],
+      { duration: total, delay, fill: "forwards" },
+    );
+    anim.onfinish = () => onDoneRef.current();
+    return () => anim.cancel();
+  }, [delay, from, to]);
+
+  return (
+    <span ref={nodeRef} className="card-flight" style={{ left: from.left, top: from.top, width: from.width, height: from.height }}>
+      <Face card={card} />
+    </span>
+  );
+}
+
 function Table({
   room,
+  reactions,
   onBid,
   onTrump,
   onPlay,
 }: {
   room: Room;
+  reactions: Record<number, { text: string }>;
   onBid: (bid: number) => void;
   onTrump: (suit: string) => void;
-  onPlay: (card: Card) => void;
+  onPlay: (card: Card) => Promise<boolean>;
 }) {
   const round = room.round;
   const yourSeat = room.yourSeat ?? 1;
@@ -220,16 +380,34 @@ function Table({
   const tricks = round?.tricks ?? [];
   const [taken, setTaken] = useState<(typeof tricks)[number] | null>(null);
   const [gather, setGather] = useState(false);
+  const [gatherFlights, setGatherFlights] = useState<{ card: PlayedCard; from: DOMRect; to: DOMRect; delay: number }[] | null>(null);
+  const gathered = useRef(false);
+  const arrived = useRef(0);
   const trickCount = useRef(tricks.length);
   const seenTrick = useRef(round?.trick.length ?? 0);
+  const seenArrival = useRef(round?.trick.length ?? 0);
   const seenBids = useRef(round?.bids.length ?? 0);
+  const [freshBids, setFreshBids] = useState<number[]>([]);
   const handKey = (room.cards ?? []).map((card) => `${card.suit}-${card.rank}`).join("|");
   const [dealing, setDealing] = useState(false);
   const seenHand = useRef("");
+  const [flight, setFlight] = useState<{ card: Card; from: DOMRect } | null>(null);
+  const [flightTo, setFlightTo] = useState<DOMRect | null>(null);
+  const [settledCard, setSettledCard] = useState<string | null>(null);
+  const flightMeasured = useRef(false);
 
   useEffect(() => {
-    if (tricks.length > trickCount.current) {
+    if (tricks.length < trickCount.current) {
+      setTaken(null);
       setGather(false);
+      setGatherFlights(null);
+      gathered.current = false;
+      arrived.current = 0;
+    } else if (tricks.length > trickCount.current) {
+      setGather(false);
+      setGatherFlights(null);
+      gathered.current = false;
+      arrived.current = 0;
       setTaken(tricks[tricks.length - 1]);
     }
     trickCount.current = tricks.length;
@@ -247,10 +425,17 @@ function Table({
     const length = round?.bids.length ?? 0;
     const added = length - seenBids.current;
     seenBids.current = length;
-    for (let index = 0; index < added; index += 1) {
-      playBidSound();
+    if (added > 0 && round) {
+      setFreshBids(round.bids.slice(-added).map((entry) => entry.seat));
+      for (let index = 0; index < added; index += 1) {
+        playBidSound();
+      }
+      return;
     }
-  }, [round?.bids]);
+    if (added < 0) {
+      setFreshBids([]);
+    }
+  }, [round?.bids, round]);
 
   useEffect(() => {
     if (!taken) {
@@ -260,45 +445,58 @@ function Table({
     return () => window.clearTimeout(pause);
   }, [taken]);
 
+  useLayoutEffect(() => {
+    if (!taken || !gather || gathered.current) {
+      return;
+    }
+    const chip = document.querySelector(`[data-seat="${taken.winner}"]`);
+    const nodes = [...document.querySelectorAll(".trick .card")];
+    if (!chip || nodes.length === 0) {
+      return;
+    }
+    gathered.current = true;
+    const target = chip.getBoundingClientRect();
+    setGatherFlights(
+      nodes.map((node, index) => {
+        const rect = node.getBoundingClientRect();
+        return {
+          card: taken.cards[index],
+          from: rect,
+          to: new DOMRect(target.left + target.width / 2 - rect.width / 2, target.top + target.height / 2 - rect.height / 2, rect.width, rect.height),
+          delay: index * 40,
+        };
+      }),
+    );
+  }, [taken, gather]);
+
   useEffect(() => {
     if (!taken || !gather) {
       return;
     }
     const count = taken.cards.length;
-    const timers = Array.from({ length: count }, (_, index) => window.setTimeout(() => playCardSound(), index * 170));
-    const frame = window.requestAnimationFrame(() => {
-      const chip = document.querySelector(`[data-seat="${taken.winner}"]`);
-      const cards = document.querySelectorAll(".trick .card");
-      if (!chip) {
-        return;
-      }
-      const target = chip.getBoundingClientRect();
-      cards.forEach((node, index) => {
-        const card = node as HTMLElement;
-        const rect = card.getBoundingClientRect();
-        const dx = target.left + target.width / 2 - (rect.left + rect.width / 2);
-        const dy = target.top + target.height / 2 - (rect.top + rect.height / 2);
-        card.style.transition = `transform 380ms ease-in ${index * 40}ms, opacity 380ms ease-in ${index * 40}ms`;
-        card.style.transform = `translate(${dx}px, ${dy}px) scale(0.25)`;
-        card.style.opacity = "0";
-      });
-    });
-    const clear = window.setTimeout(() => {
-      setTaken(null);
-      setGather(false);
-    }, count * 170 + 420);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      timers.forEach((timer) => window.clearTimeout(timer));
-      window.clearTimeout(clear);
-    };
+    for (let index = 0; index < count; index += 1) {
+      window.setTimeout(() => playCardSound(), index * 170);
+    }
   }, [taken, gather]);
+
+  function onGatherDone() {
+    arrived.current += 1;
+    if (!gatherFlights || arrived.current < gatherFlights.length) {
+      return;
+    }
+    arrived.current = 0;
+    gathered.current = false;
+    setGatherFlights(null);
+    setGather(false);
+    setTaken(null);
+  }
 
   useEffect(() => {
     if (handKey && handKey !== seenHand.current) {
       setDealing(true);
       seenHand.current = handKey;
-      const timer = window.setTimeout(() => setDealing(false), 420);
+      const count = handKey.split("|").filter(Boolean).length;
+      const timer = window.setTimeout(() => setDealing(false), count * 40 + 280);
       return () => window.clearTimeout(timer);
     }
     seenHand.current = handKey;
@@ -332,6 +530,76 @@ function Table({
   const yourBid = round?.bids.find((entry) => entry.seat === you?.seat);
   const liveTrick = round?.trick ?? [];
 
+  useLayoutEffect(() => {
+    const trick = round?.trick ?? [];
+    if (trick.length <= seenArrival.current || tricks.length !== trickCount.current) {
+      return;
+    }
+    const card = trick[trick.length - 1];
+    if (!card || card.seat === yourSeat) {
+      seenArrival.current = trick.length;
+      return;
+    }
+    const chip = document.querySelector(`[data-seat="${card.seat}"]`);
+    if (!chip) {
+      return;
+    }
+    const rect = chip.getBoundingClientRect();
+    const width = 57.6;
+    const height = 80;
+    seenArrival.current = trick.length;
+    setFlight({
+      card,
+      from: new DOMRect(rect.left + rect.width / 2 - width / 2, rect.top + rect.height / 2 - height / 2, width, height),
+    });
+  }, [round?.trick, tricks.length, yourSeat]);
+
+  useLayoutEffect(() => {
+    if (!flight) {
+      flightMeasured.current = false;
+      setFlightTo(null);
+      return;
+    }
+    if (flightMeasured.current) {
+      return;
+    }
+    const target = document.querySelector(`[data-landing="${cardId(flight.card)}"]`);
+    if (!target) {
+      return;
+    }
+    flightMeasured.current = true;
+    setFlightTo(target.getBoundingClientRect());
+  }, [flight, shownTrick]);
+
+  useEffect(() => {
+    if (!settledCard) {
+      return;
+    }
+    if (!shownTrick.some((card) => cardId(card) === settledCard)) {
+      setSettledCard(null);
+    }
+  }, [shownTrick, settledCard]);
+
+  function trickClass(card: (typeof shownTrick)[number]) {
+    const id = cardId(card);
+    if (flight && cardId(flight.card) === id) {
+      return "card-land-hold";
+    }
+    if (gatherFlights) {
+      return "card-land-hold";
+    }
+    if (taken && !gather && card.seat === taken.winner) {
+      return "card-win";
+    }
+    if (settledCard === id) {
+      return "";
+    }
+    if (card === shownTrick[shownTrick.length - 1] && !taken) {
+      return "card-in";
+    }
+    return "";
+  }
+
   return (
     <div className="table-wrap">
       <div className="felt">
@@ -344,24 +612,28 @@ function Table({
                   ★
                 </span>
               ) : null}
-              {round ? <SeatScores name={seat.name} bid={bid?.bid} won={won[seat.seat - 1]} /> : <span className="seat-name">{seat.name}</span>}
+              {round ? <SeatScores name={seat.name} bid={bid?.bid} won={won[seat.seat - 1]} snap={freshBids.includes(seat.seat)} /> : <span className="seat-name">{seat.name}</span>}
+              {reactions[seat.seat] ? <Speech text={reactions[seat.seat].text} /> : null}
             </div>
           );
         })}
         <div className={`table-center ${gather ? "gather" : ""}`}>
+          {round?.trump ? (
+            <p className={`card trump-on-table ${round.trump === "hearts" || round.trump === "diamonds" ? "card-red" : "card-black"}`}>
+              <span className="card-suit" aria-hidden="true">
+                {SUIT_MARK[round.trump]}
+              </span>
+              <span className="card-name">Trump is {round.trump}.</span>
+            </p>
+          ) : null}
           {shownTrick.length > 0 ? (
             <div className="trick">
               {shownTrick.map((card) => (
                 <Face
                   key={`${card.seat}-${card.suit}-${card.rank}`}
                   card={card}
-                  className={
-                    taken && !gather && card.seat === taken.winner
-                      ? "card-win"
-                      : card === shownTrick[shownTrick.length - 1] && !taken
-                        ? "card-in"
-                        : ""
-                  }
+                  landing={flight !== null && cardId(flight.card) === cardId(card)}
+                  className={trickClass(card)}
                 />
               ))}
             </div>
@@ -369,7 +641,7 @@ function Table({
           {stillBidding && round && round.bids.length > 0 ? (
             <ul className="bid-list">
               {round.bids.map((entry) => (
-                <li key={entry.seat} className="bid-chip">
+                <li key={entry.seat} className={`bid-chip ${freshBids.includes(entry.seat) ? "bid-snap" : ""}`}>
                   <span className="bid-chip-name">{entry.name}</span>
                   <span className="bid-chip-number">{entry.bid}</span>
                   <span className="card-name">
@@ -404,10 +676,21 @@ function Table({
                 ★
               </span>
             ) : null}
-            {round ? <SeatScores name={you.name} bid={yourBid?.bid} won={won[you.seat - 1]} /> : <span className="seat-name">{you.name}</span>}
+            {round ? <SeatScores name={you.name} bid={yourBid?.bid} won={won[you.seat - 1]} snap={freshBids.includes(you.seat)} /> : <span className="seat-name">{you.name}</span>}
+            {reactions[you.seat] ? <Speech text={reactions[you.seat].text} /> : null}
           </div>
         ) : null}
       </div>
+      {gatherFlights?.map((flightCard) => (
+        <GatherFlight
+          key={`${flightCard.card.seat}-${flightCard.card.suit}-${flightCard.card.rank}`}
+          card={flightCard.card}
+          from={flightCard.from}
+          to={flightCard.to}
+          delay={flightCard.delay}
+          onDone={onGatherDone}
+        />
+      ))}
       {you ? (
         <div className="your-seat">
           {phase ? <p className="phase">{phase}</p> : null}
@@ -427,13 +710,27 @@ function Table({
             <div className="hand">
               {hand.map((card, index) => {
                 const allowed = cardAllowed(card, hand, liveTrick);
+                const heldBack = flight !== null && cardId(flight.card) === cardId(card);
                 return playing ? (
                   <button
                     key={`${card.suit}-${card.rank}`}
                     type="button"
                     className={`card-button ${allowed ? "playable" : ""}`}
-                    disabled={!allowed}
-                    onClick={() => onPlay(card)}
+                    disabled={!allowed || Boolean(flight)}
+                    style={heldBack ? { visibility: "hidden" } : undefined}
+                    onClick={(event) => {
+                      if (flight) {
+                        return;
+                      }
+                      const face = event.currentTarget.querySelector(".card");
+                      const from = (face ?? event.currentTarget).getBoundingClientRect();
+                      setFlight({ card, from });
+                      void onPlay(card).then((played) => {
+                        if (!played) {
+                          setFlight(null);
+                        }
+                      });
+                    }}
                   >
                     <Face card={card} className={dealing ? "card-deal" : ""} delay={`${index * 40}ms`} />
                   </button>
@@ -444,6 +741,17 @@ function Table({
             </div>
           ) : null}
         </div>
+      ) : null}
+      {flight ? (
+        <FlyingCard
+          card={flight.card}
+          from={flight.from}
+          to={flightTo}
+          onDone={() => {
+            setSettledCard(cardId(flight.card));
+            setFlight(null);
+          }}
+        />
       ) : null}
     </div>
   );
@@ -732,6 +1040,9 @@ export function App() {
   const [room, setRoom] = useState<Room | null>(null);
   const [matches, setMatches] = useState<MatchSummary[]>([]);
   const [error, setError] = useState("");
+  const [reactions, setReactions] = useState<Record<number, { text: string; token: number; until: number }>>({});
+  const [reacting, setReacting] = useState(false);
+  const reactPicker = useRef<HTMLDivElement>(null);
   const [resultVisible, setResultVisible] = useState(false);
   const closedResult = useRef<number | null>(null);
   const seenResultRoom = useRef<string | null>(null);
@@ -853,6 +1164,18 @@ export function App() {
         setRoom(next);
         setError("");
         stop = watchRoom(next.iotEndpoint, next.authorizerName, next.roomId, liveId, (notice) => {
+          if (notice.kind === "reaction") {
+            if (!watching && notice.seat && notice.reaction) {
+              const seat = notice.seat;
+              const text = notice.reaction;
+              const sent = Date.now();
+              setReactions((current) => ({
+                ...current,
+                [seat]: { text, token: sent, until: sent + 5000 },
+              }));
+            }
+            return;
+          }
           setRoom((current) => {
             if (!current) {
               return current;
@@ -913,6 +1236,55 @@ export function App() {
       stop();
     };
   }, [player, location.roomId, location.screen]);
+
+  useEffect(() => {
+    if (!reacting) {
+      return;
+    }
+    function onPointer(event: PointerEvent) {
+      const target = event.target;
+      if (target instanceof Node && reactPicker.current?.contains(target)) {
+        return;
+      }
+      setReacting(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setReacting(false);
+      }
+    }
+    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [reacting]);
+
+  useEffect(() => {
+    const bubbles = Object.values(reactions);
+    if (bubbles.length === 0) {
+      return;
+    }
+    const timers = bubbles.map((bubble) =>
+      window.setTimeout(() => {
+        setReactions((current) => {
+          const next: Record<number, { text: string; token: number; until: number }> = {};
+          for (const [seat, item] of Object.entries(current)) {
+            if (item.token !== bubble.token) {
+              next[Number(seat)] = item;
+            }
+          }
+          return next;
+        });
+      }, Math.max(0, bubble.until - Date.now())),
+    );
+    return () => {
+      for (const timer of timers) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, [reactions]);
 
   function onNameSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -998,12 +1370,27 @@ export function App() {
 
   async function onPlay(card: Card) {
     if (!player || !room) {
-      return;
+      return false;
     }
     setError("");
     try {
       await playCard(room.roomId, player.playerId, card);
       setRoom(await loadRoom(room.roomId, player.playerId));
+      return true;
+    } catch {
+      setError("");
+      return false;
+    }
+  }
+
+  async function onReact(reactionText: string) {
+    if (!player || !room?.yourSeat) {
+      return;
+    }
+    setError("");
+    setReacting(false);
+    try {
+      await sendReaction(room.roomId, player.playerId, reactionText);
     } catch {
       setError("");
     }
@@ -1043,7 +1430,7 @@ export function App() {
   const pageUrl = room ? `${window.location.origin}${roomPath(room.roomId)}` : "";
 
   return (
-    <main className="mx-auto box-border max-w-3xl px-6 py-8">
+    <main className={`room-screen mx-auto box-border max-w-3xl px-6 py-8${location.screen === "room" ? " is-room" : ""}`}>
       <h1 className="brand">
         <svg className="brand-crown" viewBox="0 0 24 16" aria-hidden="true">
           <path fill="currentColor" d="M2 14.5 4.2 5.2 8.2 9.4 12 2.2 15.8 9.4 19.8 5.2 22 14.5z" />
@@ -1051,16 +1438,6 @@ export function App() {
         BidMaster
       </h1>
       {location.screen === "room" && room ? <p className="room-name">{room.roomId}</p> : null}
-      {location.screen === "room" && room ? (
-        room.round?.trump ? (
-          <p className={`trump-spot ${room.round.trump === "hearts" || room.round.trump === "diamonds" ? "card-red" : "card-black"}`}>
-            <span aria-hidden="true">{SUIT_MARK[room.round.trump]}</span>
-            <span className="card-name">Trump is {room.round.trump}.</span>
-          </p>
-        ) : (
-          <p className="trump-spot trump-spot-empty" aria-hidden="true" />
-        )
-      ) : null}
       <Dialog open={!player && location.screen !== "dashboard" && location.screen !== "rules"}>
         <DialogContent
           onPointerDownOutside={(event) => event.preventDefault()}
@@ -1109,8 +1486,24 @@ export function App() {
       {location.screen === "dashboard" && room?.started ? <Dashboard room={room} matches={matches} /> : null}
       {location.screen === "room" && resultVisible && room?.resultAt != null ? <RoundResult room={room} onOk={onResult} /> : null}
       {location.screen === "room" && room ? (
-        <section>
-          {room.seats.length === 0 ? <p className="note">This room has no seated player. The room id stays reserved.</p> : <Table room={room} onBid={onBid} onTrump={onTrump} onPlay={onPlay} />}
+        <section className="room-page">
+          {room.seats.length === 0 ? <p className="note">This room has no seated player. The room id stays reserved.</p> : <Table room={room} reactions={reactions} onBid={onBid} onTrump={onTrump} onPlay={onPlay} />}
+          {room.yourSeat ? (
+            <div className="react-spot" ref={reactPicker}>
+              <Button type="button" variant="outline" className="react-open" aria-label="Reactions" aria-expanded={reacting} onClick={() => setReacting((open) => !open)}>
+                <span aria-hidden="true">👏 😂 🔥 😮 😬</span>
+              </Button>
+              {reacting ? (
+                <div className="react-choices">
+                  {REACTIONS.map((item) => (
+                    <Button key={item} type="button" variant="outline" onClick={() => onReact(item)}>
+                      {item}
+                    </Button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
           <div className="under-table">
             <Button type="button" variant="outline" onClick={() => navigator.clipboard.writeText(pageUrl)}>
               Copy link

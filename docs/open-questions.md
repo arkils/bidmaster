@@ -33,6 +33,12 @@ An unknown stays here until the user answers it or explicitly defers it. A defer
 | OQ-27 | What is the first version 3 slice that planning writes task files for? | ANSWERED | — |
 | OQ-28 | Which moment of play does the first version 3 slice treat? | ANSWERED | — |
 | OQ-29 | How does a played card land so that it pulls toward the next card? | ANSWERED | — |
+| OQ-30 | Which moment of play is treated after the played card? | ANSWERED | — |
+| OQ-31 | How does a won trick pay off so that it pulls toward the next lead? | ANSWERED | — |
+| OQ-32 | Which remaining moment of slice 1 is treated next? | ANSWERED | — |
+| OQ-33 | How does a turn arrive so that it pulls the player to act? | ANSWERED | — |
+| OQ-34 | How does a stored bid land so that it pulls toward the next bid? | ANSWERED | — |
+| OQ-35 | How does a new deal arrive so that it pulls toward the first bid? | ANSWERED | — |
 
 ## OQ-1 resolution
 
@@ -163,4 +169,28 @@ Answered 2026-10-15. The user chose option A in [PREP-004](tasks/prep/PREP-004-f
 
 ## OQ-29 resolution
 
-Answered 2026-10-15. The user chose option A in [PREP-005](tasks/prep/PREP-005-card-landing.md). A played card lifts off the hand, travels to its place in the trick, and snaps down. `card.mp3` still plays once. No new sound and no score pop. A hand stays flat until it is that player's turn, which [look.md](product/look.md) already requires, so the remaining cards do not rise the instant a card is played. The turn mark, the won-trick pause, and the deal stay as they are. The record is `docs/product/vision.md`. [V3-001](tasks/v3/V3-001-card-landing.md) is the unstarted task for that landing.
+Answered 2026-10-15. The user chose option A in [PREP-005](tasks/prep/PREP-005-card-landing.md). A played card lifts off the hand, travels to its place in the trick, and snaps down. `card.mp3` still plays once. No new sound and no score pop. A hand stays flat until it is that player's turn, which [look.md](product/look.md) already requires, so the remaining cards do not rise the instant a card is played. The turn mark, the won-trick pause, and the deal stay as they are. The record is `docs/product/vision.md`. [V3-001](tasks/v3/V3-001-card-landing.md) is done.
+
+## OQ-30 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-007](tasks/prep/PREP-007-next-feel.md). The next moment is a won trick. A bid, the turn mark, and a new deal stay as they are. How that payoff pulls toward the next lead is [OQ-31](open-questions.md). The record is `docs/product/vision.md`.
+
+## OQ-31 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-008](tasks/prep/PREP-008-won-trick.md). During the 2 second hold, the winning card lifts. The cards of a trick that does not end the round then travel to the winner's chip and snap down. `card.mp3` still plays once for each of those cards, back to back. No new sound and no score pop. The last trick of a round stays in the center, and the round result still opens after the pause. A bid, the turn mark, the deal, and the played-card landing stay as they are. The record is `docs/product/vision.md`. [V3-003](tasks/v3/V3-003-won-trick.md) is done.
+
+## OQ-32 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-010](tasks/prep/PREP-010-next-moment.md). The next moment is a turn arriving. A bid and a new deal stay as they are. How that arrival pulls the player to act is [OQ-33](open-questions.md). The record is `docs/product/vision.md`.
+
+## OQ-33 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-011](tasks/prep/PREP-011-turn-arrival.md). When the turn moves to a seat, that chip lifts and the ring, the glow, and the star snap on. Every screen sees it. No new sound. The buzz still waits 10 seconds, and it still plays only on that player's own screen. A bid, the deal, a played card, and a won trick stay as they are. The record is `docs/product/vision.md`. [V3-011](tasks/v3/V3-011-turn-arrival.md) is done.
+
+## OQ-34 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-013](tasks/prep/PREP-013-bid-and-deal.md). On every screen, a newly stored bid snaps into the center chip and into that seat's gold box together. `bid.mp3` still plays once. No new sound. The record is `docs/product/vision.md`. [V3-012](tasks/v3/V3-012-bid-snap.md) is done.
+
+## OQ-35 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-013](tasks/prep/PREP-013-bid-and-deal.md). On the caller's screen, a new hand lifts into the row and snaps down. The cards are staggered a little. No new sound. The record is `docs/product/vision.md`. [V3-013](tasks/v3/V3-013-deal-snap.md) is done.

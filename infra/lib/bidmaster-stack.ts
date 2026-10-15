@@ -153,6 +153,11 @@ export class BidmasterStack extends cdk.Stack {
       methods: [apigwv2.HttpMethod.POST],
       integration: apiIntegration,
     });
+    httpApi.addRoutes({
+      path: "/api/rooms/{roomId}/react",
+      methods: [apigwv2.HttpMethod.POST],
+      integration: apiIntegration,
+    });
 
     const siteBucket = new s3.Bucket(this, "Site", {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,

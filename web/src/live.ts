@@ -8,6 +8,9 @@ export type LiveNotice = {
   cards?: Card[];
   trump?: string;
   leadSeat?: number;
+  name?: string;
+  reaction?: string;
+  seat?: number;
 };
 
 export function watchRoom(

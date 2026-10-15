@@ -1,6 +1,6 @@
 # Version 3 Development agent
 
-Drafted on 2026-10-15, after [V3-001](../tasks/v3/V3-001-card-landing.md) was written. Not active. Do not copy this file to the root until the user records that version 3 build may start.
+Promoted to root `AGENTS.md` on 2026-10-15, when the user recorded that version 3 build may start. The root file is the active copy. Do not edit this draft except to fix broken links.
 
 Source of truth is `docs/`. Trust `docs/` and the active task file over chat memory.
 

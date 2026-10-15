@@ -2,7 +2,7 @@
 
 One task is `IN_PROGRESS` at a time. If none is, take the lowest `TODO` whose blockers are `DONE`. Status here and in the task file stay the same.
 
-The user recorded **Review GO** on 2026-10-14, that Implementation Planning may start on 2026-10-14, and **Build GO** on 2026-10-14. That Build GO covered version 1. The user recorded that version 3 planning may start on 2026-10-15. Version 3 planning does not write code.
+The user recorded **Review GO** on 2026-10-14, that Implementation Planning may start on 2026-10-14, and **Build GO** on 2026-10-14. That Build GO covered version 1. The user recorded that version 3 planning may start on 2026-10-15, and that version 3 build may start on 2026-10-15. Code is allowed only inside the one `V3-*` task that is `IN_PROGRESS`.
 
 | ID | Status | Priority | Blocked by | Summary |
 | --- | --- | --- | --- | --- |
@@ -103,12 +103,34 @@ Started 2026-10-15. These tasks do not write code. Implementation task files wai
 | [PREP-004](prep/PREP-004-feel-moments.md) | DONE | Blocking | PREP-003 | Propose which moments get the first feel of play |
 | [PREP-005](prep/PREP-005-card-landing.md) | DONE | Blocking | PREP-004 | Propose how a played card lands |
 | [PREP-006](prep/PREP-006-card-task.md) | DONE | Blocking | PREP-005 | Write the unstarted card-landing task |
+| [PREP-007](prep/PREP-007-next-feel.md) | DONE | Blocking | — | Propose which moment of play is next |
+| [PREP-008](prep/PREP-008-won-trick.md) | DONE | Blocking | PREP-007 | Propose how a won trick pays off |
+| [PREP-009](prep/PREP-009-won-trick-task.md) | DONE | Blocking | PREP-008 | Write the unstarted won-trick task |
+| [PREP-010](prep/PREP-010-next-moment.md) | DONE | Blocking | — | Propose which remaining moment of slice 1 is next |
+| [PREP-011](prep/PREP-011-turn-arrival.md) | DONE | Blocking | PREP-010 | Propose how a turn arrives |
+| [PREP-012](prep/PREP-012-turn-task.md) | DONE | Blocking | PREP-011 | Write the unstarted turn-arrival task |
+| [PREP-013](prep/PREP-013-bid-and-deal.md) | DONE | Blocking | — | Propose how a bid and a new deal feel |
 
 ## Version 3
 
-Unstarted. Do not set one of these to `IN_PROGRESS` until the user records that version 3 build may start.
+Started 2026-10-15, when the user recorded that version 3 build may start.
 
 | ID | Status | Priority | Blocked by | Summary |
 | --- | --- | --- | --- | --- |
-| [V3-001](v3/V3-001-card-landing.md) | TODO | Blocking | — | A played card lifts, travels, and snaps |
-| [V3-002](v3/V3-002-reactions.md) | TODO | Important | — | Reaction emojis and short lines for the table |
+| [V3-001](v3/V3-001-card-landing.md) | DONE | Blocking | — | A played card lifts, travels, and snaps |
+| [V3-002](v3/V3-002-reactions.md) | DONE | Important | — | Reaction emojis and short lines for the table |
+| [V3-003](v3/V3-003-won-trick.md) | DONE | Important | — | A won trick lifts, travels, and snaps onto the winner |
+| [V3-004](v3/V3-004-reaction-bubble.md) | DONE | Important | — | A reaction sits on the sender's seat as a comic bubble |
+| [V3-005](v3/V3-005-reaction-hold.md) | DONE | Important | — | Several reaction bubbles can sit on their own seats for 5 seconds |
+| [V3-006](v3/V3-006-reaction-picker.md) | DONE | Important | — | Reactions open from one centered emoji button |
+| [V3-007](v3/V3-007-reaction-popup.md) | DONE | Important | — | Reaction choices open in a popup |
+| [V3-008](v3/V3-008-reaction-emoji.md) | DONE | Important | — | A larger emoji in a thin bubble with no shadow |
+| [V3-009](v3/V3-009-trump-on-table.md) | DONE | Important | — | The trump icon sits on the felt above the trick |
+| [V3-010](v3/V3-010-trump-card.md) | DONE | Important | — | Trump on the felt is a small card |
+| [V3-011](v3/V3-011-turn-arrival.md) | DONE | Important | — | The seat chip lifts when the turn arrives |
+| [V3-012](v3/V3-012-bid-snap.md) | DONE | Important | — | A stored bid snaps into the center and onto the seat |
+| [V3-013](v3/V3-013-deal-snap.md) | DONE | Important | — | A new hand lifts and snaps into the row |
+| [V3-014](v3/V3-014-trick-sounds.md) | DONE | Important | — | One card sound for each card traveling to the winner |
+| [V3-015](v3/V3-015-bid-wrap.md) | DONE | Important | — | Bid chips wrap sooner on a phone |
+| [V3-016](v3/V3-016-card-from-seat.md) | DONE | Important | — | A played card comes from the hand, or from that player's seat |
+| [V3-017](v3/V3-017-last-trick.md) | DONE | Important | — | The last trick of every round travels to the winner |

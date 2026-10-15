@@ -20,6 +20,7 @@ from rooms import (
     notice,
     player_topic,
     public_room,
+    reaction_notice,
     room_topic,
 )
 
@@ -47,6 +48,8 @@ def handler(event, context):
         return bid_room(room_id, body)
     if method == "POST" and path.endswith("/trump"):
         return trump_room(room_id, body)
+    if method == "POST" and path.endswith("/react"):
+        return react_room(room_id, body)
     if method == "POST" and path.endswith("/start"):
         return start_room(room_id, body)
     if method == "POST" and path.endswith("/join"):
@@ -178,6 +181,18 @@ def result_room(room_id, body):
     publish_payload(continued_notice(updated, meta))
     publish_hands(updated, meta, player_id)
     return respond(200, with_iot(present(updated, player_id, include_cards=False)))
+
+
+def react_room(room_id, body):
+    item = load_item(room_id)
+    if item is None:
+        return respond(404, {"error": "there is no room with that id"})
+    player_id = str(body.get("playerId") or "").strip()
+    payload = reaction_notice(item, player_id, body.get("reaction"))
+    if payload is None:
+        return respond(403, with_iot(present(item, player_id, include_cards=False)))
+    publish_payload(payload)
+    return respond(200, with_iot(present(item, player_id, include_cards=False)))
 
 
 def list_matches(player_id):

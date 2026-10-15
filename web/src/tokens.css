@@ -23,7 +23,9 @@
 
 :root {
   --motion-slide: 180ms;
-  --motion-lift: 280ms;
+  --motion-lift: 140ms;
+  --motion-travel: 220ms;
+  --motion-snap: 90ms;
   --motion-deal: 220ms;
   --motion-pulse: 700ms;
 }
