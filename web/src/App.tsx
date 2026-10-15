@@ -584,7 +584,7 @@ function MatchList({ matches }: { matches: MatchSummary[] }) {
 
 function Rules({ roomId }: { roomId: string }) {
   const back = roomId ? roomPath(roomId) : "/";
-  const backLabel = roomId ? "Table" : "Home";
+  const backLabel = roomId ? "Room" : "Home";
   return (
     <article className="rules">
       <h2>Rules</h2>

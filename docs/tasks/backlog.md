@@ -90,3 +90,4 @@ Work after version 1 goes in this table. One task is `IN_PROGRESS` at a time. Ta
 | [V2-023](v2/V2-023-buzz-interval.md) | DONE | Important | — | Buzz 10 seconds into a turn, then every 10 seconds |
 | [V2-024](v2/V2-024-total-graph.md) | DONE | Important | — | Add a graph of each player's running total |
 | [V2-025](v2/V2-025-rules-page.md) | DONE | Important | — | Add a rules page and link it from home and the room |
+| [V2-026](v2/V2-026-room-link-label.md) | DONE | Important | — | Use Room for the link back to the room |

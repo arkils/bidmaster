@@ -78,7 +78,7 @@ Seating order is the order in which players joined the room, earliest first. The
   1. From home, Rules sits below Create room and Join room and opens `/rules`.
   2. From a room, Rules sits with Copy link and Dashboard and opens `/rules/{roomId}`.
   3. The page explains the match in `docs/game/rules.md`. Opening it does not join the room.
-- End: Home returns to the home page. Table returns to the room the player left.
+- End: Home returns to the home page. Room returns to the room the player left. The dashboard uses that same word.
 
 ## Dashboard
 

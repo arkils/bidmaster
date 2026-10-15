@@ -51,8 +51,10 @@ Delivery is in `docs/architecture/delivery.md`: AWS CDK in TypeScript from a lap
 
 [V2-024](tasks/v2/V2-024-total-graph.md) is done. The dashboard keeps the round-points graph and adds a graph of each player's running total, starting at 0.
 
-[V2-025](tasks/v2/V2-025-rules-page.md) is done. A rules page explains how to play. Home and the room link to it, and the page links back. It is not deployed yet. The running-total graph from V2-024 is also waiting for that deploy.
+[V2-025](tasks/v2/V2-025-rules-page.md) is done. A rules page explains how to play. Home and the room link to it, and the page links back. The running-total graph and the rules page were deployed on 2026-10-15.
+
+[V2-026](tasks/v2/V2-026-room-link-label.md) is done. The rules page and the dashboard both say Room for the link back to the room. That label change is not deployed yet.
 
 ## Next step
 
-No version 2 prep is waiting. The user chooses the next change. New work is a `V2-*` task under Version 2 preps in [backlog.md](tasks/backlog.md). Do not change code until that task is `IN_PROGRESS`. Do not deploy until the user asks.
+No version 2 prep is waiting. The user chooses the next change. New work is a `V2-*` task under Version 2 preps in [backlog.md](tasks/backlog.md). Do not change code until that task is `IN_PROGRESS`.
