@@ -2,7 +2,7 @@
 
 One task is `IN_PROGRESS` at a time. If none is, take the lowest `TODO` whose blockers are `DONE`. Status here and in the task file stay the same.
 
-The user recorded **Review GO** on 2026-10-14, that Implementation Planning may start on 2026-10-14, and **Build GO** on 2026-10-14. Code is allowed only inside the active `IMPL-*` task.
+The user recorded **Review GO** on 2026-10-14, that Implementation Planning may start on 2026-10-14, and **Build GO** on 2026-10-14. That Build GO covered version 1. The user recorded that version 3 planning may start on 2026-10-15. Version 3 planning does not write code.
 
 | ID | Status | Priority | Blocked by | Summary |
 | --- | --- | --- | --- | --- |
@@ -61,7 +61,7 @@ The order is a chain. Split or reorder a later task only after discovery shows t
 
 ## Version 2 preps
 
-Version 2 closed on 2026-10-15. This table is the record. The version 3 target is in [product/vision.md](../product/vision.md). Do not add a version 3 task here until a later pass names one piece of work.
+Version 2 closed on 2026-10-15. This table is the record. Do not add a version 3 task in this table. Version 3 planning is the next table.
 
 | ID | Status | Priority | Blocked by | Summary |
 | --- | --- | --- | --- | --- |
@@ -92,3 +92,23 @@ Version 2 closed on 2026-10-15. This table is the record. The version 3 target i
 | [V2-025](v2/V2-025-rules-page.md) | DONE | Important | — | Add a rules page and link it from home and the room |
 | [V2-026](v2/V2-026-room-link-label.md) | DONE | Important | — | Use Room for the link back to the room |
 | [V2-027](v2/V2-027-close-v2.md) | DONE | Important | — | Close version 2 and match the documents to the site |
+
+## Version 3 planning
+
+Started 2026-10-15. These tasks do not write code. Implementation task files wait until the user agrees the slice.
+
+| ID | Status | Priority | Blocked by | Summary |
+| --- | --- | --- | --- | --- |
+| [PREP-003](prep/PREP-003-v3-slice.md) | DONE | Blocking | — | Propose the first version 3 slice |
+| [PREP-004](prep/PREP-004-feel-moments.md) | DONE | Blocking | PREP-003 | Propose which moments get the first feel of play |
+| [PREP-005](prep/PREP-005-card-landing.md) | DONE | Blocking | PREP-004 | Propose how a played card lands |
+| [PREP-006](prep/PREP-006-card-task.md) | DONE | Blocking | PREP-005 | Write the unstarted card-landing task |
+
+## Version 3
+
+Unstarted. Do not set one of these to `IN_PROGRESS` until the user records that version 3 build may start.
+
+| ID | Status | Priority | Blocked by | Summary |
+| --- | --- | --- | --- | --- |
+| [V3-001](v3/V3-001-card-landing.md) | TODO | Blocking | — | A played card lifts, travels, and snaps |
+| [V3-002](v3/V3-002-reactions.md) | TODO | Important | — | Reaction emojis and short lines for the table |

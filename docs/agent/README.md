@@ -23,7 +23,11 @@ Draft the next phase’s `AGENTS-*.md` in this folder before the gate. Promote t
 
 [AGENTS-implementation-planning.md](AGENTS-implementation-planning.md) was copied to the root on 2026-10-14, when the user recorded that Implementation Planning may start. That root file is archived as [agent-implementation-planning.md](agent-implementation-planning.md).
 
-[AGENTS-development.md](AGENTS-development.md) was copied to the root on 2026-10-14, when the user recorded **Build GO**. Root `AGENTS.md` is the active development agent.
+[AGENTS-development.md](AGENTS-development.md) was copied to the root on 2026-10-14, when the user recorded **Build GO**. That root file is archived as [agent-development.md](agent-development.md).
+
+[AGENTS-v3-planning.md](AGENTS-v3-planning.md) was copied to the root on 2026-10-15, when the user recorded that version 3 planning may start. Root `AGENTS.md` is the active version 3 planning agent.
+
+[AGENTS-v3-development.md](AGENTS-v3-development.md) is a draft for the next phase. It is not active. Promote it only when the user records that version 3 build may start.
 
 ## Archives
 
@@ -33,3 +37,4 @@ Draft the next phase’s `AGENTS-*.md` in this folder before the gate. Promote t
 | [agent-discovery-architecture.md](agent-discovery-architecture.md) | Discovery & Architecture | 2026-10-14 |
 | [agent-pre-development-review.md](agent-pre-development-review.md) | Pre-Development Review | 2026-10-14 |
 | [agent-implementation-planning.md](agent-implementation-planning.md) | Implementation Planning | 2026-10-14 |
+| [agent-development.md](agent-development.md) | Development | 2026-10-15 |

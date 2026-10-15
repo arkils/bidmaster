@@ -42,6 +42,10 @@ CONFIRMED on 2026-10-15. Version 3 is the target. It is not built, and no versio
 
 A public lobby, accounts, and any retention that blocks Leave room stay out of this target.
 
+CONFIRMED on 2026-10-15. The first slice is the look, the motion, and the feel of play. Side ads and the home-screen install wait. The first moment is a played card leaving the hand and landing in the trick. On the screen of the player who played it, that card lifts, travels to its place in the trick, and snaps down. `card.mp3` still plays once. No new sound and no score pop. A hand stays flat until it is that player's turn. A bid, the turn mark, a won trick, and a new deal stay as they are. The record of the choices is [OQ-27](../open-questions.md), [OQ-28](../open-questions.md), and [OQ-29](../open-questions.md).
+
+CONFIRMED on 2026-10-15. A seated player can send a reaction to the others at the table: one of 👏 😂 🔥 😮 😬, or one of these lines: Nice one, Well bid, Wow, Unlucky, Good game. The player cannot type a message. The dashboard does not show it, and the match does not store it. The task is [V3-002](../tasks/v3/V3-002-reactions.md). It is unstarted.
+
 ## Non-goals
 
 CONFIRMED. Version 1 is not a source of income. Version 3 drops that non-goal. The page shows ads on the side.

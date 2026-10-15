@@ -2,11 +2,11 @@
 
 | | |
 | --- | --- |
-| Phase | Development |
-| Phase started | 2026-10-14 |
-| Agent | Development (`AGENTS.md`) |
-| Code | Allowed only inside the one task that is `IN_PROGRESS` |
-| Active task | None. Version 2 is closed. The version 3 target is recorded. No version 3 task is in progress. |
+| Phase | Version 3 Planning |
+| Phase started | 2026-10-15 |
+| Agent | Version 3 Planning (`AGENTS.md`) |
+| Code | Not allowed. The Build GO of 2026-10-14 covered version 1. Version 3 code waits until the user records that version 3 build may start. |
+| Active task | None. [V3-001](tasks/v3/V3-001-card-landing.md) and [V3-002](tasks/v3/V3-002-reactions.md) are written and unstarted. |
 | Documentation gate | PASS on 2026-10-14. See [01-development-gate.md](01-development-gate.md). |
 | Review GO | Recorded by the user on 2026-10-14 |
 | Build GO | Recorded by the user on 2026-10-14 |
@@ -57,6 +57,8 @@ Delivery is in `docs/architecture/delivery.md`: AWS CDK in TypeScript from a lap
 
 [V2-027](tasks/v2/V2-027-close-v2.md) is done. The user recorded on 2026-10-15 that version 2 development and bug fixes are finished. The living product and architecture documents match that site: a scored round waits for OK, the screen shows names without seat numbers, the dashboard has both graphs, and a dashboard listens without taking a seat.
 
+The user recorded on 2026-10-15 that version 3 planning may start. The Development agent is archived at [agent/agent-development.md](agent/agent-development.md). [PREP-003](tasks/prep/PREP-003-v3-slice.md) proposes the first slice. The version 3 target stays in [product/vision.md](product/vision.md): the table should hold a player the way a short video holds a viewer, the page shows ads on the side, and Android and iOS are that same website on a phone home screen.
+
 ## Next step
 
-Version 3's target is recorded in [product/vision.md](product/vision.md), [product/requirements.md](product/requirements.md), and [product/non-functional.md](product/non-functional.md). The table should hold a player the way a short video holds a viewer: the look, the motion, and the feel of each bid, card, and trick. The page shows ads on the side, and Android and iOS are that same website on a phone home screen. No version 3 task is in progress. Do not change application code until a task for that work is `IN_PROGRESS`. Do not open a version 3 task until the user agrees that piece of work.
+[PREP-003](tasks/prep/PREP-003-v3-slice.md) through [PREP-006](tasks/prep/PREP-006-card-task.md) are done. The first slice is a played card that lifts, travels, and snaps, in [V3-001](tasks/v3/V3-001-card-landing.md). [V3-002](tasks/v3/V3-002-reactions.md) is the unstarted task for reaction emojis and short lines. Do not start either task, and do not change application code, until the user records that version 3 build may start. Side ads and the home-screen install wait.

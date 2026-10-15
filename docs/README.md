@@ -2,7 +2,7 @@
 
 Source of truth is `docs/`. Root `AGENTS.md` is the active phase agent. Chat history is not a requirement, a decision, or a task.
 
-Version 2 closed on 2026-10-15. The product and architecture documents describe that site. Version 3's target is recorded in [product/vision.md](product/vision.md). No version 3 task is in progress, and the site is still the version 2 site.
+Version 2 closed on 2026-10-15. The product and architecture documents describe that site. Version 3 planning started on 2026-10-15. The target is in [product/vision.md](product/vision.md). [V3-001](tasks/v3/V3-001-card-landing.md) and [V3-002](tasks/v3/V3-002-reactions.md) are written and unstarted. The site is still the version 2 site.
 
 ## How to read this repo
 

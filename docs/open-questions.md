@@ -30,6 +30,9 @@ An unknown stays here until the user answers it or explicitly defers it. A defer
 | OQ-24 | May a player outside India wait longer than 2 seconds on a bid or a card? | ANSWERED | — |
 | OQ-25 | What is the first milestone slice that Implementation Planning writes `IMPL-*.md` files for? | ANSWERED | — |
 | OQ-26 | Where is DNS for `arkil.in` managed? | ANSWERED | — |
+| OQ-27 | What is the first version 3 slice that planning writes task files for? | ANSWERED | — |
+| OQ-28 | Which moment of play does the first version 3 slice treat? | ANSWERED | — |
+| OQ-29 | How does a played card land so that it pulls toward the next card? | ANSWERED | — |
 
 ## OQ-1 resolution
 
@@ -149,3 +152,15 @@ Prior notes that are easy to mistake for answers:
 ## OQ-26 resolution
 
 Answered 2026-10-15. DNS for `arkil.in` is managed at GoDaddy. The site name is `bidmaster.arkil.in`. CloudFront stays the front door, and the GoDaddy records are added by hand. The record is `docs/architecture/delivery.md`.
+
+## OQ-27 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-003](tasks/prep/PREP-003-v3-slice.md). The first version 3 slice is the look, the motion, and the feel of play. Side ads and the home-screen install wait. The first moment is a played card, recorded in [OQ-28](open-questions.md). The record is `docs/product/vision.md`.
+
+## OQ-28 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-004](tasks/prep/PREP-004-feel-moments.md). The first moment is a played card leaving the hand and landing in the trick. A bid, a turn, a won trick, and a new deal stay as they are. How that landing pulls toward the next card is [OQ-29](open-questions.md). The record is `docs/product/vision.md`.
+
+## OQ-29 resolution
+
+Answered 2026-10-15. The user chose option A in [PREP-005](tasks/prep/PREP-005-card-landing.md). A played card lifts off the hand, travels to its place in the trick, and snaps down. `card.mp3` still plays once. No new sound and no score pop. A hand stays flat until it is that player's turn, which [look.md](product/look.md) already requires, so the remaining cards do not rise the instant a card is played. The turn mark, the won-trick pause, and the deal stay as they are. The record is `docs/product/vision.md`. [V3-001](tasks/v3/V3-001-card-landing.md) is the unstarted task for that landing.
