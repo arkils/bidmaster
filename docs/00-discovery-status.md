@@ -53,7 +53,7 @@ Delivery is in `docs/architecture/delivery.md`: AWS CDK in TypeScript from a lap
 
 [V2-025](tasks/v2/V2-025-rules-page.md) is done. A rules page explains how to play. Home and the room link to it, and the page links back. The running-total graph and the rules page were deployed on 2026-10-15.
 
-[V2-026](tasks/v2/V2-026-room-link-label.md) is done. The rules page and the dashboard both say Room for the link back to the room. That label change is not deployed yet.
+[V2-026](tasks/v2/V2-026-room-link-label.md) is done. The rules page and the dashboard both say Room for the link back to the room. That label was deployed on 2026-10-15.
 
 ## Next step
 
