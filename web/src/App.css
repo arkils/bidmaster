@@ -95,8 +95,9 @@
 
 .turn-star {
   position: absolute;
-  top: 0.05rem;
-  right: 0.2rem;
+  top: -0.75rem;
+  right: -0.60rem;
+  z-index: 3;
   color: var(--color-turn);
   font-size: 0.85rem;
   line-height: 1;

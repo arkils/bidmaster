@@ -62,14 +62,14 @@ Two graphs share the names and colors under them. The first shows how many point
 
 ## Turn
 
-The seat whose turn it is, for a bid, the trump choice, or a card, is highlighted on every player's screen. When the turn moves to that seat, the chip lifts and the highlight snaps on. The highlight is a thick bright gold ring, `#E4AD3D`, a glow that continues, and a star on that chip. A seat that is not to move has none of those.
+The seat whose turn it is, for a bid, the trump choice, or a card, is highlighted on every player's screen. When the turn moves to that seat, the chip lifts and the highlight snaps on. The highlight is a thick bright gold ring, `#E4AD3D`, a glow that continues, and a star just outside that ring at the top-right corner of the chip. The star does not cover the name. A seat that is not to move has none of those.
 
 ## Motion
 
 Motion is snappy.
 
 - A chosen bid plays one short sound from `bid.mp3` on every table. On every screen, the new center chip snaps into the center and the number snaps into that seat's gold box, together. A bid already stored when the table opens does not play. The next round clearing those bids does not play.
-- On the screen of the player who played a card, that card lifts off its place in the hand, travels to its place in the trick, and snaps down. It plays one short card sound from `card.mp3`. On every other screen, the card lifts off that player's seat chip, travels to its place in the trick, and snaps down. That screen does not show a flight from a hand it cannot see. A hand stays flat until it is that player's turn.
+- On the screen of the player who played a card, that card lifts off its place in the hand, crosses the felt to its place in the trick, and snaps down. The card stays visible on that path. It plays one short card sound from `card.mp3`. On every other screen, the card lifts off that player's seat chip, crosses the felt to its place in the trick, and snaps down. That screen does not show a flight from a hand it cannot see. A hand stays flat until it is that player's turn.
 - When the last card of a trick is played, including the last trick of a round and the last trick of the match, the cards stay in the center, the winning card is highlighted, and that card lifts. After 2 seconds, those cards travel to the winner's seat chip and snap down. One sound plays for each of those cards, back to back. The round result still opens after that same pause.
 - On the caller's screen, a new hand lifts into the row and snaps down. The cards are staggered a little. There is no new sound. Other players do not see that hand.
 - When the turn moves to a seat, that chip lifts and the gold ring, the glow, and the star snap on. Every screen sees it. There is no new sound. On that player's own screen, a buzz from `buzz.mp3` starts 10 seconds after the turn is shown and plays again every 10 seconds until the turn ends. It does not play when the turn begins, and it does not play on another player's turn. A phone vibrates once at each buzz when the browser allows it. A browser that refuses vibration still plays the buzz.

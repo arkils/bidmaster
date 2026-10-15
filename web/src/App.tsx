@@ -276,16 +276,16 @@ function FlyingCard({
       const origin = fromRef.current;
       const dx = to.left - origin.left;
       const dy = to.top - origin.top;
-      const travel = motionMs("--motion-travel", 220);
+      const travel = motionMs("--motion-play", 560);
       const snap = motionMs("--motion-snap", 90);
       const total = travel + snap;
       travelAnim = node.animate(
         [
-          { transform: "translate3d(0, -1rem, 0) scale(1.06)", easing: "cubic-bezier(0.16, 0.84, 0.3, 1)" },
+          { transform: "translate3d(0, -1rem, 0) scale(1.06)", easing: "linear" },
           {
             transform: `translate3d(${dx}px, ${dy - 14}px, 0) scale(1.04)`,
             offset: travel / total,
-            easing: "cubic-bezier(0.45, 0, 0.85, 0.35)",
+            easing: "ease-out",
           },
           { transform: `translate3d(${dx}px, ${dy}px, 0) scale(1)` },
         ],

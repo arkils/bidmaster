@@ -22,7 +22,7 @@ One task is `IN_PROGRESS` at a time.
 | Planning | `PREP-` | `docs/tasks/prep/` | Version 1 planning is done through PREP-002. Version 3 planning is done through PREP-009. No code |
 | Implementation | `IMPL-` | `docs/tasks/impl/` | Version 1 is done through IMPL-031 |
 | Version 2 prep | `V2-` | `docs/tasks/v2/` | Closed on 2026-10-15, through V2-027 |
-| Version 3 | `V3-` | `docs/tasks/v3/` | Build recorded on 2026-10-15. V3-001 through V3-017 are done. |
+| Version 3 | `V3-` | `docs/tasks/v3/` | Build recorded on 2026-10-15. V3-001 through V3-019 are done. |
 
 Planning may add `PREP-*` files. It writes `IMPL-*.md` files only after the user agrees that slice. Those files stay unstarted until **Build GO**.
 

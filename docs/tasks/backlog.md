@@ -134,3 +134,5 @@ Started 2026-10-15, when the user recorded that version 3 build may start.
 | [V3-015](v3/V3-015-bid-wrap.md) | DONE | Important | — | Bid chips wrap sooner on a phone |
 | [V3-016](v3/V3-016-card-from-seat.md) | DONE | Important | — | A played card comes from the hand, or from that player's seat |
 | [V3-017](v3/V3-017-last-trick.md) | DONE | Important | — | The last trick of every round travels to the winner |
+| [V3-018](v3/V3-018-card-crosses.md) | DONE | Important | — | A played card crosses the felt from the player |
+| [V3-019](v3/V3-019-turn-star.md) | DONE | Important | — | The turn star sits outside the gold ring |
